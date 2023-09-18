@@ -1,0 +1,37 @@
+[{
+        "text": ":v",
+        "replace": "😄"
+    },
+    {
+        "text": ":lol",
+        "replace": "🤣"
+    },
+    {
+        "text": ":D",
+        "replace": "😁"
+    },
+    {
+        "text": "<o",
+        "replace": "🐧"
+    },
+    {
+        "text": "-_-",
+        "replace": "😑"
+    },
+    {
+        "text": ":love",
+        "replace": "😍"
+    },
+    {
+        "text": ":pig",
+        "replace": "🐷"
+    },
+    {
+        "text": ":sad",
+        "replace": "😥"
+    },
+    {
+        "text": "<3",
+        "replace": "💖"
+    }
+]
