@@ -1,9 +1,9 @@
 <?php
 date_default_timezone_set('Asia/Ho_Chi_Minh');
 $config['db_host']    = 'localhost';
-$config['db_name']     = 'phimhayz_animechill'; // Tên Database
-$config['db_user']    = 'phimhayz_animechill'; // Tên Người Dùng Database
-$config['db_pass']    = 'animechill@mqh1811'; // Mật Khẩu Database
+$config['db_name']     = 'animechill'; // Tên Database
+$config['db_user']    = 'root'; // Tên Người Dùng Database
+$config['db_pass']    = ''; // Mật Khẩu Database
 $tb_prefix            = 'table_';
 define('SERVER_HOST', $config['db_host']);
 define('DATABASE_NAME', $config['db_name']);
@@ -17,8 +17,8 @@ define('URL', 'https://animechill.site');
 define('ADMIN', 'https://animechill.site/admin_movie');
 define('EMAIL', 'None');
 define('PASSMAIL', 'None');
-define('UPLOAD_DIR', $_SERVER["DOCUMENT_ROOT"] . '/assets/upload');
-define('ROOT_DIR', $_SERVER["DOCUMENT_ROOT"]);
+define('UPLOAD_DIR', $_SERVER["DOCUMENT_ROOT"] . '/anime-chill/assets/upload');
+define('ROOT_DIR', $_SERVER["DOCUMENT_ROOT"].'/anime-chill');
 if (isset($_SERVER['HTTP_CF_CONNECTING_IP'])) {
     $_SERVER['REMOTE_ADDR'] = $_SERVER['HTTP_CF_CONNECTING_IP'];
 }
