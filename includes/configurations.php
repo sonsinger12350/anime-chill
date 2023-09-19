@@ -13,12 +13,12 @@ define('DATABASE_FX',            'table_');
 define('TIME', time());
 define('DATE', date('Y-m-d'));
 define('DATEFULL', date('d/m/Y - H:i:s'));
-define('URL', 'https://animechill.site');
-define('ADMIN', 'https://animechill.site/admin_movie');
+define('URL', 'http://localhost');
+define('ADMIN', 'http://localhost/admin_movie');
 define('EMAIL', 'None');
 define('PASSMAIL', 'None');
-define('UPLOAD_DIR', $_SERVER["DOCUMENT_ROOT"] . '/anime-chill/assets/upload');
-define('ROOT_DIR', $_SERVER["DOCUMENT_ROOT"].'/anime-chill');
+define('UPLOAD_DIR', $_SERVER["DOCUMENT_ROOT"] . '/assets/upload');
+define('ROOT_DIR', $_SERVER["DOCUMENT_ROOT"]);
 if (isset($_SERVER['HTTP_CF_CONNECTING_IP'])) {
     $_SERVER['REMOTE_ADDR'] = $_SERVER['HTTP_CF_CONNECTING_IP'];
 }

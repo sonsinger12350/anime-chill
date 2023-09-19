@@ -1,6 +1,6 @@
  RewriteEngine On
 Options +FollowSymlinks
-RewriteCond %{HTTP_HOST} ^animechill.site
+RewriteCond %{HTTP_HOST} ^localhost
 #RewriteCond %{HTTPS} !on 
 #RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 RewriteCond %{REQUEST_FILENAME} !-f
