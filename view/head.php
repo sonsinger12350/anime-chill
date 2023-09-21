@@ -40,6 +40,7 @@ FireWall();
 <script type="text/javascript" src="<?= URL ?>/themes/js_ob/class.js?v=1.7.4"></script>
 <script type="text/javascript" src="<?= URL ?>/themes/js_ob/function.js?v=1.7.4"></script>
 <link href="//cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
 <script type="text/javascript">
     const $user = {
