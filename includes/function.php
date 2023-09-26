@@ -914,3 +914,25 @@ function view_pages_admin($ttrow, $limit, $page, $link)
     </div>';
     return $main;
 }
+
+function getConfigGeneralUserInfo($keys)
+{
+    global $mysql;
+
+    if (empty($keys) || !is_array($keys)) {
+        return [];
+    }
+    try {
+
+        $data = [];
+        $sql = "SELECT `key`,`value` FROM `table_configs` WHERE `key` IN ('".implode("','", $keys)."')";
+        $query = $mysql->query($sql);
+        while($row = $query->fetch(PDO::FETCH_ASSOC)) {
+            $data[$row['key']] = $row['value'];
+        }
+    } catch (\Throwable $th) {
+        die(JsonMessage(400, "Lỗi rồi => [$th]"));
+    }
+    
+    return $data;
+}

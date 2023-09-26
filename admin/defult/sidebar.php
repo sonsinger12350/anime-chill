@@ -55,7 +55,7 @@
                     </li>
                     <li class="sidebar-list">
                         <a class="sidebar-link sidebar-title" href="#">
-                            <i class="fa fa-smile-o fw-bold fs-6 text-primary"></i><span>User Menu</span>
+                            <i class="fa fa-smile-o fw-bold fs-6 text-primary"></i><span> User Menu</span>
                             <div class="according-menu"><i class="fa fa-angle-right"></i></div>
                         </a>
                         <ul class="sidebar-submenu" style="display: none;">
@@ -64,6 +64,7 @@
                             <li><a href="/admin_movie/author">Danh Sách Thành Viên</a></li>
                             <li><a href="/admin_movie/comments">Quản Lý Bình Luận</a></li>
                             <li><a href="/admin_movie/notice">Quản Lý Thông Báo</a></li>
+                            <li><a href="/admin_movie/general_info">Cài đặt Thông Tin Chung</a></li>
                         </ul>
                     </li>
                     <li class="sidebar-list">
