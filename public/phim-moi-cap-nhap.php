@@ -31,7 +31,9 @@ $NumPage = GetParam('p') ? GetParam('p') : 1;
                     <?php
                     $PAGE = CheckPages('movie', "WHERE public = 'true'", 30, $NumPage);
                     if ($PAGE['total'] >= 1) {
-                        $arr = $mysql->query("SELECT * FROM " . DATABASE_FX . "movie WHERE public = 'true' ORDER BY id DESC LIMIT {$PAGE['start']},30");
+                        // $arr = $mysql->query("SELECT * FROM " . DATABASE_FX . "movie WHERE public = 'true' ORDER BY id DESC LIMIT {$PAGE['start']},30");
+                        $arr = $mysql->query("SELECT * FROM " . DATABASE_FX . "movie WHERE public = 'true' ORDER BY timestap DESC LIMIT {$PAGE['start']},30");
+
                         while ($row = $arr->fetch(PDO::FETCH_ASSOC)) {
                             $NumEpisode = ($row['ep_hien_tai'] ? $row['ep_hien_tai'] : get_total("episode", "WHERE movie_id = '{$row['id']}'"));
                             if ($row['loai_phim'] == 'Phim Lẻ') {
@@ -39,6 +41,8 @@ $NumPage = GetParam('p') ? GetParam('p') : 1;
                             } else {
                                 $statut = "$NumEpisode/{$row['ep_num']}";
                             }
+                            // echo $row['timestap']; exit;
+                            $statut = date("d/m/Y", $row['timestap']);
                     ?>
                             <div class="movie-item" id="movie-id-<?= $row['id'] ?>">
                                 <a href="<?= URL ?>/thong-tin-phim/<?= $row['slug'] ?>.html" title="<?= $row['name'] ?>">

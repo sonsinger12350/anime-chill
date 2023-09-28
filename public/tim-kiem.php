@@ -3,6 +3,8 @@ if (!defined('MovieAnime')) die("You are illegally infiltrating our website");
 if (!$value[2]) die(header('location:' . URL));
 FireWall();
 $kw = sql_escape($value[2]);
+$kw = str_replace("-"," ",$kw);
+
 $SLUG = chuyenslug($kw);
 ?>
 <!DOCTYPE html>
@@ -31,9 +33,12 @@ $SLUG = chuyenslug($kw);
                 <div class="movies-list">
                     <?php
                     $NumPage = GetParam('p') ? GetParam('p') : 1;
-                    $PAGE = CheckPages('movie', "WHERE public = 'true' AND name LIKE '%$kw%' OR slug LIKE '%$SLUG%' OR other_name LIKE '%$kw%'", 30, $NumPage);
+                    
+                    $PAGE = CheckPages('movie', "WHERE public = 'true' AND name LIKE '%$kw%' OR other_name LIKE '%$kw%'", 30, $NumPage);
+                    // $PAGE = CheckPages('movie', "WHERE public = 'true' AND name LIKE '%$kw%' OR slug LIKE '%$SLUG%' OR other_name LIKE '%$kw%'", 30, $NumPage);
                     if ($PAGE['total'] >= 1) {
-                        $arr = $mysql->query("SELECT * FROM " . DATABASE_FX . "movie WHERE public = 'true' AND name LIKE '%$kw%' OR slug LIKE '%$SLUG%' OR other_name LIKE '%$kw%' ORDER BY id DESC LIMIT {$PAGE['start']},30");
+                        $arr = $mysql->query("SELECT * FROM " . DATABASE_FX . "movie WHERE public = 'true' AND name LIKE '%$kw%' OR other_name LIKE '%$kw%' ORDER BY id DESC LIMIT {$PAGE['start']},30");
+                        // $arr = $mysql->query("SELECT * FROM " . DATABASE_FX . "movie WHERE public = 'true' AND name LIKE '%$kw%' OR slug LIKE '%$SLUG%' OR other_name LIKE '%$kw%' ORDER BY id DESC LIMIT {$PAGE['start']},30");
                         while ($row = $arr->fetch(PDO::FETCH_ASSOC)) {
                             $NumEpisode = ($row['ep_hien_tai'] ? $row['ep_hien_tai'] : get_total("episode", "WHERE movie_id = '{$row['id']}'"));
                             if ($row['loai_phim'] == 'Phim Lẻ') {
