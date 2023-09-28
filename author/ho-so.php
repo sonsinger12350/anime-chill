@@ -23,6 +23,18 @@ if (isset($_POST['change_profile'])) {
 		$Notice .= '<div class="noti-success flex flex-hozi-center"><span class="material-icons-round margin-0-5">success</span>Cập Nhật Hồ Sơ Thành Công</div>';
 	}
 }
+$configs = getConfigGeneralUserInfo([
+	'vip_package',
+	'join_telegram',
+	'first_login',
+	'online_reward',
+	'farm_tree',
+	'comment',
+	'first_upload_avatar',
+	'vip_icon',
+	'deposit_money',
+	'vip_fee',
+]);
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -587,45 +599,39 @@ if (isset($_POST['change_profile'])) {
 										<div class="group">
 											<div class="label">Gói VIP ADS:</div>
 											<div class="detail">
-												đăng ký theo năm ( 30 ngày )<br>
-												đăng ký theo năm ( 12 tháng + thêm 1 tháng )<br>
+												<?=nl2br($configs['vip_package'])?><br>
 												<i class="fa fa-long-arrow-right" aria-hidden="true"></i> <a href="/store#vip">Mua VIP ADS tắt quảng cáo tại đây</a>
 											</div>
 										</div>
 										<div class="group">
 											<div class="label">Tham gia nhóm Telegram:</div>
-											<div class="detail">+300 XU<br><i class="fa fa-long-arrow-right" aria-hidden="true"></i> <a href="/user_edit">Tham gia nhóm nhận thông báo quan trọng tại đây</a></div>
+											<div class="detail"><?=$configs['join_telegram']?><br><i class="fa fa-long-arrow-right" aria-hidden="true"></i> <a href="/user_edit">Tham gia nhóm nhận thông báo quan trọng tại đây</a></div>
 										</div>
 										<div class="group">
 											<div class="label">Đăng nhập mỗi ngày:</div>
-											<div class="detail">+50 XU<br> </div>
+											<div class="detail"><?=$configs['first_login']?></div>
 										</div>
 										<div class="group">
 											<div class="label">OnLine:</div>
 											<div class="detail">
-												Online 5 phút: +5 xu<br>
-												Online 10 phút: +10 xu<br>
-												Online 20 phút: +20 xu<br>
-												Online 30 phút: +30 xu<br>
-												Online 60 phút: +60 xu<br>
-												Online 120 phút: +120 xu<br>
+												<?=nl2br($configs['online_reward'])?>
 											</div>
 										</div>
 										<div class="group">
 											<div class="label">Cây khế nông trại:</div>
-											<div class="detail">đang phát triển<br> </div>
+											<div class="detail"><?=$configs['farm_tree']?></div>
 										</div>
 										<div class="group">
 											<div class="label">Bình luận:</div>
-											<div class="detail">mỗi bình luận trong bộ phim trong 1 ngày + 2 xu (chỉ tính bình luận đầu tiên trong ngày của bộ phim đó ).</div>
+											<div class="detail"><?=$configs['comment']?></div>
 										</div>
 										<div class="group">
 											<div class="label">Up Avatar:</div>
-											<div class="detail">+100 xu ( lần đầu )</div>
+											<div class="detail"><?=$configs['first_upload_avatar']?></div>
 										</div>
 										<div class="group">
 											<div class="label">Vip Icon:</div>
-											<div class="detail">Nhận được icon vip khi mua gói vip ads 12 tháng</div>
+											<div class="detail"><?=$configs['vip_icon']?></div>
 										</div>
 										<div class="group">
 											<div class="label">Sưu tầm khung viền:</div>
@@ -634,15 +640,14 @@ if (isset($_POST['change_profile'])) {
 										<div class="group">
 											<div class="label">Nạp Xu:</div>
 											<div class="detail">
-												nạp ít nhất 10$ <br>
-												mỗi 1$=10.000 xu <br>
+												<?=nl2br($configs['deposit_money'])?><br>
 												<i class="fa fa-long-arrow-right" aria-hidden="true"></i> <a href="#">Nạp Xu ở đây</a>
 											</div>
 										</div>
 										<div class="group">
 											<div class="label">Giá Vip / Tháng:</div>
 											<div class="detail">
-												10.0000 xu ( thay đổi được trong admin)
+												<?=$configs['vip_fee']?>
 											</div>
 										</div>
 									</div>

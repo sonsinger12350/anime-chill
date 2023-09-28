@@ -254,7 +254,7 @@ if ($action == 'loginadmin') {
 } else if ($action == 'XoaCache') {
     if (!$InstanceCache->clear()) die(JsonMessage(404, '<div>
     <h4>Xóa cache không thành công</h4>
-</div>'));
+    </div>'));
     die(JsonMessage(200, '<div>
         <h4>Hoàn Tất Quá Trình Xóa Cache</h4>
     </div>'));
@@ -382,6 +382,35 @@ if ($action == 'loginadmin') {
         $mysql->update('movie', "public = '$movie_type'", "id = $movie_id");
     }
     die(JsonMessage(200, 'Cập nhật lại trạng thái cho phim thành công'));
+} else if ($action == 'update-user-general-info') {
+    $table = sql_escape('table-configs');
+    $fields = $_POST['data'];
+
+    $Check = count($fields);
+    $ArrNum = 0;
+    foreach ($fields as $key => $value) {
+        $data = [];
+        $query = $mysql->query("SELECT `value` FROM `table_configs` WHERE `key` = '$key' LIMIT 1");
+        $row = $query->fetch(PDO::FETCH_ASSOC);
+        
+        try {
+            if (empty($row)) {
+                $sql = "INSERT INTO `table_configs` (`key`, `value`) VALUES ('$key', '$value')";
+                $mysql->query($sql);
+            } else {
+                if ($row[$key] != $value) {
+                    $sql = "UPDATE `table_configs` SET `value` = '$value' WHERE `key` = '$key'";
+                    $mysql->query($sql);
+                }
+            }
+        } catch (\Throwable $th) {
+            die(JsonMessage(400, "Lỗi rồi => [$th]"));
+        }
+        
+    }
+
+    
+    die(JsonMessage(200, "Cập Nhật Thành Công"));
 }
 // Không Có Thằng Action Nào Trùng Hợp
 else die(HTMLMethodNot(503));
