@@ -600,8 +600,8 @@ $configs = getConfigGeneralUserInfo([
 								</a>
 							</li>
 							<li class="nav-item menu-item hvr-sweep-to-right">
-								<a class="nav-link" href="/">
-									<i class="fa-solid fa-sign-out"></i> Thoát
+								<a class="nav-link" href="/dang-xuat">
+									<i class="fa-solid fa-sign-out"></i> Đăng xuất
 								</a>
 							</li>
 						</ul>
