@@ -535,4 +535,47 @@ if ($Json['action'] == 'live_search') {
 } else if ($Json['action'] == 'huong_dan') {
     if (!$cf['huong_dan']) die(json_encode(["result" => '<div class="home-status">Chưa Có Hướng Dẫn Nào</div>', "status" => "failed"]));
     die(json_encode(["result" => un_htmlchars($cf['huong_dan']), "status" => "success"]));
+} else if ($Json['action'] == 'list_comment') {
+    if ($user['banned'] == 'true') {
+        die(json_encode(["result" => "Tài Khoản Bị Khóa", "status" => "failed"]));
+    }
+
+    $sql = "SELECT `c`.*, `m`.`name` `movie_name` , `m`.`slug` `movie_slug` 
+    FROM `table_comment` as `c`
+    JOIN `table_movie` as `m` ON `c`.`movie_id` = `m`.`id`
+    WHERE `user_id` = ".$user['id']." AND `show_cmt` = 'true' 
+    ORDER BY `timestap` DESC 
+    LIMIT 10
+    ";
+    $arr = $mysql->query($sql);
+    $html = '';
+    $results = $arr->fetchAll(PDO::FETCH_ASSOC);
+    
+    if (empty($results)) {
+        die(json_encode(["result" => "Không có bình luận", "status" => "success"]));
+    }
+    
+    foreach ($results as $result) {
+        $html .= '
+        <div class="comment-main user-comment cmt-438631">
+            <div class="flex bg-comment">
+                <div class="left">
+                    <div class="avatar"><img src="'.$user['avatar'].'"></div>
+                </div>
+                <div class="right">
+                    <div class="flex flex-column">
+                        <div class="content">'.$result['content'].'</div>
+                        <div class="flex fs-12 toolbarr">
+                            <label>
+                                <a href="' . URL . '/thong-tin-phim/' . $result['movie_slug'] . '.html"><i class="fa fa-film"></i> '.$result['movie_name'].'</a>
+                            </label>
+                            <span class="cmt-time color-gray">'.RemainTime($result['timestap']).'</span><br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>';
+    }
+
+    die(json_encode(["result" => $html, "status" => "success"]));
 }

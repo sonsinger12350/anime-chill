@@ -316,6 +316,16 @@ $configs = getConfigGeneralUserInfo([
 		.profile .info .tab-content #tab-movie-history .watch-history .item a img {
 			width: 100%;
 		}
+
+		.profile .info .tab-content #tab-movie-follow .movie-follow .delete  {
+			position: absolute;
+			z-index: 3;
+			right: 0;
+			background: #000;
+			padding: 5px 10px;
+			top: 0;
+			color: #fff;
+		}
 	</style>
 </head>
 
@@ -682,174 +692,23 @@ $configs = getConfigGeneralUserInfo([
 						</div>
 						<div class="tab-pane fade" id="tab-movie-follow">
 							<h4 class="tab-title">Phim theo dõi</h4>
-							<div class="movies-list ah-frame-bg">
-								<div class="movie-item" id="movie-id-3300">
-									<a href="http://localhost/thong-tin-phim/hong-hoang-linh-ton.html" title="Hồng Hoang Linh Tôn">
-										<div class="episode-latest">
-											<span>
-												6/?? </span>
-										</div>
-										<div>
-											<img src="https://hhtqtv.vip/assets/upload/1682093545_250x350.jpg" alt="Phim Hồng Hoang Linh Tôn">
-										</div>
-										<div class="score">
-											<span style="display: flex;">
-												<i class="material-icons-round" style="padding: 0px 2px; font-size: 13px;">star</i>
-												9.5 </span>
-										</div>
-										<div class="name-movie">
-											Hồng Hoang Linh Tôn
-										</div>
-									</a>
-								</div>
-								<div class="movie-item" id="movie-id-3300">
-									<a href="http://localhost/thong-tin-phim/gamera--tai-sinh.html" title="GAMERA -TÁI SINH">
-										<div class="episode-latest">
-											<span>
-												6/6 </span>
-										</div>
-										<div>
-											<img src="https://hhtqtv.vip/assets/upload/gamera-rebirth_250x350.jpg" alt="Phim GAMERA -TÁI SINH">
-										</div>
-										<div class="score">
-											<span style="display: flex;">
-												<i class="material-icons-round" style="padding: 0px 2px; font-size: 13px;">star</i>
-												10 </span>
-										</div>
-										<div class="name-movie">
-											GAMERA -TÁI SINH
-										</div>
-									</a>
-								</div>
-								<div class="movie-item" id="movie-id-3300">
-									<a href="http://localhost/thong-tin-phim/goblin-slayer-2nd-season.html" title="Goblin Slayer 2nd Season">
-										<div class="episode-latest">
-											<span>
-												7/10/2023/ </span>
-										</div>
-										<div>
-											<img src="https://hhtqtv.vip/assets/upload/134760_250x350.jpg" alt="Phim Goblin Slayer 2nd Season">
-										</div>
-										<div class="score">
-											<span style="display: flex;">
-												<i class="material-icons-round" style="padding: 0px 2px; font-size: 13px;">star</i>
-												0 </span>
-										</div>
-										<div class="name-movie">
-											Goblin Slayer 2nd Season
-										</div>
-									</a>
-								</div>
-								<div class="movie-item" id="movie-id-3300">
-									<a href="http://localhost/thong-tin-phim/kimetsu-no-yaiba-season-4---thanh-guom-diet-quy-phao-dai-vo-cuc.html" title="Thanh Gươm Diệt Quỷ Phần 4: Pháo Đài Vô Cực - Kimetsu no Yaiba Season 4">
-										<div class="episode-latest">
-											<span>
-												??/??/2024/ </span>
-										</div>
-										<div>
-											<img src="https://hhtqtv.vip/assets/upload/demon-slayer-season-4_250x350.png" alt="Phim Thanh Gươm Diệt Quỷ Phần 4: Pháo Đài Vô Cực - Kimetsu no Yaiba Season 4">
-										</div>
-										<div class="score">
-											<span style="display: flex;">
-												<i class="material-icons-round" style="padding: 0px 2px; font-size: 13px;">star</i>
-												0 </span>
-										</div>
-										<div class="name-movie">
-											Thanh Gươm Diệt Quỷ Phần 4: Pháo Đài Vô Cực - Kimetsu no Yaiba Season 4
-										</div>
-									</a>
-								</div>
-								<div class="movie-item" id="movie-id-3300">
-									<a href="http://localhost/thong-tin-phim/kimetsu-no-yaiba-season-4---thanh-guom-diet-quy-phao-dai-vo-cuc.html" title="Thanh Gươm Diệt Quỷ Phần 4: Pháo Đài Vô Cực - Kimetsu no Yaiba Season 4">
-										<div class="episode-latest">
-											<span>
-												??/??/2024/ </span>
-										</div>
-										<div>
-											<img src="https://hhtqtv.vip/assets/upload/demon-slayer-season-4_250x350.png" alt="Phim Thanh Gươm Diệt Quỷ Phần 4: Pháo Đài Vô Cực - Kimetsu no Yaiba Season 4">
-										</div>
-										<div class="score">
-											<span style="display: flex;">
-												<i class="material-icons-round" style="padding: 0px 2px; font-size: 13px;">star</i>
-												0 </span>
-										</div>
-										<div class="name-movie">
-											Thanh Gươm Diệt Quỷ Phần 4: Pháo Đài Vô Cực - Kimetsu no Yaiba Season 4
-										</div>
-									</a>
-								</div>
-								<div class="movie-item" id="movie-id-3300">
-									<a href="http://localhost/thong-tin-phim/kimetsu-no-yaiba-season-4---thanh-guom-diet-quy-phao-dai-vo-cuc.html" title="Thanh Gươm Diệt Quỷ Phần 4: Pháo Đài Vô Cực - Kimetsu no Yaiba Season 4">
-										<div class="episode-latest">
-											<span>
-												??/??/2024/ </span>
-										</div>
-										<div>
-											<img src="https://hhtqtv.vip/assets/upload/demon-slayer-season-4_250x350.png" alt="Phim Thanh Gươm Diệt Quỷ Phần 4: Pháo Đài Vô Cực - Kimetsu no Yaiba Season 4">
-										</div>
-										<div class="score">
-											<span style="display: flex;">
-												<i class="material-icons-round" style="padding: 0px 2px; font-size: 13px;">star</i>
-												0 </span>
-										</div>
-										<div class="name-movie">
-											Thanh Gươm Diệt Quỷ Phần 4: Pháo Đài Vô Cực - Kimetsu no Yaiba Season 4
-										</div>
-									</a>
-								</div>
-								<div class="movie-item" id="movie-id-3300">
-									<a href="http://localhost/thong-tin-phim/kimetsu-no-yaiba-season-4---thanh-guom-diet-quy-phao-dai-vo-cuc.html" title="Thanh Gươm Diệt Quỷ Phần 4: Pháo Đài Vô Cực - Kimetsu no Yaiba Season 4">
-										<div class="episode-latest">
-											<span>
-												??/??/2024/ </span>
-										</div>
-										<div>
-											<img src="https://hhtqtv.vip/assets/upload/demon-slayer-season-4_250x350.png" alt="Phim Thanh Gươm Diệt Quỷ Phần 4: Pháo Đài Vô Cực - Kimetsu no Yaiba Season 4">
-										</div>
-										<div class="score">
-											<span style="display: flex;">
-												<i class="material-icons-round" style="padding: 0px 2px; font-size: 13px;">star</i>
-												0 </span>
-										</div>
-										<div class="name-movie">
-											Thanh Gươm Diệt Quỷ Phần 4: Pháo Đài Vô Cực - Kimetsu no Yaiba Season 4
-										</div>
-									</a>
-								</div>
+							<div class="movie-follow">
+								
 							</div>
 						</div>
 						<div class="tab-pane fade" id="tab-movie-history">
 							<h4 class="tab-title">Lịch sử xem phim</h4>
 							<div class="tab-body">
-								<section class="comics-followed comics-followed-nopaging user-table clearfix">
-									<div class="alert alert-success d-none">Bạn có thể xem lại hoặc xem tiếp các phim mà bạn đã xem</div>
-									<div class="blockbody list">
-										<ul class="list-film">
-											<div class="dinfo fr">
-												<a href="https://tvhayb.org/xem/hirogaru-sky-precure-tap-1-69450.742905">
-													<div class="film_lastwatch_grid">
-														<div class="film_lastwatch_round"><img class=" lazyloaded" data-src="https://sss11.hlss1.net/cdn/down/2292a3edc169a07afe647c0aa8d91a89/thumb.jpg" width="100%" height="100%" src="https://sss11.hlss1.net/cdn/down/2292a3edc169a07afe647c0aa8d91a89/thumb.jpg"><img src="https://dataqq.net/theme/play_red.png" class="film_lastwatch_iconplay"><span class="film_lastwatch_duration">24:02</span><span class="film_lastwatch_timeline" style="width: 37.031900138696%;"></span></div>
-														<div>
-															<div class="film_lastwatch_title_deswap"><b>Hirogaru Sky! Precure Tập 1 VIETSUB</b></div>
-															<div class="film_lastwatch_title_desweb"><b>[Tập 1 VIETSUB] Hirogaru Sky! Precure</b><br>xem tiếp <i class="fa fa-angle-double-right" aria-hidden="true"></i></div>
-														</div>
-													</div>
-												</a>
-											</div>
-											<div class="dinfo fr">
-												<a href="https://tvhayb.org/xem/giao-duc-gioi-tinh-4-tap-1-80835.833867">
-													<div class="film_lastwatch_grid">
-														<div class="film_lastwatch_round"><img class=" lazyloaded" data-src="https://sss18.hlss1.net/cdn/down/558ee58dee53da31a0e0b2c3d322450f/thumb.jpg" width="100%" height="100%" src="https://sss18.hlss1.net/cdn/down/558ee58dee53da31a0e0b2c3d322450f/thumb.jpg"><img src="https://dataqq.net/theme/play_red.png" class="film_lastwatch_iconplay"><span class="film_lastwatch_duration">52:02</span><span class="film_lastwatch_timeline" style="width: 38.052530429212%;"></span></div>
-														<div>
-															<div class="film_lastwatch_title_deswap"><b>Giáo Dục Giới Tính 4 Tập 1 Lồng Tiếng</b></div>
-															<div class="film_lastwatch_title_desweb"><b>[Tập 1 Lồng Tiếng] Giáo Dục Giới Tính 4</b><br>xem tiếp <i class="fa fa-angle-double-right" aria-hidden="true"></i></div>
-														</div>
-													</div>
-												</a>
-											</div>
-										</ul>
+								<div class="display_axios watch-history">
+									<div class="ah_loading">
+										<div class="lds-ellipsis">
+											<div></div>
+											<div></div>
+											<div></div>
+											<div></div>
+										</div>
 									</div>
-								</section>
+								</div>
 							</div>
 						</div>
 						<div class="tab-pane fade" id="tab-notification">
@@ -895,72 +754,7 @@ $configs = getConfigGeneralUserInfo([
 						</div>
 						<div class="tab-pane fade" id="tab-comment">
 							<h4 class="tab-title">Bình Luận</h4>
-							<!-- doing  -->
-							<div class="col-md-9 col-sm-8">
-								<div class="user-page clearfix">
-									<div class="row">
-										<div class="col-xs-12">
-											<div class="relative">
-												<h2 class="posttitle">Bình luận mới</h2>
-											</div>
-											<section class="user-table clearfix">
-												<div class="comment-main user-comment cmt-438631">
-													<div class="flex bg-comment">
-														<div class="left">
-															<div class="avatar"><img src="https://dataqq.net/tvhay/user/thumb-df-user.png"></div>
-														</div>
-														<div class="right">
-															<div class="flex flex-column">
-																<div class="content">phim này hay quá, khi nào ra phần 3 nhỉ</div>
-																<div class="flex fs-12 toolbarr"><label><a href="/v/74010"><i class="fa fa-film"></i> Giáo Dục Giới Tính (Phần 1)</a></label><span class="cmt-time color-gray">8 giây</span><br></div>
-															</div>
-														</div>
-													</div>
-												</div>
-												<div class="comment-main user-comment cmt-438630">
-													<div class="flex bg-comment">
-														<div class="left">
-															<div class="avatar"><img src="https://dataqq.net/tvhay/user/thumb-df-user.png"></div>
-														</div>
-														<div class="right">
-															<div class="flex flex-column">
-																<div class="content">phim hay quá</div>
-																<div class="flex fs-12 toolbarr"><label><a href="/v/80824"><i class="fa fa-film"></i> Đỉnh Núi Quỷ</a></label><span class="cmt-time color-gray">1 phút</span><br></div>
-															</div>
-														</div>
-													</div>
-												</div>
-												<div class="comment-main user-comment cmt-438630">
-													<div class="flex bg-comment">
-														<div class="left">
-															<div class="avatar"><img src="https://dataqq.net/tvhay/user/thumb-df-user.png"></div>
-														</div>
-														<div class="right">
-															<div class="flex flex-column">
-																<div class="content">phim hay quá</div>
-																<div class="flex fs-12 toolbarr"><label><a href="/v/80824"><i class="fa fa-film"></i> Đỉnh Núi Quỷ</a></label><span class="cmt-time color-gray">1 phút</span><br></div>
-															</div>
-														</div>
-													</div>
-												</div>
-												<div class="comment-main user-comment cmt-438630">
-													<div class="flex bg-comment">
-														<div class="left">
-															<div class="avatar"><img src="https://dataqq.net/tvhay/user/thumb-df-user.png"></div>
-														</div>
-														<div class="right">
-															<div class="flex flex-column">
-																<div class="content">phim hay quá</div>
-																<div class="flex fs-12 toolbarr"><label><a href="/v/80824"><i class="fa fa-film"></i> Đỉnh Núi Quỷ</a></label><span class="cmt-time color-gray">1 phút</span><br></div>
-															</div>
-														</div>
-													</div>
-												</div>
-											</section>
-										</div>
-									</div>
-								</div>
-							</div>
+							<section class="list-comment clearfix"></section>
 						</div>
 					</div>
 				</div>
@@ -988,6 +782,7 @@ $configs = getConfigGeneralUserInfo([
 </script>
 
 <script type="text/javascript">
+	// Movie watch history
 	const _0x3047 = ['getItem', 'post', '/server/api', 'getElementsByClassName', 'addEventListener', 'stringify', 'data_history', 'display_axios', 'log', 'innerHTML', 'parse', 'data'];
 	(function(_0x150929, _0x209022) {
 		const _0x304767 = function(_0x4e0512) {
@@ -1027,6 +822,131 @@ $configs = getConfigGeneralUserInfo([
 			});
 		};
 	})();
+
+	// End movie watch history
+
+	// Movie follow
+	var run_ax = true;
+
+	(() => {
+		document.addEventListener("DOMContentLoaded", function(event) {
+			const dataFollow = async () => {
+				try {
+					let movie_follow = document.getElementsByClassName('movie-follow')[0];
+					let response = await loadFollowmovie();
+					let data = response.data;
+					movie_follow.innerHTML = data;
+				} catch (e) {
+					console.log(e)
+				}
+			};
+			$user.id && asyncFollow();
+			dataFollow();
+		});
+	})();
+
+	asyncFollow = async () => {
+		let local_store = localStorage.getItem("data_follow");
+		let data_follow_store = local_store ? JSON.parse(local_store) : [];
+		var check_async_follow = localStorage.getItem("async_follow");
+		await securityCode();
+		if (!check_async_follow) {
+			await axios.post('/server/api', {
+				"action": 'async_follow',
+				"token": $dt.token,
+				"data_follow": JSON.stringify(data_follow_store),
+			}).then(reponse => {
+				run_ax = true;
+				if (reponse.data == "success") {
+					localStorage.setItem("async_follow", true);
+					let success = document.createElement("div");
+					let el_ah_follows = document.getElementsByClassName("ah_follows")[0];
+					success.setAttribute('class', 'noti-success');
+					success.innerHTML = 'Đồng bộ phim theo dõi lưu trên trình duyệt sang tài khoản thành công!';
+					el_ah_follows.insertBefore(success, el_ah_follows.childNodes[2]);
+					location.reload();
+				}
+			}).catch(e => run_ax = true)
+		}
+	}
+
+	loadFollowmovie = () => {
+		let local_store = localStorage.getItem("data_follow");
+		let data_follow_store = local_store ? JSON.parse(local_store) : [];
+		return axios.post(
+			'/server/api', {
+				"action": "data_follow",
+				"data_follow": JSON.stringify(data_follow_store),
+				"page_now": 1
+			}
+		);
+	}
+
+	followGuestmovie = (e, movie_id) => {
+		let local_store = localStorage.getItem("data_follow");
+		let data_follow_store = local_store ? JSON.parse(local_store) : [];
+		var index_this_movie = data_follow_store.indexOf(movie_id);
+		if (index_this_movie !== -1) {
+			data_follow_store.splice(index_this_movie, 1);
+			e.target.parentNode.remove();
+			Toast({
+				message: "Xoá theo dõi thành công!",
+				type: "success"
+			});
+		}
+		localStorage.setItem("data_follow", JSON.stringify(data_follow_store));
+	}
+
+	delFollowmovie = (e, movie_id) => {
+		e.preventDefault();
+		if (!$user.id) {
+			followGuestmovie(e, movie_id)
+		} else {
+			if (run_ax) {
+				run_ax = false;
+				axios.post('/server/api', {
+					"action": 'del_follow',
+					"movie_id": movie_id,
+				}).then(reponse => {
+					run_ax = true;
+					if (reponse.data == "success") {
+						followGuestmovie(e, movie_id)
+					} else {
+						alert('Xoá theo dõi thất bại, thử lại sau!');
+					}
+				}).catch(e => run_ax = true)
+			}
+		}
+	}
+
+	// End movie follow
+
+	// Comment
+	$(document).ready(async function() {
+		let response = await getListComment();
+		let content = '';
+
+		if (response.status == 200) {
+			if (response.data.status == "success") {
+				content = response.data.result;
+			} else {
+				content = 'Không có bình luận';
+			}
+		} else {
+			content = 'Không có bình luận';
+		}
+		
+		$('#tab-comment .list-comment').html(content);
+	});
+
+	function getListComment() {
+		return axios.post('/server/api', {
+			"action": 'list_comment',
+			"token": $dt.token,
+		});
+	}
+	// End comment
+
 </script>
 
 </html>
