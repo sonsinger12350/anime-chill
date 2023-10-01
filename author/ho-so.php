@@ -563,7 +563,10 @@ $configs = getConfigGeneralUserInfo([
 							<p style="color: <?= LevelColor($user['level'] + 1) ?>">Cấp <?= $user['level'] + 1 ?></p>
 						</div>
 						<div class="progress">
-							<span class="progress-bar" style="width: 50%">50%</span>
+							<?php
+								$exp = number_format(($user['exp']*100)/30, 0, ',', '.');
+							?>
+							<span class="progress-bar" style="width: <?=$exp?>%"><?= $exp.'%' ?></span>
 						</div>
 					</div>
 					<!-- Menu -->
