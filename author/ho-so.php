@@ -47,6 +47,8 @@ $configs = getConfigGeneralUserInfo([
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" />
 	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.min.js"></script> -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+	<script type="text/javascript" src="/themes/js_ob/croppie.js?v=1.7.4"></script>
+	<link href="/themes/styles/croppie.css?v=1.4.0" rel="stylesheet" />
 	<style>
 		body {
 			color: #ccc;
@@ -751,7 +753,31 @@ $configs = getConfigGeneralUserInfo([
 		</div>
 		<?php require_once(ROOT_DIR . '/view/footer.php'); ?>
 	</div>
+	<div id="modal" class="modal">
+		<div>
+			<div>Tải lên ảnh đại diện</div>
+			<a href="javascript:$modal.toggleModal()"><span class="material-icons-round margin-0-5">
+					close
+				</span></a>
+		</div>
+		<div class="upload-area">
+			<form action="/file-upload">
+				<div class="fallback">
+					<div id="show-image-upload">
+					</div>
+					<input name="file" type="file" id="upload-avatar" class="display-none" accept="image/*" />
+					<div class="option-avatar">
+					</div>
+					<div class="button-default padding-10-20 bg-red color-white" id="select-avatar" onclick="showSelectAvatar()"><span class="material-icons-round margin-0-5">
+							cloud_upload
+						</span> Tải ảnh lên</div>
+					<div class="fw-500 margin-t-10">Upload ảnh 18+ sẽ bị khoá nick ngay lập tức</div>
+				</div>
+			</form>
+		</div>
+	</div>
 </body>
+<script type="text/javascript" src="/themes/js_ob/user.profile.js?v=1.7.4"></script>
 <script>
 	// show Tab Notificaiton 
 	function showTab(tabId) {
