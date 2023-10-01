@@ -326,6 +326,16 @@ $configs = getConfigGeneralUserInfo([
 			top: 0;
 			color: #fff;
 		}
+
+		.profile .info .tab-content #tab-update-profile #form-change-password .invalid-feedback {
+			min-height: 20px;
+			display: block;
+			visibility: hidden;
+		}
+		.profile .info .tab-content #tab-update-profile #form-change-password .is-invalid~.invalid-feedback {
+			visibility: visible;
+		}
+		
 	</style>
 </head>
 
@@ -686,6 +696,18 @@ $configs = getConfigGeneralUserInfo([
 											</div>
 										</div>
 										<br><br><br>
+										<div class="change-password-content">
+											<form method="POST" id="form-change-password">
+												<div class="mb-3">
+													<label for="new_password" class="mb-1">Mật khẩu mới</label>
+													<input id="new_password" name="new_password" type="password" class="form-control" placeholder="Nhập nếu muốn đổi" autocomplete="false">
+													<p class="invalid-feedback mb-0"></p>
+												</div>
+												<div class="text-end">
+													<button type="submit" class="btn btn-primary">Đổi mật khẩu</button>
+												</div>
+											</form>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -713,44 +735,8 @@ $configs = getConfigGeneralUserInfo([
 						</div>
 						<div class="tab-pane fade" id="tab-notification">
 							<h4 class="tab-title">Thông báo</h4>
-							<div class="col-md-12 col-sm-8">
-								<div class="user-page clearfix">
-									<div class="row">
-										<div class="col-xs-12">
-											<div class="relative">
-												<h2 class="posttitle">Thông báo mới</h2>
-											</div>
-											<section class="user-table clearfix">
-												<div id="notify-load-content">
-													<div class="wrappertab_notification">
-														<div class="tab_notification active"><a href="#notification_main" onclick="showTab('notification_main')">THÔNG BÁO CHÍNH</a></div>
-														<div class="tab_notification"><a href="#notification_like" onclick="showTab('notification_like')">THÔNG BÁO LIKE</a></div>
-													</div>
-													<div id="notification_main" class="tab_content_notification" style="display: block;">
-														<div class="noti noti_4976758">
-															<div class="noti-one">
-																<div class="noti-content"><b>NHIỆM VỤ ĐIỂM DANH MỖI NGÀY</b><br><br>Bạn nhận được phần thưởng:<br>+5 TRỨNG<br>+100 XU<br>+100 EXP<br><br>Cập nhật ID Telegram để nhận X2 Trứng và XU mỗi ngày<br><br><a href="/user_edit">CẬP NHẬT ID TELEGRAM TẠI ĐÂY</a><br><br></div>
-															</div>
-															<div class="noti-two"><span><i class="fa fa-clock-o" aria-hidden="true"></i> 56 phút trước</span><span class="notidel_4976758" onclick="delnoti(this)" data-id="4976758"><i class="fa fa-trash" aria-hidden="true"></i> XÓA</span></div>
-														</div>
-														<br>
-														<div class="center">
-															<div class="flex-ver-center fw-700 load-more button-cmt-loadmores bg-blue" onclick="delnoti(this)" data-id="outlike">Xoá tất cả thông báo hệ thống</div>
-														</div>
-													</div>
-													<div id="notification_like" class="tab_content_notification" style="display:none">
-														<div style="padding:20px">Chưa có thông báo</div>
-														<br>
-														<div class="center" style="color: #ffffff;">
-															<div class="flex-ver-center fw-700 load-more button-cmt-loadmores bg-blue" onclick="delnoti(this)" data-id="like">Xoá tất cả thông báo like</div>
-														</div>
-													</div>
-												</div>
-											</section>
-										</div>
-									</div>
-								</div>
-							</div>
+							<div class="col-md-12 col-sm-8" id="list-item"></div>
+							<div id="active_show"></div>
 						</div>
 						<div class="tab-pane fade" id="tab-comment">
 							<h4 class="tab-title">Bình Luận</h4>
@@ -782,6 +768,71 @@ $configs = getConfigGeneralUserInfo([
 </script>
 
 <script type="text/javascript">
+	// start tab-update-profile
+		$(document).ready(function() {
+			let form = $('#form-change-password');
+			let new_password = form.find('[name="new_password"]');
+			let btn = form.find('.btn[type="submit"]');
+			let form_error = form.find('.form-error');
+			
+			form.submit(function() {
+				let error = 0;
+				
+				if (!new_password.val()) {
+					new_password.focus();
+					new_password.addClass('is-invalid');
+					new_password.next().html('Nhập mật khẩu mới');
+					error = 1;
+				} else {
+					new_password.removeClass('is-invalid');
+				}
+
+				if (new_password.val().length < 6) {
+					new_password.focus();
+					new_password.addClass('is-invalid');
+					new_password.next().html('Mật khẩu đặt phải nhiều hơn 6 kí tự');
+					error = 1;
+				} else {
+					new_password.removeClass('is-invalid');
+				}
+
+				if (error == 0) {
+					Promise.all([changePassword(new_password.val())])
+					.then(function(responses) {
+						let rs = responses[0].data;
+						if (rs.status=='success') {
+							new_password.removeClass('is-invalid');
+							new_password.val('');
+							alert(rs.result);
+						} else {
+							new_password.focus();
+							new_password.addClass('is-invalid');
+							new_password.next().html(rs.result);
+						}
+					})
+					.catch(function(error) {
+						console.error(error);
+					});
+				}
+
+				return false;
+			});
+		});
+
+		function changePassword(new_password) {
+			if (new_password) {
+				return axios.post(
+					'/server/api', {
+						"action": "change_password",
+						"new_password": new_password,
+					}
+				);
+			}
+
+			return false;
+		}
+	// end tab-update-profile
+
 	// Movie watch history
 	const _0x3047 = ['getItem', 'post', '/server/api', 'getElementsByClassName', 'addEventListener', 'stringify', 'data_history', 'display_axios', 'log', 'innerHTML', 'parse', 'data'];
 	(function(_0x150929, _0x209022) {
@@ -920,6 +971,22 @@ $configs = getConfigGeneralUserInfo([
 	}
 
 	// End movie follow
+
+	// Notification
+	var loaded_noti = true;
+	(function() {
+		Observer("active_show", async function() {
+			if (loaded_noti) {
+				let id_load_more = document.getElementById("list-item").lastElementChild;
+				id_load_more = id_load_more ? parseInt(id_load_more.attributes[1].value) || 0 : 0;
+				console.log(id_load_more);
+				loaded_noti = await loadNotification("list-item", id_load_more, loaded_noti);
+				//if (loaded_noti.status == "failed") 
+				loaded_noti = false;
+			}
+		}, false)
+	}());
+	// End Notification
 
 	// Comment
 	$(document).ready(async function() {

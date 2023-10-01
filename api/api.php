@@ -554,7 +554,7 @@ if ($Json['action'] == 'live_search') {
     if (empty($results)) {
         die(json_encode(["result" => "Không có bình luận", "status" => "success"]));
     }
-    
+
     foreach ($results as $result) {
         $html .= '
         <div class="comment-main user-comment cmt-438631">
@@ -578,4 +578,31 @@ if ($Json['action'] == 'live_search') {
     }
 
     die(json_encode(["result" => $html, "status" => "success"]));
+} else if ($Json['action'] == 'change_password') {
+    if ($user['banned'] == 'true') {
+        die(json_encode(["result" => "Tài Khoản Bị Khóa", "status" => "failed"]));
+    }
+
+    if (empty($Json['new_password'])) {
+        die(json_encode(["result" => "Chưa nhập mật khẩu mới", "status" => "failed"]));
+    }
+
+    $new_password = md5(sql_escape($Json['new_password']));
+    $error = 0;
+
+    if ($new_password == $user['password']) {
+        $error++;
+        die(json_encode(["result" => "Mật khẩu mới phải khác mật khẩu hiện tại", "status" => "failed"]));
+    }
+
+    if (strlen($Json['new_password']) < 6) {
+        $error++;
+        die(json_encode(["result" => "Mật khẩu đặt phải nhiều hơn 6 kí tự", "status" => "failed"]));
+    }
+
+    if ($error == 0) {
+        $useremail = $user['email'];
+        $mysql->update("user", "password = '$new_password'", "email = '$useremail'");
+        die(json_encode(["result" => "Thay Đổi Mật Khẩu Thành Công", "status" => "success"]));
+    }
 }
