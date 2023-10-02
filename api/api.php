@@ -85,7 +85,7 @@ if ($Json['action'] == 'live_search') {
     $HTML_DATA .= '<div class="movies-list">';
     $HisCheck = 0;
 
-    if ($Json['screen_witdh'] <= 767) {
+    if ($Json['screen_width'] <= 767) {
         $page_limit = 9;
     } else {
         $page_limit = 8;

@@ -333,10 +333,6 @@ $configs = getConfigGeneralUserInfo([
 			color: #fff;
 		}
 
-		.profile .info .tab-content #tab-movie-follow .movie-follow .pagination {
-			list-style: none;
-		}
-
 		.profile .info .tab-content #tab-movie-follow .movie-follow .movies-list {
 			align-items: stretch;
 			justify-content: stretch;
@@ -349,6 +345,10 @@ $configs = getConfigGeneralUserInfo([
 			height: 100%;
 		}
 
+		.profile .info .tab-content #tab-movie-follow .movie-follow .pagination {
+			list-style: none;
+		}
+		
 		.profile .info .tab-content #tab-movie-follow .movie-follow .pagination .pagination-item.active a {
 			background-color: #4caf50;
 		}
@@ -661,7 +661,7 @@ $configs = getConfigGeneralUserInfo([
 						</div>
 						<div class="progress">
 							<?php
-								$exp = number_format(($user['exp']*100)/30, 0, ',', '.');
+								$exp = number_format(($user['exp']*100)/(30*$user['level']), 0, ',', '.');
 							?>
 							<span class="progress-bar" style="width: <?=$exp?>%"><?= $exp.'%' ?></span>
 						</div>
@@ -788,7 +788,7 @@ $configs = getConfigGeneralUserInfo([
 														Cách 1: Click vào đường <a style="color: #009dff;" href="https://t.me/+P91IG7VRyvc1NGY9">link</a> này: <span style="color: #009dff;"> https://t.me/+P91IG7VRyvc1NGY9</span> <br><br>
 														Cách 2: Truy cập telegram trên điện thoại hoặc máy tính </br>
 														Tìm kiếm người dùng với từ khóa: <span style="color: #00FF00;"> My-anime </span>
-														<br><br><img src="http://localhost/assets/upload/1-img-anime.png" style="max-width:500px"><br><br>
+														<br><br><img src="/assets/upload/1-img-anime.png" style="max-width:500px"><br><br>
 														<p></p>
 														<br><br>
 													</div>
@@ -1061,7 +1061,7 @@ $configs = getConfigGeneralUserInfo([
 				"action": "data_follow",
 				"data_follow": JSON.stringify(data_follow_store),
 				"page_now": page,
-				"screen_witdh": screen.width,
+				"screen_width": screen.width,
 			}
 		);
 	}
