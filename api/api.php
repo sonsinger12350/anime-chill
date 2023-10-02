@@ -68,7 +68,7 @@ if ($Json['action'] == 'live_search') {
                 <img src="' . $Movie['image'] . '" />
                 </div>
                 <div>
-                <div>' . $Movie['name'] . '</div><div>Bạn đã xem ' . $Ep['ep_name'] . '</div>
+                <div>' . $Movie['name'] . '</div><div>Bạn đã xem tập ' . $Ep['ep_name'] . '</div>
                 </div>
                 </a>
                 </div>';
@@ -84,8 +84,28 @@ if ($Json['action'] == 'live_search') {
 } else if ($Json['action'] == 'data_follow') {
     $HTML_DATA .= '<div class="movies-list">';
     $HisCheck = 0;
+
+    if ($Json['screen_witdh'] <= 767) {
+        $page_limit = 9;
+    } else {
+        $page_limit = 8;
+    }
+    
     if (!$_author_cookie) {
-        foreach (json_decode($Json['data_follow'], true) as $key => $value) {
+        $list_id = json_decode($Json['data_follow'], true);
+
+        if (empty($list_id)) {
+            $HTML_DATA .= '<div class="ah_noti">Bạn Chưa Theo Dõi Bộ Phim Nào</div>';
+            $HTML_DATA .= '</div>';
+            die($HTML_DATA);
+        }
+
+        $id_chunk = array_chunk($list_id, $page_limit, true);
+        $pagination = array_keys($id_chunk);
+        $activePage = !empty($Json['page']) ? $Json['page']-1 : 0;
+        $id_query = $id_chunk[$activePage];
+
+        foreach ($id_query as $key => $value) {
             $MovieID = sql_escape($value);
             if (get_total("movie", "WHERE id = '$MovieID'") >= 1) {
                 $HisCheck++;
@@ -115,16 +135,29 @@ if ($Json['action'] == 'live_search') {
             }
         }
     } else if (isset($_author_cookie)) {
-        $arr = $mysql->query("SELECT * FROM " . DATABASE_FX . "history WHERE user_id = '{$user['id']}' ORDER BY id DESC");
-        while ($row = $arr->fetch(PDO::FETCH_ASSOC)) {
+        $arr = $mysql->query("SELECT `movie_save`, `movie_save` FROM " . DATABASE_FX . "history WHERE user_id = '{$user['id']}' ORDER BY id DESC");
+        $list_id = $arr->fetchAll(PDO::FETCH_KEY_PAIR);
+
+        if (empty($list_id)) {
+            $HTML_DATA .= '<div class="ah_noti">Bạn Chưa Theo Dõi Bộ Phim Nào</div>';
+            $HTML_DATA .= '</div>';
+            die($HTML_DATA);
+        }
+
+        $id_chunk = array_chunk($list_id, $page_limit, true);
+        $pagination = array_keys($id_chunk);
+        $activePage = !empty($Json['page_now']) ? $Json['page_now'] : 0;
+        $id_query = $id_chunk[$activePage];
+        
+        foreach ($id_query as $id) {
             $HisCheck++;
-            $Movie = GetDataArr("movie", "id = '{$row['movie_save']}'");
+            $Movie = GetDataArr("movie", "id = '{$id}'");
             $NumEpisode = ($Movie['ep_hien_tai'] ? $Movie['ep_hien_tai'] : get_total("episode", "WHERE movie_id = '{$Movie['id']}'"));
             if ($Movie['loai_phim'] == 'Phim Lẻ') {
                 $statut = "{$Movie['movie_duration']} Phút";
             } else $statut = "$NumEpisode/{$Movie['ep_num']}";
-            $HTML_DATA .= '<div class="movie-item" movie-id="' . $row['movie_save'] . '">
-                <a class="delete" href="#" onclick="delFollowmovie(event,' . $row['movie_save'] . ')">X</a>
+            $HTML_DATA .= '<div class="movie-item" movie-id="' . $id . '">
+                <a class="delete" href="#" onclick="delFollowmovie(event,' . $id . ')">X</a>
                 <a href="' . URL . '/thong-tin-phim/' . $Movie['slug'] . '.html" title="' . $Movie['name'] . '">
                     <div class="episode-latest">
                         <span>' . $statut . '</span>
@@ -146,7 +179,22 @@ if ($Json['action'] == 'live_search') {
     if ($HisCheck == 0) {
         $HTML_DATA .= '<div class="ah_noti">Bạn Chưa Theo Dõi Bộ Phim Nào</div>';
     }
+
     $HTML_DATA .= '</div>';
+
+    if (!empty($pagination)) {
+        $HTML_DATA .= '<ul class="pagination">';
+
+        foreach ($pagination as $page) {
+            $HTML_DATA .= '
+            <li class="pagination-item '.($activePage==$page ? 'active' : '').'">
+                <a href="javascript:void(0)" class="movie-follow-pagination" data-page="'.$page.'">'.($page+1).'</a>
+            </li>
+            ';
+        }
+
+        $HTML_DATA .= '</ul>';
+    }
 
     die($HTML_DATA);
 } else if ($Json['action'] == 'upload_avatar') {

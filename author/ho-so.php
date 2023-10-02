@@ -302,6 +302,10 @@ $configs = getConfigGeneralUserInfo([
 			color: #ffffff;
 		}
 
+		.profile .info .tab-content #tab-movie-history .watch-history {
+			width: 100%;
+		}
+
 		.profile .info .tab-content #tab-movie-history .watch-history .item a>div:first-child {
 			width: 75px;
 			height: 75px;
@@ -329,15 +333,107 @@ $configs = getConfigGeneralUserInfo([
 			color: #fff;
 		}
 
+		.profile .info .tab-content #tab-movie-follow .movie-follow .pagination {
+			list-style: none;
+		}
+
+		.profile .info .tab-content #tab-movie-follow .movie-follow .movies-list {
+			align-items: stretch;
+			justify-content: stretch;
+		}
+
+		.profile .info .tab-content #tab-movie-follow .movie-follow .movies-list .movie-item a:not(.delete) {
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			height: 100%;
+		}
+
+		.profile .info .tab-content #tab-movie-follow .movie-follow .pagination .pagination-item.active a {
+			background-color: #4caf50;
+		}
+
 		.profile .info .tab-content #tab-update-profile #form-change-password .invalid-feedback {
 			min-height: 20px;
 			display: block;
 			visibility: hidden;
 		}
+
 		.profile .info .tab-content #tab-update-profile #form-change-password .is-invalid~.invalid-feedback {
 			visibility: visible;
 		}
-		
+
+		@media (max-width: 991px) {
+			.profile {
+				flex-direction: column;
+			}
+
+			.profile .navigation {
+				width: 100%;
+				margin-bottom: 16px;
+			}
+		}
+
+		@media (max-width: 767px) {
+			.profile .info .tab-content #tab-movie-follow .movie-follow .movies-list .movie-item {
+				width: 33.33%;
+			}
+
+			.profile .info .tab-content #tab-movie-follow .movie-follow .movies-list .movie-item img {
+				height: 100%;
+				width: 100%;
+			}
+
+			.profile .info .tab-content #tab-movie-follow .movie-follow .movies-list .movie-item a:not(.delete) div:has(img) {
+				flex: 1;
+			}
+		}
+
+		@media (max-width: 591px) {
+			.profile .info .tab-content #tab-movie-follow .movie-follow .movies-list .movie-item .episode-latest {
+				font-size: 12px;
+			}
+
+			.profile .info .tab-content #tab-movie-follow .movie-follow .movies-list .movie-item .name-movie {
+				font-size: 13px;
+			}
+		}
+
+		@media (max-width: 480px) {
+			.profile .info .tab-content #tab-movie-follow .movie-follow .movies-list .movie-item .episode-latest {
+				left: 4px;
+				font-size: 10px;
+			}
+
+			.profile .info .tab-content #tab-movie-follow .movie-follow .movies-list .movie-item img {
+				height: 100% !important;
+				width: 100%;
+			}
+
+			.profile .info .tab-content #tab-movie-follow .movie-follow .delete {
+				padding: 1px 5px;
+			}
+
+			.profile .info .tab-content #tab-movie-follow .movie-follow .movies-list .movie-item .name-movie {
+				font-size: 12px;
+			}
+		}
+
+		@media (max-width: 400px) {
+			.profile .info .tab-content #tab-movie-follow .movie-follow .movies-list .movie-item .episode-latest {
+				left: 0px;
+				font-size: 8px;
+			}
+
+			.profile .info {
+				padding-left: unset;
+				padding: 10px 0px;
+			}
+
+			.profile .info .tab-content #tab-movie-follow .movie-follow .movies-list .movie-item .name-movie {
+				font-size: 10px;
+			}
+		}
 	</style>
 </head>
 
@@ -719,9 +815,7 @@ $configs = getConfigGeneralUserInfo([
 						</div>
 						<div class="tab-pane fade" id="tab-movie-follow">
 							<h4 class="tab-title">Phim theo dõi</h4>
-							<div class="movie-follow">
-								
-							</div>
+							<div class="movie-follow"></div>
 						</div>
 						<div class="tab-pane fade" id="tab-movie-history">
 							<h4 class="tab-title">Lịch sử xem phim</h4>
@@ -797,7 +891,7 @@ $configs = getConfigGeneralUserInfo([
 </script>
 
 <script type="text/javascript">
-	// start tab-update-profile
+	// Change password
 		$(document).ready(function() {
 			let form = $('#form-change-password');
 			let new_password = form.find('[name="new_password"]');
@@ -860,7 +954,7 @@ $configs = getConfigGeneralUserInfo([
 
 			return false;
 		}
-	// end tab-update-profile
+	// End change password
 
 	// Movie watch history
 	const _0x3047 = ['getItem', 'post', '/server/api', 'getElementsByClassName', 'addEventListener', 'stringify', 'data_history', 'display_axios', 'log', 'innerHTML', 'parse', 'data'];
@@ -910,20 +1004,30 @@ $configs = getConfigGeneralUserInfo([
 
 	(() => {
 		document.addEventListener("DOMContentLoaded", function(event) {
-			const dataFollow = async () => {
-				try {
-					let movie_follow = document.getElementsByClassName('movie-follow')[0];
-					let response = await loadFollowmovie();
-					let data = response.data;
-					movie_follow.innerHTML = data;
-				} catch (e) {
-					console.log(e)
-				}
-			};
-			$user.id && asyncFollow();
-			dataFollow();
+			showMovieFollow(0);
 		});
 	})();
+
+	$('body').on('click', '.movie-follow-pagination', function() {
+		if ($(this).parent().hasClass('active')) {
+			return false;
+		}
+
+		let page = $(this).attr('data-page');
+		showMovieFollow(page);
+	});
+
+	async function showMovieFollow(page) {
+		try {
+			let movie_follow = document.getElementsByClassName('movie-follow')[0];
+			let response = await loadFollowmovie(page);
+			let data = response.data;
+			movie_follow.innerHTML = data;
+		} catch (e) {
+			console.log(e)
+		}
+		$user.id && asyncFollow();
+	}
 
 	asyncFollow = async () => {
 		let local_store = localStorage.getItem("data_follow");
@@ -950,14 +1054,15 @@ $configs = getConfigGeneralUserInfo([
 		}
 	}
 
-	loadFollowmovie = () => {
+	loadFollowmovie = (page = 0) => {
 		let local_store = localStorage.getItem("data_follow");
 		let data_follow_store = local_store ? JSON.parse(local_store) : [];
 		return axios.post(
 			'/server/api', {
 				"action": "data_follow",
 				"data_follow": JSON.stringify(data_follow_store),
-				"page_now": 1
+				"page_now": page,
+				"screen_witdh": screen.width,
 			}
 		);
 	}
