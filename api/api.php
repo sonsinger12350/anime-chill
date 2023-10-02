@@ -183,14 +183,57 @@ if ($Json['action'] == 'live_search') {
     $HTML_DATA .= '</div>';
 
     if (!empty($pagination)) {
+        $totalPage = count($pagination);
         $HTML_DATA .= '<ul class="pagination">';
 
-        foreach ($pagination as $page) {
-            $HTML_DATA .= '
-            <li class="pagination-item '.($activePage==$page ? 'active' : '').'">
-                <a href="javascript:void(0)" class="movie-follow-pagination" data-page="'.$page.'">'.($page+1).'</a>
-            </li>
-            ';
+        if ($totalPage > 5) {
+            if ($activePage > 2 ) {
+                $HTML_DATA .= '
+                <li class="pagination-item '.($activePage==$page ? 'active' : '').'">
+                    <a href="javascript:void(0)" class="movie-follow-pagination" data-page="0"><i class="fa-solid fa-angles-left"></i></a>
+                </li>
+                ';
+            }
+            $count = 0;
+            foreach ($pagination as $page) {
+                if ($count == 5) {
+                    break;
+                }
+
+                if ($activePage >= 3) {
+                    if ($page > ($activePage-3)) {
+                        $HTML_DATA .= '
+                        <li class="pagination-item '.($activePage==$page ? 'active' : '').'">
+                            <a href="javascript:void(0)" class="movie-follow-pagination" data-page="'.$page.'">'.($page+1).'</a>
+                        </li>
+                        ';
+                        $count++;
+                    }
+                } else {
+                    $HTML_DATA .= '
+                    <li class="pagination-item '.($activePage==$page ? 'active' : '').'">
+                        <a href="javascript:void(0)" class="movie-follow-pagination" data-page="'.$page.'">'.($page+1).'</a>
+                    </li>
+                    ';
+                    $count++;
+                }
+            }
+
+            if ($activePage <= ($totalPage-2) ) {
+                $HTML_DATA .= '
+                <li class="pagination-item '.($activePage==$page ? 'active' : '').'">
+                    <a href="javascript:void(0)" class="movie-follow-pagination" data-page="'.end($pagination).'"><i class="fa-solid fa-angles-right"></i></a>
+                </li>
+                ';
+            }
+        } else {
+            foreach ($pagination as $page) {
+                $HTML_DATA .= '
+                <li class="pagination-item '.($activePage==$page ? 'active' : '').'">
+                    <a href="javascript:void(0)" class="movie-follow-pagination" data-page="'.$page.'">'.($page+1).'</a>
+                </li>
+                ';
+            }
         }
 
         $HTML_DATA .= '</ul>';

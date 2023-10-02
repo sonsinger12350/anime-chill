@@ -401,7 +401,7 @@ $configs = getConfigGeneralUserInfo([
 
 		@media (max-width: 480px) {
 			.profile .info .tab-content #tab-movie-follow .movie-follow .movies-list .movie-item .episode-latest {
-				left: 4px;
+				left: 10px;
 				font-size: 10px;
 			}
 
@@ -421,7 +421,6 @@ $configs = getConfigGeneralUserInfo([
 
 		@media (max-width: 400px) {
 			.profile .info .tab-content #tab-movie-follow .movie-follow .movies-list .movie-item .episode-latest {
-				left: 0px;
 				font-size: 8px;
 			}
 
