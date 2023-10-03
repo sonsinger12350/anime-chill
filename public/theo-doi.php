@@ -98,12 +98,18 @@ FireWall();
                 loadFollowmovie = (page = 0) => {
                     let local_store = localStorage.getItem("data_follow");
                     let data_follow_store = local_store ? JSON.parse(local_store) : [];
+                    let limit;
+                    if (screen.width <= 767) {
+                        limit = 9;
+                    } else {
+                        limit = 10;
+                    }
                     return axios.post(
                         '/server/api', {
                             "action": "data_follow",
                             "data_follow": JSON.stringify(data_follow_store),
                             "page_now": page,
-				            "screen_width": screen.width,
+				            "limit": limit,
                         }
                     );
                 }

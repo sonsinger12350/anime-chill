@@ -84,13 +84,8 @@ if ($Json['action'] == 'live_search') {
 } else if ($Json['action'] == 'data_follow') {
     $HTML_DATA .= '<div class="movies-list">';
     $HisCheck = 0;
+    $page_limit = !empty($Json['limit']) ? $Json['limit'] : 9;
 
-    if ($Json['screen_width'] <= 767) {
-        $page_limit = 9;
-    } else {
-        $page_limit = 8;
-    }
-    
     if (!$_author_cookie) {
         $list_id = json_decode($Json['data_follow'], true);
 
