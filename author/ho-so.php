@@ -1,40 +1,46 @@
 <?php
-if (!defined('MovieAnime')) die("You are illegally infiltrating our website");
-if (!$_author_cookie) die(header("location:/login"));
-if (isset($_POST['change_profile'])) {
-	$nickname = sql_escape($_POST['nickname']);
-	$quote = sql_escape($_POST['quote']);
-	$Success = 0;
-	if (!$nickname) {
-		$Success++;
-		$Notice .= '<div class="noti-error flex flex-hozi-center"><span class="material-icons-round margin-0-5">error</span>Vui Lòng Nhập Biệt Danh Của Bạn</div>';
+	if (!defined('MovieAnime')) die("You are illegally infiltrating our website");
+	if (!$_author_cookie) die(header("location:/login"));
+	if (isset($_POST['change_profile'])) {
+		$nickname = sql_escape($_POST['nickname']);
+		$quote = sql_escape($_POST['quote']);
+		$Success = 0;
+		if (!$nickname) {
+			$Success++;
+			$Notice .= '<div class="noti-error flex flex-hozi-center"><span class="material-icons-round margin-0-5">error</span>Vui Lòng Nhập Biệt Danh Của Bạn</div>';
+		}
+		if (strlen($nickname) < 6) {
+			$Success++;
+			$Notice .= '<div class="noti-error flex flex-hozi-center"><span class="material-icons-round margin-0-5">error</span>Biệt Danh phải nhiều hơn 6 kí tự</div>';
+		}
+		if (strlen($quote) > 50) {
+			$Success++;
+			$Notice .= '<div class="noti-error flex flex-hozi-center"><span class="material-icons-round margin-0-5">error</span>Châm Ngôn Sống Không Được Quá 50 Ký Tự</div>';
+		}
+		if ($Success == 0) {
+			$mysql->update("user", "nickname = '$nickname',quote = '$quote'", "email = '$useremail'");
+			header("Refresh:0");
+			$Notice .= '<div class="noti-success flex flex-hozi-center"><span class="material-icons-round margin-0-5">success</span>Cập Nhật Hồ Sơ Thành Công</div>';
+		}
 	}
-	if (strlen($nickname) < 6) {
-		$Success++;
-		$Notice .= '<div class="noti-error flex flex-hozi-center"><span class="material-icons-round margin-0-5">error</span>Biệt Danh phải nhiều hơn 6 kí tự</div>';
-	}
-	if (strlen($quote) > 50) {
-		$Success++;
-		$Notice .= '<div class="noti-error flex flex-hozi-center"><span class="material-icons-round margin-0-5">error</span>Châm Ngôn Sống Không Được Quá 50 Ký Tự</div>';
-	}
-	if ($Success == 0) {
-		$mysql->update("user", "nickname = '$nickname',quote = '$quote'", "email = '$useremail'");
-		header("Refresh:0");
-		$Notice .= '<div class="noti-success flex flex-hozi-center"><span class="material-icons-round margin-0-5">success</span>Cập Nhật Hồ Sơ Thành Công</div>';
-	}
-}
-$configs = getConfigGeneralUserInfo([
-	'vip_package',
-	'join_telegram',
-	'first_login',
-	'online_reward',
-	'farm_tree',
-	'comment',
-	'first_upload_avatar',
-	'vip_icon',
-	'deposit_money',
-	'vip_fee',
-]);
+	$configs = getConfigGeneralUserInfo([
+		'vip_package',
+		'join_telegram',
+		'first_login',
+		'online_reward',
+		'farm_tree',
+		'comment',
+		'first_upload_avatar',
+		'vip_icon',
+		'deposit_min',
+		'deposit_rate',
+		'deposit_exp',
+		'vip_fee',
+	]);
+
+	$paypalConfig = [
+		'client_id'	=>	'AYldjoFRqHN-fq47TxTzcg9pQc6f-Z8jYqqbTaVniT4bCdoD4fZwp37Zjv--L2ffBnmkS7M99P8medCf',
+	];
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -49,6 +55,7 @@ $configs = getConfigGeneralUserInfo([
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
 	<script type="text/javascript" src="/themes/js_ob/croppie.js?v=1.7.4"></script>
 	<link href="/themes/styles/croppie.css?v=1.4.0" rel="stylesheet" />
+	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/autonumeric/4.10.0/autoNumeric.min.js"></script> -->
 	<style>
 		body {
 			color: #ccc;
@@ -363,6 +370,28 @@ $configs = getConfigGeneralUserInfo([
 			visibility: visible;
 		}
 
+		.profile .info .tab-content #tab-deposit .alert-deposit {
+			font-size: 14px;
+			padding: 10px;
+			background-color: #6d6d6d;
+			border-radius: 5px;
+			color: #fff;
+			box-shadow: 1px 1px 1px 1px #000;
+		}
+
+		.profile .info .tab-content #tab-deposit .deposit-method {
+			padding: 8px;
+			text-align: center;
+			background-color: #9c3737;
+			color: #fff;
+			margin-bottom: 16px;
+		}
+
+		.profile .info .tab-content #tab-deposit #form-deposit .form-group label {
+			font-weight: 500;
+			color: #ff9393;
+		}
+
 		@media (max-width: 991px) {
 			.profile {
 				flex-direction: column;
@@ -661,7 +690,7 @@ $configs = getConfigGeneralUserInfo([
 						</div>
 						<div class="progress">
 							<?php
-								$exp = number_format(($user['exp']*100)/(30*$user['level']), 0, ',', '.');
+								$exp = number_format(($user['exp']*100)/getExpLevel($user['level']), 0, ',', '.');
 							?>
 							<span class="progress-bar" style="width: <?=$exp?>%"><?= $exp.'%' ?></span>
 						</div>
@@ -675,13 +704,18 @@ $configs = getConfigGeneralUserInfo([
 								</a>
 							</li>
 							<li class="nav-item menu-item hvr-sweep-to-right">
+								<a class="nav-link" href="#tab-deposit" data-bs-toggle="tab">
+									<i class="fa-solid fa-cart-plus"></i> Nạp xu
+								</a>
+							</li>
+							<li class="nav-item menu-item hvr-sweep-to-right">
 								<a class="nav-link" href="#tab-update-profile" data-bs-toggle="tab">
 									<i class="fa-solid fa-pen-to-square"></i> Chỉnh sửa thông tin
 								</a>
 							</li>
 							<li class="nav-item menu-item hvr-sweep-to-right">
 								<a class="nav-link" href="#tab-movie-follow" data-bs-toggle="tab">
-									<i class="fa-solid fa-plus"></i> Phim theo dõi
+									<i class="fa-solid fa-heart"></i> Phim theo dõi
 								</a>
 							</li>
 							<li class="nav-item menu-item hvr-sweep-to-right">
@@ -725,11 +759,15 @@ $configs = getConfigGeneralUserInfo([
 										</div>
 										<div class="group">
 											<div class="label">Tham gia nhóm Telegram:</div>
-											<div class="detail"><?=$configs['join_telegram']?><br><i class="fa fa-long-arrow-right" aria-hidden="true"></i> <a href="/user_edit">Tham gia nhóm nhận thông báo quan trọng tại đây</a></div>
+											<div class="detail">
+												+<?=$configs['join_telegram']?> xu<br>
+												<i class="fa fa-long-arrow-right" aria-hidden="true"></i> 
+												<a href="/user_edit">Tham gia nhóm nhận thông báo quan trọng tại đây</a>
+											</div>
 										</div>
 										<div class="group">
 											<div class="label">Đăng nhập mỗi ngày:</div>
-											<div class="detail"><?=$configs['first_login']?></div>
+											<div class="detail">+<?=$configs['first_login']?> xu</div>
 										</div>
 										<div class="group">
 											<div class="label">OnLine:</div>
@@ -743,11 +781,15 @@ $configs = getConfigGeneralUserInfo([
 										</div>
 										<div class="group">
 											<div class="label">Bình luận:</div>
-											<div class="detail"><?=$configs['comment']?></div>
+											<div class="detail">
+												mỗi bình luận trong bộ phim trong 1 ngày + <?=$configs['comment']?> xu (chỉ tính bình luận đầu tiên trong ngày của bộ phim đó ).
+											</div>
 										</div>
 										<div class="group">
 											<div class="label">Up Avatar:</div>
-											<div class="detail"><?=$configs['first_upload_avatar']?></div>
+											<div class="detail">
+												+<?=$configs['first_upload_avatar']?> xu ( lần đầu )
+											</div>
 										</div>
 										<div class="group">
 											<div class="label">Vip Icon:</div>
@@ -760,18 +802,50 @@ $configs = getConfigGeneralUserInfo([
 										<div class="group">
 											<div class="label">Nạp Xu:</div>
 											<div class="detail">
-												<?=nl2br($configs['deposit_money'])?><br>
-												<i class="fa fa-long-arrow-right" aria-hidden="true"></i> <a href="#">Nạp Xu ở đây</a>
+												nạp ít nhất <?=$configs['deposit_min']?>$<br>
+												mỗi 1$=<?=$configs['deposit_rate']?> xu<br>
 											</div>
 										</div>
 										<div class="group">
 											<div class="label">Giá Vip / Tháng:</div>
 											<div class="detail">
-												<?=$configs['vip_fee']?>
+												<?=$configs['vip_fee']?> xu
 											</div>
 										</div>
 									</div>
 								</div>
+							</div>
+						</div>
+						<div class="tab-pane fade " id="tab-deposit">
+							<h4 class="tab-title">Nạp xu</h4>
+							<div class="tab-body">
+								<div class="deposit-method">
+									<i class="fa-brands fa-paypal"></i> Paypal/Visa
+								</div>
+								<div class="alert-deposit mb-3">
+									<i class="fa-solid fa-circle-info"></i> Nạp ít nhất là 10$, vì bên paypal thu phí cố định nên nạp 1 lúc càng nhiều sẽ càng đỡ phí so với nạp chia nhỏ
+								</div>
+								<form action="" method="POST" id="form-deposit">
+									<div class="alert alert-danger d-none"></div>
+									<div class="alert alert-success d-none"></div>
+									<div class="form-group mb-3">
+										<label for="deposit_money" class="mb-1">Số tiền muốn nạp</label>
+										<input type="text" value="10" min="10" name="deposit[money]" id="deposit_money" class="form-control">
+									</div>
+									<div class="form-group mb-3">
+										<label class="mb-1">Loại tiền</label>
+										<input type="text" value="USD" class="form-control" readonly>
+									</div>
+									<div class="form-group mb-3">
+										<label for="deposit_earn" class="mb-1">Số xu nhận được</label>
+										<input type="text" value="" id="deposit_earn" class="form-control" readonly>
+									</div>
+									<div class="form-group mb-3">
+										<label for="deposit_exp" class="mb-1">Số kinh nghiệm nhận được</label>
+										<input type="text" value="" id="deposit_exp" class="form-control" readonly>
+									</div>
+									<div id="deposit-checkout"></div>
+								</form>
 							</div>
 						</div>
 						<div class="tab-pane fade" id="tab-update-profile">
@@ -870,7 +944,10 @@ $configs = getConfigGeneralUserInfo([
 		</div>
 	</div>
 </body>
+
 <script type="text/javascript" src="/themes/js_ob/user.profile.js?v=1.7.4"></script>
+<script src="https://www.paypal.com/sdk/js?client-id=<?=$paypalConfig['client_id']?>&components=buttons&disable-funding=card"></script>
+
 <script>
 	// show Tab Notificaiton 
 	function showTab(tabId) {
@@ -1153,6 +1230,121 @@ $configs = getConfigGeneralUserInfo([
 		});
 	}
 	// End comment
+
+	//Deposit
+	let formDeposit = $('#form-deposit');
+	let depositMin = <?=!empty($configs['deposit_min']) ? $configs['deposit_min'] : 10?>;
+	let depositRate = <?=!empty($configs['deposit_rate']) ? $configs['deposit_rate'] : 10.000?>;
+	let depositExp = <?=!empty($configs['deposit_exp']) ? $configs['deposit_exp'] : 50?>;
+
+	$(document).ready(function() {
+		caculateDeposit();
+
+		formDeposit.on('input', '#deposit_money', function() {
+			caculateDeposit();
+		})
+
+		formDeposit.submit(function() {
+			validateFormDeposit();
+			return false;
+		});
+
+		paypal.Buttons({
+			onInit(data, actions)  {
+				// actions.disable();
+
+				// if (!validateFormDeposit()) {
+				// 	actions.enable();
+				// }
+			},
+			onClick() {
+				if (validateFormDeposit()) {
+					return false;
+				}
+			},
+			createOrder: function(data, actions) {
+				if (!validateFormDeposit()) {
+					return actions.order.create({
+						purchase_units: [
+							{
+								amount: {
+									currentcy: 'USD',
+									value: formDeposit.find('#deposit_money').val()
+								}
+							}
+						]
+					});
+				}
+				
+				return false;
+			},
+			onApprove: function(data, actions) {
+				return actions.order.capture().then(async function(details) {
+					await axios.post('/server/api', {
+						"action": 'add_deposit',
+						"token": $dt.token,
+						"data": details,
+					}).then(rs => {
+						if (rs.data.success) {
+							formDeposit.find('.alert-success').html(rs.data.message);
+							formDeposit.find('.alert-success').removeClass('d-none');
+							setTimeout(function() {
+								location.reload();
+							}, 2000);
+						} else {
+							formDeposit.find('.alert-danger').html(rs.data.message);
+							formDeposit.find('.alert-danger').removeClass('d-none');
+						}
+					});
+				});
+			}
+		}).render('#deposit-checkout');
+	});
+	
+	function caculateDeposit() {
+		let inputMoney = formDeposit.find('#deposit_money');
+		let inputEarn = formDeposit.find('#deposit_earn');
+		let inputExp = formDeposit.find('#deposit_exp');
+
+		inputEarn.val(new Intl.NumberFormat('vi-VN', { maximumSignificantDigits: 3 }).format(inputMoney.val() * depositRate));
+		inputExp.val(new Intl.NumberFormat('vi-VN', { maximumSignificantDigits: 3 }).format(inputMoney.val() * depositExp));
+	}
+
+	function validateFormDeposit() {
+		let inputMoney = formDeposit.find('#deposit_money');
+		let inputEarn = formDeposit.find('#deposit_earn');
+		let inputExp = formDeposit.find('#deposit_exp');
+		let error = 0;
+		let errorMsg = '';
+		formDeposit.find('.alert').addClass('d-none');
+
+		if (inputMoney.val() <= 0 || isNaN(inputMoney.val())) {
+			errorMsg = 'Chưa nhập số tiền muốn nạp';
+			error = 1;
+			inputMoney.addClass('is-invalid');
+		} else {
+			inputMoney.removeClass('is-invalid');
+		}
+
+		if (inputMoney.val() <= 9) {
+			errorMsg = 'Nạp ít nhất '+depositMin+'$';
+			inputMoney.addClass('is-invalid');
+			error = 1;
+		} else {
+			inputMoney.removeClass('is-invalid');
+		}
+
+		if (error == 1) {
+			formDeposit.find('.alert-danger').html(errorMsg);
+			formDeposit.find('.alert-danger').removeClass('d-none');
+		} else {
+			formDeposit.find('.alert-danger').html('');
+			formDeposit.find('.alert-danger').addClass('d-none');
+		}
+
+		return error;
+	}
+	//End deposit
 
 </script>
 

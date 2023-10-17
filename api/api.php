@@ -691,4 +691,81 @@ if ($Json['action'] == 'live_search') {
         $mysql->update("user", "password = '$new_password'", "email = '$useremail'");
         die(json_encode(["result" => "Thay Đổi Mật Khẩu Thành Công", "status" => "success"]));
     }
+} else if ($Json['action'] == 'add_deposit') {
+    if ($user['banned'] == 'true') {
+        die(json_encode(["result" => "Tài Khoản Bị Khóa", "status" => "failed"]));
+    }
+
+    $data = $Json['data'];
+    $configs = getConfigGeneralUserInfo([
+		'deposit_rate',
+		'deposit_exp',
+	]);
+
+    $rs = [
+        'success'   => false,
+        'message'   => ''
+    ];
+
+    // save log
+    if (!empty($data['id'])) {
+        $pathLog = 'storage\log\deposit.log';
+        $logDeposit = "\n".date('Y-m-d H:i:s') .' '. "Deposit ".$data['purchase_units'][0]['amount']['value']. ' '.$data['purchase_units'][0]['amount']['currency_code']. ' by user '.$user['id'].' with paypalID '.$data['id'];
+        error_log($logDeposit, 3, $pathLog);
+    }
+
+    if (empty($data['purchase_units'][0]['amount']['currency_code'])) {
+        $rs['message'] = 'Có lỗi. Vui lòng thử lại';
+        die(json_encode($rs));
+    }
+
+    $currency = $data['purchase_units'][0]['amount']['currency_code'];
+    $amount = $data['purchase_units'][0]['amount']['value'];
+    $coin = $amount * $configs['deposit_rate'];
+    $exp = $amount * $configs['deposit_exp'];
+
+    $insertHistory = [
+        'user'          =>  $user['id'],
+        'money'         =>  $amount,
+        'currency'      =>  $currency,
+        'coin'          =>  $coin,
+        'exp'           =>  $exp,
+        'id_paypal'     =>  $data['id'],
+        'status'        =>  1,
+        'created_at'    =>  date('Y-m-d H:i'),
+    ];
+
+    // insert deposit history
+    $insert = $mysql->insert('deposit_history', implode(',', array_keys($insertHistory)), '"'.implode('", "', $insertHistory).'"');
+    
+    // plus coin and exp for user
+    $userQuery = $mysql->query('SELECT `id`,`exp`,`level`,`coins` FROM `table_user` WHERE `id` = '.$user['id']);
+    $userData = $userQuery->fetch(PDO::FETCH_ASSOC);
+    
+    $level = $userData['level'];
+	$currentExp = $userData['exp'];
+
+	while($exp > 0) {
+		$expLevel = getExpLevel($level) - $currentExp;
+		$currentExp = 0;
+
+		if ($exp - $expLevel > 0) {
+			$level++;
+			$exp = $exp - $expLevel;
+		} else {
+			$currentExp = $exp;
+			$exp = 0;
+		}
+    }
+
+    $updateUser = "level = ". $level . ", exp = " . $currentExp . ", coins = coins +" . $coin;
+    $mysql->update("user", $updateUser, "id = ".$user['id']);
+
+    // insert notify
+    $mysql->insert('notice', 'user_id,content,timestap,time', "'{$user['id']}','Chúc Mừng Bạn Đã Thằng Cấp Từ Level " . number_format($user['level']) . " Lên Level " . number_format($level) . " Hãy Cố Gắng Để Đạt Được Những Cấp Cao Hơn Nhé','" . time() . "','" . DATE . "'");
+    
+
+    $rs['success'] = true;
+    $rs['message'] = 'Nạp xu thành công';
+    die(json_encode($rs));
 }

@@ -60,7 +60,7 @@ function UpdateLevel($user)
 {
     global $mysql;
     if (isset($user['id'])) {
-        $KinhNghiem = ($user['level'] * 30);
+        $KinhNghiem = getExpLevel($user['level']);
         if ($user['exp'] >= $KinhNghiem) {
             $LevelPlus = ($user['level'] + 1);
             $mysql->insert('notice', 'user_id,content,timestap,time', "'{$user['id']}','Chúc Mừng Bạn Đã Thằng Cấp Từ Level " . number_format($user['level']) . " Lên Level " . number_format($LevelPlus) . " Hãy Cố Gắng Để Đạt Được Những Cấp Cao Hơn Nhé','" . time() . "','" . DATE . "'");
@@ -935,4 +935,19 @@ function getConfigGeneralUserInfo($keys)
     }
     
     return $data;
+}
+
+function getExpLevel($level) {
+    $exp = 0;
+
+    if ($level == 0) {
+        return 0;
+    }
+
+    for ($i = 0; $i <= $level; $i++) {
+        $e = ($i * 30);
+        $exp += $e;
+    }
+    
+    return $exp;
 }
