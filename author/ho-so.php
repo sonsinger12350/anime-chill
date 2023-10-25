@@ -1,40 +1,46 @@
 <?php
-if (!defined('MovieAnime')) die("You are illegally infiltrating our website");
-if (!$_author_cookie) die(header("location:/login"));
-if (isset($_POST['change_profile'])) {
-	$nickname = sql_escape($_POST['nickname']);
-	$quote = sql_escape($_POST['quote']);
-	$Success = 0;
-	if (!$nickname) {
-		$Success++;
-		$Notice .= '<div class="noti-error flex flex-hozi-center"><span class="material-icons-round margin-0-5">error</span>Vui Lòng Nhập Biệt Danh Của Bạn</div>';
+	if (!defined('MovieAnime')) die("You are illegally infiltrating our website");
+	if (!$_author_cookie) die(header("location:/login"));
+	if (isset($_POST['change_profile'])) {
+		$nickname = sql_escape($_POST['nickname']);
+		$quote = sql_escape($_POST['quote']);
+		$Success = 0;
+		if (!$nickname) {
+			$Success++;
+			$Notice .= '<div class="noti-error flex flex-hozi-center"><span class="material-icons-round margin-0-5">error</span>Vui Lòng Nhập Biệt Danh Của Bạn</div>';
+		}
+		if (strlen($nickname) < 6) {
+			$Success++;
+			$Notice .= '<div class="noti-error flex flex-hozi-center"><span class="material-icons-round margin-0-5">error</span>Biệt Danh phải nhiều hơn 6 kí tự</div>';
+		}
+		if (strlen($quote) > 50) {
+			$Success++;
+			$Notice .= '<div class="noti-error flex flex-hozi-center"><span class="material-icons-round margin-0-5">error</span>Châm Ngôn Sống Không Được Quá 50 Ký Tự</div>';
+		}
+		if ($Success == 0) {
+			$mysql->update("user", "nickname = '$nickname',quote = '$quote'", "email = '$useremail'");
+			header("Refresh:0");
+			$Notice .= '<div class="noti-success flex flex-hozi-center"><span class="material-icons-round margin-0-5">success</span>Cập Nhật Hồ Sơ Thành Công</div>';
+		}
 	}
-	if (strlen($nickname) < 6) {
-		$Success++;
-		$Notice .= '<div class="noti-error flex flex-hozi-center"><span class="material-icons-round margin-0-5">error</span>Biệt Danh phải nhiều hơn 6 kí tự</div>';
-	}
-	if (strlen($quote) > 50) {
-		$Success++;
-		$Notice .= '<div class="noti-error flex flex-hozi-center"><span class="material-icons-round margin-0-5">error</span>Châm Ngôn Sống Không Được Quá 50 Ký Tự</div>';
-	}
-	if ($Success == 0) {
-		$mysql->update("user", "nickname = '$nickname',quote = '$quote'", "email = '$useremail'");
-		header("Refresh:0");
-		$Notice .= '<div class="noti-success flex flex-hozi-center"><span class="material-icons-round margin-0-5">success</span>Cập Nhật Hồ Sơ Thành Công</div>';
-	}
-}
-$configs = getConfigGeneralUserInfo([
-	'vip_package',
-	'join_telegram',
-	'first_login',
-	'online_reward',
-	'farm_tree',
-	'comment',
-	'first_upload_avatar',
-	'vip_icon',
-	'deposit_money',
-	'vip_fee',
-]);
+	$configs = getConfigGeneralUserInfo([
+		'vip_package',
+		'join_telegram',
+		'first_login',
+		'online_reward',
+		'farm_tree',
+		'comment',
+		'first_upload_avatar',
+		'vip_icon',
+		'deposit_min',
+		'deposit_rate',
+		'deposit_exp',
+		'vip_fee',
+	]);
+
+	$paypalConfig = [
+		'client_id'	=>	'AYldjoFRqHN-fq47TxTzcg9pQc6f-Z8jYqqbTaVniT4bCdoD4fZwp37Zjv--L2ffBnmkS7M99P8medCf',
+	];
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -47,6 +53,9 @@ $configs = getConfigGeneralUserInfo([
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" />
 	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.min.js"></script> -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+	<script type="text/javascript" src="/themes/js_ob/croppie.js?v=1.7.4"></script>
+	<link href="/themes/styles/croppie.css?v=1.4.0" rel="stylesheet" />
+	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/autonumeric/4.10.0/autoNumeric.min.js"></script> -->
 	<style>
 		body {
 			color: #ccc;
@@ -300,6 +309,10 @@ $configs = getConfigGeneralUserInfo([
 			color: #ffffff;
 		}
 
+		.profile .info .tab-content #tab-movie-history .watch-history {
+			width: 100%;
+		}
+
 		.profile .info .tab-content #tab-movie-history .watch-history .item a>div:first-child {
 			width: 75px;
 			height: 75px;
@@ -315,6 +328,139 @@ $configs = getConfigGeneralUserInfo([
 
 		.profile .info .tab-content #tab-movie-history .watch-history .item a img {
 			width: 100%;
+		}
+
+		.profile .info .tab-content #tab-movie-follow .movie-follow .delete  {
+			position: absolute;
+			z-index: 3;
+			right: 0;
+			background: #000;
+			padding: 5px 10px;
+			top: 0;
+			color: #fff;
+		}
+
+		.profile .info .tab-content #tab-movie-follow .movie-follow .movies-list {
+			align-items: stretch;
+			justify-content: stretch;
+		}
+
+		.profile .info .tab-content #tab-movie-follow .movie-follow .movies-list .movie-item a:not(.delete) {
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			height: 100%;
+		}
+
+		.profile .info .tab-content #tab-movie-follow .movie-follow .pagination {
+			list-style: none;
+		}
+		
+		.profile .info .tab-content #tab-movie-follow .movie-follow .pagination .pagination-item.active a {
+			background-color: #4caf50;
+		}
+
+		.profile .info .tab-content #tab-update-profile #form-change-password .invalid-feedback {
+			min-height: 20px;
+			display: block;
+			visibility: hidden;
+		}
+
+		.profile .info .tab-content #tab-update-profile #form-change-password .is-invalid~.invalid-feedback {
+			visibility: visible;
+		}
+
+		.profile .info .tab-content #tab-deposit .alert-deposit {
+			font-size: 14px;
+			padding: 10px;
+			background-color: #6d6d6d;
+			border-radius: 5px;
+			color: #fff;
+			box-shadow: 1px 1px 1px 1px #000;
+		}
+
+		.profile .info .tab-content #tab-deposit .deposit-method {
+			padding: 8px;
+			text-align: center;
+			background-color: #9c3737;
+			color: #fff;
+			margin-bottom: 16px;
+		}
+
+		.profile .info .tab-content #tab-deposit #form-deposit .form-group label {
+			font-weight: 500;
+			color: #ff9393;
+		}
+
+		@media (max-width: 991px) {
+			.profile {
+				flex-direction: column;
+			}
+
+			.profile .navigation {
+				width: 100%;
+				margin-bottom: 16px;
+			}
+		}
+
+		@media (max-width: 767px) {
+			.profile .info .tab-content #tab-movie-follow .movie-follow .movies-list .movie-item {
+				width: 33.33%;
+			}
+
+			.profile .info .tab-content #tab-movie-follow .movie-follow .movies-list .movie-item img {
+				height: 100%;
+				width: 100%;
+			}
+
+			.profile .info .tab-content #tab-movie-follow .movie-follow .movies-list .movie-item a:not(.delete) div:has(img) {
+				flex: 1;
+			}
+		}
+
+		@media (max-width: 591px) {
+			.profile .info .tab-content #tab-movie-follow .movie-follow .movies-list .movie-item .episode-latest {
+				font-size: 12px;
+			}
+
+			.profile .info .tab-content #tab-movie-follow .movie-follow .movies-list .movie-item .name-movie {
+				font-size: 13px;
+			}
+		}
+
+		@media (max-width: 480px) {
+			.profile .info .tab-content #tab-movie-follow .movie-follow .movies-list .movie-item .episode-latest {
+				left: 10px;
+				font-size: 10px;
+			}
+
+			.profile .info .tab-content #tab-movie-follow .movie-follow .movies-list .movie-item img {
+				height: 100% !important;
+				width: 100%;
+			}
+
+			.profile .info .tab-content #tab-movie-follow .movie-follow .delete {
+				padding: 1px 5px;
+			}
+
+			.profile .info .tab-content #tab-movie-follow .movie-follow .movies-list .movie-item .name-movie {
+				font-size: 12px;
+			}
+		}
+
+		@media (max-width: 400px) {
+			.profile .info .tab-content #tab-movie-follow .movie-follow .movies-list .movie-item .episode-latest {
+				font-size: 8px;
+			}
+
+			.profile .info {
+				padding-left: unset;
+				padding: 10px 0px;
+			}
+
+			.profile .info .tab-content #tab-movie-follow .movie-follow .movies-list .movie-item .name-movie {
+				font-size: 10px;
+			}
 		}
 	</style>
 </head>
@@ -543,7 +689,10 @@ $configs = getConfigGeneralUserInfo([
 							<p style="color: <?= LevelColor($user['level'] + 1) ?>">Cấp <?= $user['level'] + 1 ?></p>
 						</div>
 						<div class="progress">
-							<span class="progress-bar" style="width: 50%">50%</span>
+							<?php
+								$exp = number_format(($user['exp']*100)/getExpLevel($user['level']), 0, ',', '.');
+							?>
+							<span class="progress-bar" style="width: <?=$exp?>%"><?= $exp.'%' ?></span>
 						</div>
 					</div>
 					<!-- Menu -->
@@ -555,13 +704,18 @@ $configs = getConfigGeneralUserInfo([
 								</a>
 							</li>
 							<li class="nav-item menu-item hvr-sweep-to-right">
+								<a class="nav-link" href="#tab-deposit" data-bs-toggle="tab">
+									<i class="fa-solid fa-cart-plus"></i> Nạp xu
+								</a>
+							</li>
+							<li class="nav-item menu-item hvr-sweep-to-right">
 								<a class="nav-link" href="#tab-update-profile" data-bs-toggle="tab">
 									<i class="fa-solid fa-pen-to-square"></i> Chỉnh sửa thông tin
 								</a>
 							</li>
 							<li class="nav-item menu-item hvr-sweep-to-right">
 								<a class="nav-link" href="#tab-movie-follow" data-bs-toggle="tab">
-									<i class="fa-solid fa-plus"></i> Phim theo dõi
+									<i class="fa-solid fa-heart"></i> Phim theo dõi
 								</a>
 							</li>
 							<li class="nav-item menu-item hvr-sweep-to-right">
@@ -580,8 +734,8 @@ $configs = getConfigGeneralUserInfo([
 								</a>
 							</li>
 							<li class="nav-item menu-item hvr-sweep-to-right">
-								<a class="nav-link" href="/">
-									<i class="fa-solid fa-sign-out"></i> Thoát
+								<a class="nav-link" href="/dang-xuat">
+									<i class="fa-solid fa-sign-out"></i> Đăng xuất
 								</a>
 							</li>
 						</ul>
@@ -605,11 +759,15 @@ $configs = getConfigGeneralUserInfo([
 										</div>
 										<div class="group">
 											<div class="label">Tham gia nhóm Telegram:</div>
-											<div class="detail"><?=$configs['join_telegram']?><br><i class="fa fa-long-arrow-right" aria-hidden="true"></i> <a href="/user_edit">Tham gia nhóm nhận thông báo quan trọng tại đây</a></div>
+											<div class="detail">
+												+<?=$configs['join_telegram']?> xu<br>
+												<i class="fa fa-long-arrow-right" aria-hidden="true"></i> 
+												<a href="/user_edit">Tham gia nhóm nhận thông báo quan trọng tại đây</a>
+											</div>
 										</div>
 										<div class="group">
 											<div class="label">Đăng nhập mỗi ngày:</div>
-											<div class="detail"><?=$configs['first_login']?></div>
+											<div class="detail">+<?=$configs['first_login']?> xu</div>
 										</div>
 										<div class="group">
 											<div class="label">OnLine:</div>
@@ -623,11 +781,15 @@ $configs = getConfigGeneralUserInfo([
 										</div>
 										<div class="group">
 											<div class="label">Bình luận:</div>
-											<div class="detail"><?=$configs['comment']?></div>
+											<div class="detail">
+												mỗi bình luận trong bộ phim trong 1 ngày + <?=$configs['comment']?> xu (chỉ tính bình luận đầu tiên trong ngày của bộ phim đó ).
+											</div>
 										</div>
 										<div class="group">
 											<div class="label">Up Avatar:</div>
-											<div class="detail"><?=$configs['first_upload_avatar']?></div>
+											<div class="detail">
+												+<?=$configs['first_upload_avatar']?> xu ( lần đầu )
+											</div>
 										</div>
 										<div class="group">
 											<div class="label">Vip Icon:</div>
@@ -640,18 +802,50 @@ $configs = getConfigGeneralUserInfo([
 										<div class="group">
 											<div class="label">Nạp Xu:</div>
 											<div class="detail">
-												<?=nl2br($configs['deposit_money'])?><br>
-												<i class="fa fa-long-arrow-right" aria-hidden="true"></i> <a href="#">Nạp Xu ở đây</a>
+												nạp ít nhất <?=$configs['deposit_min']?>$<br>
+												mỗi 1$=<?=$configs['deposit_rate']?> xu<br>
 											</div>
 										</div>
 										<div class="group">
 											<div class="label">Giá Vip / Tháng:</div>
 											<div class="detail">
-												<?=$configs['vip_fee']?>
+												<?=$configs['vip_fee']?> xu
 											</div>
 										</div>
 									</div>
 								</div>
+							</div>
+						</div>
+						<div class="tab-pane fade " id="tab-deposit">
+							<h4 class="tab-title">Nạp xu</h4>
+							<div class="tab-body">
+								<div class="deposit-method">
+									<i class="fa-brands fa-paypal"></i> Paypal/Visa
+								</div>
+								<div class="alert-deposit mb-3">
+									<i class="fa-solid fa-circle-info"></i> Nạp ít nhất là 10$, vì bên paypal thu phí cố định nên nạp 1 lúc càng nhiều sẽ càng đỡ phí so với nạp chia nhỏ
+								</div>
+								<form action="" method="POST" id="form-deposit">
+									<div class="alert alert-danger d-none"></div>
+									<div class="alert alert-success d-none"></div>
+									<div class="form-group mb-3">
+										<label for="deposit_money" class="mb-1">Số tiền muốn nạp</label>
+										<input type="text" value="10" min="10" name="deposit[money]" id="deposit_money" class="form-control">
+									</div>
+									<div class="form-group mb-3">
+										<label class="mb-1">Loại tiền</label>
+										<input type="text" value="USD" class="form-control" readonly>
+									</div>
+									<div class="form-group mb-3">
+										<label for="deposit_earn" class="mb-1">Số xu nhận được</label>
+										<input type="text" value="" id="deposit_earn" class="form-control" readonly>
+									</div>
+									<div class="form-group mb-3">
+										<label for="deposit_exp" class="mb-1">Số kinh nghiệm nhận được</label>
+										<input type="text" value="" id="deposit_exp" class="form-control" readonly>
+									</div>
+									<div id="deposit-checkout"></div>
+								</form>
 							</div>
 						</div>
 						<div class="tab-pane fade" id="tab-update-profile">
@@ -668,7 +862,7 @@ $configs = getConfigGeneralUserInfo([
 														Cách 1: Click vào đường <a style="color: #009dff;" href="https://t.me/+P91IG7VRyvc1NGY9">link</a> này: <span style="color: #009dff;"> https://t.me/+P91IG7VRyvc1NGY9</span> <br><br>
 														Cách 2: Truy cập telegram trên điện thoại hoặc máy tính </br>
 														Tìm kiếm người dùng với từ khóa: <span style="color: #00FF00;"> My-anime </span>
-														<br><br><img src="http://localhost/assets/upload/1-img-anime.png" style="max-width:500px"><br><br>
+														<br><br><img src="/assets/upload/1-img-anime.png" style="max-width:500px"><br><br>
 														<p></p>
 														<br><br>
 													</div>
@@ -676,291 +870,49 @@ $configs = getConfigGeneralUserInfo([
 											</div>
 										</div>
 										<br><br><br>
+										<div class="change-password-content">
+											<form method="POST" id="form-change-password">
+												<div class="mb-3">
+													<label for="new_password" class="mb-1">Mật khẩu mới</label>
+													<input id="new_password" name="new_password" type="password" class="form-control" placeholder="Nhập nếu muốn đổi" autocomplete="false">
+													<p class="invalid-feedback mb-0"></p>
+												</div>
+												<div class="text-end">
+													<button type="submit" class="btn btn-primary">Đổi mật khẩu</button>
+												</div>
+											</form>
+										</div>
 									</div>
 								</div>
 							</div>
 						</div>
 						<div class="tab-pane fade" id="tab-movie-follow">
 							<h4 class="tab-title">Phim theo dõi</h4>
-							<div class="movies-list ah-frame-bg">
-								<div class="movie-item" id="movie-id-3300">
-									<a href="http://localhost/thong-tin-phim/hong-hoang-linh-ton.html" title="Hồng Hoang Linh Tôn">
-										<div class="episode-latest">
-											<span>
-												6/?? </span>
-										</div>
-										<div>
-											<img src="https://hhtqtv.vip/assets/upload/1682093545_250x350.jpg" alt="Phim Hồng Hoang Linh Tôn">
-										</div>
-										<div class="score">
-											<span style="display: flex;">
-												<i class="material-icons-round" style="padding: 0px 2px; font-size: 13px;">star</i>
-												9.5 </span>
-										</div>
-										<div class="name-movie">
-											Hồng Hoang Linh Tôn
-										</div>
-									</a>
-								</div>
-								<div class="movie-item" id="movie-id-3300">
-									<a href="http://localhost/thong-tin-phim/gamera--tai-sinh.html" title="GAMERA -TÁI SINH">
-										<div class="episode-latest">
-											<span>
-												6/6 </span>
-										</div>
-										<div>
-											<img src="https://hhtqtv.vip/assets/upload/gamera-rebirth_250x350.jpg" alt="Phim GAMERA -TÁI SINH">
-										</div>
-										<div class="score">
-											<span style="display: flex;">
-												<i class="material-icons-round" style="padding: 0px 2px; font-size: 13px;">star</i>
-												10 </span>
-										</div>
-										<div class="name-movie">
-											GAMERA -TÁI SINH
-										</div>
-									</a>
-								</div>
-								<div class="movie-item" id="movie-id-3300">
-									<a href="http://localhost/thong-tin-phim/goblin-slayer-2nd-season.html" title="Goblin Slayer 2nd Season">
-										<div class="episode-latest">
-											<span>
-												7/10/2023/ </span>
-										</div>
-										<div>
-											<img src="https://hhtqtv.vip/assets/upload/134760_250x350.jpg" alt="Phim Goblin Slayer 2nd Season">
-										</div>
-										<div class="score">
-											<span style="display: flex;">
-												<i class="material-icons-round" style="padding: 0px 2px; font-size: 13px;">star</i>
-												0 </span>
-										</div>
-										<div class="name-movie">
-											Goblin Slayer 2nd Season
-										</div>
-									</a>
-								</div>
-								<div class="movie-item" id="movie-id-3300">
-									<a href="http://localhost/thong-tin-phim/kimetsu-no-yaiba-season-4---thanh-guom-diet-quy-phao-dai-vo-cuc.html" title="Thanh Gươm Diệt Quỷ Phần 4: Pháo Đài Vô Cực - Kimetsu no Yaiba Season 4">
-										<div class="episode-latest">
-											<span>
-												??/??/2024/ </span>
-										</div>
-										<div>
-											<img src="https://hhtqtv.vip/assets/upload/demon-slayer-season-4_250x350.png" alt="Phim Thanh Gươm Diệt Quỷ Phần 4: Pháo Đài Vô Cực - Kimetsu no Yaiba Season 4">
-										</div>
-										<div class="score">
-											<span style="display: flex;">
-												<i class="material-icons-round" style="padding: 0px 2px; font-size: 13px;">star</i>
-												0 </span>
-										</div>
-										<div class="name-movie">
-											Thanh Gươm Diệt Quỷ Phần 4: Pháo Đài Vô Cực - Kimetsu no Yaiba Season 4
-										</div>
-									</a>
-								</div>
-								<div class="movie-item" id="movie-id-3300">
-									<a href="http://localhost/thong-tin-phim/kimetsu-no-yaiba-season-4---thanh-guom-diet-quy-phao-dai-vo-cuc.html" title="Thanh Gươm Diệt Quỷ Phần 4: Pháo Đài Vô Cực - Kimetsu no Yaiba Season 4">
-										<div class="episode-latest">
-											<span>
-												??/??/2024/ </span>
-										</div>
-										<div>
-											<img src="https://hhtqtv.vip/assets/upload/demon-slayer-season-4_250x350.png" alt="Phim Thanh Gươm Diệt Quỷ Phần 4: Pháo Đài Vô Cực - Kimetsu no Yaiba Season 4">
-										</div>
-										<div class="score">
-											<span style="display: flex;">
-												<i class="material-icons-round" style="padding: 0px 2px; font-size: 13px;">star</i>
-												0 </span>
-										</div>
-										<div class="name-movie">
-											Thanh Gươm Diệt Quỷ Phần 4: Pháo Đài Vô Cực - Kimetsu no Yaiba Season 4
-										</div>
-									</a>
-								</div>
-								<div class="movie-item" id="movie-id-3300">
-									<a href="http://localhost/thong-tin-phim/kimetsu-no-yaiba-season-4---thanh-guom-diet-quy-phao-dai-vo-cuc.html" title="Thanh Gươm Diệt Quỷ Phần 4: Pháo Đài Vô Cực - Kimetsu no Yaiba Season 4">
-										<div class="episode-latest">
-											<span>
-												??/??/2024/ </span>
-										</div>
-										<div>
-											<img src="https://hhtqtv.vip/assets/upload/demon-slayer-season-4_250x350.png" alt="Phim Thanh Gươm Diệt Quỷ Phần 4: Pháo Đài Vô Cực - Kimetsu no Yaiba Season 4">
-										</div>
-										<div class="score">
-											<span style="display: flex;">
-												<i class="material-icons-round" style="padding: 0px 2px; font-size: 13px;">star</i>
-												0 </span>
-										</div>
-										<div class="name-movie">
-											Thanh Gươm Diệt Quỷ Phần 4: Pháo Đài Vô Cực - Kimetsu no Yaiba Season 4
-										</div>
-									</a>
-								</div>
-								<div class="movie-item" id="movie-id-3300">
-									<a href="http://localhost/thong-tin-phim/kimetsu-no-yaiba-season-4---thanh-guom-diet-quy-phao-dai-vo-cuc.html" title="Thanh Gươm Diệt Quỷ Phần 4: Pháo Đài Vô Cực - Kimetsu no Yaiba Season 4">
-										<div class="episode-latest">
-											<span>
-												??/??/2024/ </span>
-										</div>
-										<div>
-											<img src="https://hhtqtv.vip/assets/upload/demon-slayer-season-4_250x350.png" alt="Phim Thanh Gươm Diệt Quỷ Phần 4: Pháo Đài Vô Cực - Kimetsu no Yaiba Season 4">
-										</div>
-										<div class="score">
-											<span style="display: flex;">
-												<i class="material-icons-round" style="padding: 0px 2px; font-size: 13px;">star</i>
-												0 </span>
-										</div>
-										<div class="name-movie">
-											Thanh Gươm Diệt Quỷ Phần 4: Pháo Đài Vô Cực - Kimetsu no Yaiba Season 4
-										</div>
-									</a>
-								</div>
-							</div>
+							<div class="movie-follow"></div>
 						</div>
 						<div class="tab-pane fade" id="tab-movie-history">
 							<h4 class="tab-title">Lịch sử xem phim</h4>
 							<div class="tab-body">
-								<section class="comics-followed comics-followed-nopaging user-table clearfix">
-									<div class="alert alert-success d-none">Bạn có thể xem lại hoặc xem tiếp các phim mà bạn đã xem</div>
-									<div class="blockbody list">
-										<ul class="list-film">
-											<div class="dinfo fr">
-												<a href="https://tvhayb.org/xem/hirogaru-sky-precure-tap-1-69450.742905">
-													<div class="film_lastwatch_grid">
-														<div class="film_lastwatch_round"><img class=" lazyloaded" data-src="https://sss11.hlss1.net/cdn/down/2292a3edc169a07afe647c0aa8d91a89/thumb.jpg" width="100%" height="100%" src="https://sss11.hlss1.net/cdn/down/2292a3edc169a07afe647c0aa8d91a89/thumb.jpg"><img src="https://dataqq.net/theme/play_red.png" class="film_lastwatch_iconplay"><span class="film_lastwatch_duration">24:02</span><span class="film_lastwatch_timeline" style="width: 37.031900138696%;"></span></div>
-														<div>
-															<div class="film_lastwatch_title_deswap"><b>Hirogaru Sky! Precure Tập 1 VIETSUB</b></div>
-															<div class="film_lastwatch_title_desweb"><b>[Tập 1 VIETSUB] Hirogaru Sky! Precure</b><br>xem tiếp <i class="fa fa-angle-double-right" aria-hidden="true"></i></div>
-														</div>
-													</div>
-												</a>
-											</div>
-											<div class="dinfo fr">
-												<a href="https://tvhayb.org/xem/giao-duc-gioi-tinh-4-tap-1-80835.833867">
-													<div class="film_lastwatch_grid">
-														<div class="film_lastwatch_round"><img class=" lazyloaded" data-src="https://sss18.hlss1.net/cdn/down/558ee58dee53da31a0e0b2c3d322450f/thumb.jpg" width="100%" height="100%" src="https://sss18.hlss1.net/cdn/down/558ee58dee53da31a0e0b2c3d322450f/thumb.jpg"><img src="https://dataqq.net/theme/play_red.png" class="film_lastwatch_iconplay"><span class="film_lastwatch_duration">52:02</span><span class="film_lastwatch_timeline" style="width: 38.052530429212%;"></span></div>
-														<div>
-															<div class="film_lastwatch_title_deswap"><b>Giáo Dục Giới Tính 4 Tập 1 Lồng Tiếng</b></div>
-															<div class="film_lastwatch_title_desweb"><b>[Tập 1 Lồng Tiếng] Giáo Dục Giới Tính 4</b><br>xem tiếp <i class="fa fa-angle-double-right" aria-hidden="true"></i></div>
-														</div>
-													</div>
-												</a>
-											</div>
-										</ul>
+								<div class="display_axios watch-history">
+									<div class="ah_loading">
+										<div class="lds-ellipsis">
+											<div></div>
+											<div></div>
+											<div></div>
+											<div></div>
+										</div>
 									</div>
-								</section>
+								</div>
 							</div>
 						</div>
 						<div class="tab-pane fade" id="tab-notification">
 							<h4 class="tab-title">Thông báo</h4>
-							<div class="col-md-12 col-sm-8">
-								<div class="user-page clearfix">
-									<div class="row">
-										<div class="col-xs-12">
-											<div class="relative">
-												<h2 class="posttitle">Thông báo mới</h2>
-											</div>
-											<section class="user-table clearfix">
-												<div id="notify-load-content">
-													<div class="wrappertab_notification">
-														<div class="tab_notification active"><a href="#notification_main" onclick="showTab('notification_main')">THÔNG BÁO CHÍNH</a></div>
-														<div class="tab_notification"><a href="#notification_like" onclick="showTab('notification_like')">THÔNG BÁO LIKE</a></div>
-													</div>
-													<div id="notification_main" class="tab_content_notification" style="display: block;">
-														<div class="noti noti_4976758">
-															<div class="noti-one">
-																<div class="noti-content"><b>NHIỆM VỤ ĐIỂM DANH MỖI NGÀY</b><br><br>Bạn nhận được phần thưởng:<br>+5 TRỨNG<br>+100 XU<br>+100 EXP<br><br>Cập nhật ID Telegram để nhận X2 Trứng và XU mỗi ngày<br><br><a href="/user_edit">CẬP NHẬT ID TELEGRAM TẠI ĐÂY</a><br><br></div>
-															</div>
-															<div class="noti-two"><span><i class="fa fa-clock-o" aria-hidden="true"></i> 56 phút trước</span><span class="notidel_4976758" onclick="delnoti(this)" data-id="4976758"><i class="fa fa-trash" aria-hidden="true"></i> XÓA</span></div>
-														</div>
-														<br>
-														<div class="center">
-															<div class="flex-ver-center fw-700 load-more button-cmt-loadmores bg-blue" onclick="delnoti(this)" data-id="outlike">Xoá tất cả thông báo hệ thống</div>
-														</div>
-													</div>
-													<div id="notification_like" class="tab_content_notification" style="display:none">
-														<div style="padding:20px">Chưa có thông báo</div>
-														<br>
-														<div class="center" style="color: #ffffff;">
-															<div class="flex-ver-center fw-700 load-more button-cmt-loadmores bg-blue" onclick="delnoti(this)" data-id="like">Xoá tất cả thông báo like</div>
-														</div>
-													</div>
-												</div>
-											</section>
-										</div>
-									</div>
-								</div>
-							</div>
+							<div class="col-md-12 col-sm-8" id="list-item"></div>
+							<div id="active_show"></div>
 						</div>
 						<div class="tab-pane fade" id="tab-comment">
 							<h4 class="tab-title">Bình Luận</h4>
-							<!-- doing  -->
-							<div class="col-md-9 col-sm-8">
-								<div class="user-page clearfix">
-									<div class="row">
-										<div class="col-xs-12">
-											<div class="relative">
-												<h2 class="posttitle">Bình luận mới</h2>
-											</div>
-											<section class="user-table clearfix">
-												<div class="comment-main user-comment cmt-438631">
-													<div class="flex bg-comment">
-														<div class="left">
-															<div class="avatar"><img src="https://dataqq.net/tvhay/user/thumb-df-user.png"></div>
-														</div>
-														<div class="right">
-															<div class="flex flex-column">
-																<div class="content">phim này hay quá, khi nào ra phần 3 nhỉ</div>
-																<div class="flex fs-12 toolbarr"><label><a href="/v/74010"><i class="fa fa-film"></i> Giáo Dục Giới Tính (Phần 1)</a></label><span class="cmt-time color-gray">8 giây</span><br></div>
-															</div>
-														</div>
-													</div>
-												</div>
-												<div class="comment-main user-comment cmt-438630">
-													<div class="flex bg-comment">
-														<div class="left">
-															<div class="avatar"><img src="https://dataqq.net/tvhay/user/thumb-df-user.png"></div>
-														</div>
-														<div class="right">
-															<div class="flex flex-column">
-																<div class="content">phim hay quá</div>
-																<div class="flex fs-12 toolbarr"><label><a href="/v/80824"><i class="fa fa-film"></i> Đỉnh Núi Quỷ</a></label><span class="cmt-time color-gray">1 phút</span><br></div>
-															</div>
-														</div>
-													</div>
-												</div>
-												<div class="comment-main user-comment cmt-438630">
-													<div class="flex bg-comment">
-														<div class="left">
-															<div class="avatar"><img src="https://dataqq.net/tvhay/user/thumb-df-user.png"></div>
-														</div>
-														<div class="right">
-															<div class="flex flex-column">
-																<div class="content">phim hay quá</div>
-																<div class="flex fs-12 toolbarr"><label><a href="/v/80824"><i class="fa fa-film"></i> Đỉnh Núi Quỷ</a></label><span class="cmt-time color-gray">1 phút</span><br></div>
-															</div>
-														</div>
-													</div>
-												</div>
-												<div class="comment-main user-comment cmt-438630">
-													<div class="flex bg-comment">
-														<div class="left">
-															<div class="avatar"><img src="https://dataqq.net/tvhay/user/thumb-df-user.png"></div>
-														</div>
-														<div class="right">
-															<div class="flex flex-column">
-																<div class="content">phim hay quá</div>
-																<div class="flex fs-12 toolbarr"><label><a href="/v/80824"><i class="fa fa-film"></i> Đỉnh Núi Quỷ</a></label><span class="cmt-time color-gray">1 phút</span><br></div>
-															</div>
-														</div>
-													</div>
-												</div>
-											</section>
-										</div>
-									</div>
-								</div>
-							</div>
+							<section class="list-comment clearfix"></section>
 						</div>
 					</div>
 				</div>
@@ -968,7 +920,34 @@ $configs = getConfigGeneralUserInfo([
 		</div>
 		<?php require_once(ROOT_DIR . '/view/footer.php'); ?>
 	</div>
+	<div id="modal" class="modal">
+		<div>
+			<div>Tải lên ảnh đại diện</div>
+			<a href="javascript:$modal.toggleModal()"><span class="material-icons-round margin-0-5">
+					close
+				</span></a>
+		</div>
+		<div class="upload-area">
+			<form action="/file-upload">
+				<div class="fallback">
+					<div id="show-image-upload">
+					</div>
+					<input name="file" type="file" id="upload-avatar" class="display-none" accept="image/*" />
+					<div class="option-avatar">
+					</div>
+					<div class="button-default padding-10-20 bg-red color-white" id="select-avatar" onclick="showSelectAvatar()"><span class="material-icons-round margin-0-5">
+							cloud_upload
+						</span> Tải ảnh lên</div>
+					<div class="fw-500 margin-t-10">Upload ảnh 18+ sẽ bị khoá nick ngay lập tức</div>
+				</div>
+			</form>
+		</div>
+	</div>
 </body>
+
+<script type="text/javascript" src="/themes/js_ob/user.profile.js?v=1.7.4"></script>
+<script src="https://www.paypal.com/sdk/js?client-id=<?=$paypalConfig['client_id']?>&components=buttons&disable-funding=card"></script>
+
 <script>
 	// show Tab Notificaiton 
 	function showTab(tabId) {
@@ -988,6 +967,72 @@ $configs = getConfigGeneralUserInfo([
 </script>
 
 <script type="text/javascript">
+	// Change password
+		$(document).ready(function() {
+			let form = $('#form-change-password');
+			let new_password = form.find('[name="new_password"]');
+			let btn = form.find('.btn[type="submit"]');
+			let form_error = form.find('.form-error');
+			
+			form.submit(function() {
+				let error = 0;
+				
+				if (!new_password.val()) {
+					new_password.focus();
+					new_password.addClass('is-invalid');
+					new_password.next().html('Nhập mật khẩu mới');
+					error = 1;
+				} else {
+					new_password.removeClass('is-invalid');
+				}
+
+				if (new_password.val().length < 6) {
+					new_password.focus();
+					new_password.addClass('is-invalid');
+					new_password.next().html('Mật khẩu đặt phải nhiều hơn 6 kí tự');
+					error = 1;
+				} else {
+					new_password.removeClass('is-invalid');
+				}
+
+				if (error == 0) {
+					Promise.all([changePassword(new_password.val())])
+					.then(function(responses) {
+						let rs = responses[0].data;
+						if (rs.status=='success') {
+							new_password.removeClass('is-invalid');
+							new_password.val('');
+							alert(rs.result);
+						} else {
+							new_password.focus();
+							new_password.addClass('is-invalid');
+							new_password.next().html(rs.result);
+						}
+					})
+					.catch(function(error) {
+						console.error(error);
+					});
+				}
+
+				return false;
+			});
+		});
+
+		function changePassword(new_password) {
+			if (new_password) {
+				return axios.post(
+					'/server/api', {
+						"action": "change_password",
+						"new_password": new_password,
+					}
+				);
+			}
+
+			return false;
+		}
+	// End change password
+
+	// Movie watch history
 	const _0x3047 = ['getItem', 'post', '/server/api', 'getElementsByClassName', 'addEventListener', 'stringify', 'data_history', 'display_axios', 'log', 'innerHTML', 'parse', 'data'];
 	(function(_0x150929, _0x209022) {
 		const _0x304767 = function(_0x4e0512) {
@@ -1027,6 +1072,280 @@ $configs = getConfigGeneralUserInfo([
 			});
 		};
 	})();
+
+	// End movie watch history
+
+	// Movie follow
+	var run_ax = true;
+
+	(() => {
+		document.addEventListener("DOMContentLoaded", function(event) {
+			showMovieFollow(0);
+		});
+	})();
+
+	$('body').on('click', '.movie-follow-pagination', function() {
+		if ($(this).parent().hasClass('active')) {
+			return false;
+		}
+
+		let page = $(this).attr('data-page');
+		showMovieFollow(page);
+	});
+
+	async function showMovieFollow(page) {
+		try {
+			let movie_follow = document.getElementsByClassName('movie-follow')[0];
+			let response = await loadFollowmovie(page);
+			let data = response.data;
+			movie_follow.innerHTML = data;
+		} catch (e) {
+			console.log(e)
+		}
+		$user.id && asyncFollow();
+	}
+
+	asyncFollow = async () => {
+		let local_store = localStorage.getItem("data_follow");
+		let data_follow_store = local_store ? JSON.parse(local_store) : [];
+		var check_async_follow = localStorage.getItem("async_follow");
+		await securityCode();
+		if (!check_async_follow) {
+			await axios.post('/server/api', {
+				"action": 'async_follow',
+				"token": $dt.token,
+				"data_follow": JSON.stringify(data_follow_store),
+			}).then(reponse => {
+				run_ax = true;
+				if (reponse.data == "success") {
+					localStorage.setItem("async_follow", true);
+					let success = document.createElement("div");
+					let el_ah_follows = document.getElementsByClassName("ah_follows")[0];
+					success.setAttribute('class', 'noti-success');
+					success.innerHTML = 'Đồng bộ phim theo dõi lưu trên trình duyệt sang tài khoản thành công!';
+					el_ah_follows.insertBefore(success, el_ah_follows.childNodes[2]);
+					location.reload();
+				}
+			}).catch(e => run_ax = true)
+		}
+	}
+
+	loadFollowmovie = (page = 0) => {
+		let local_store = localStorage.getItem("data_follow");
+		let data_follow_store = local_store ? JSON.parse(local_store) : [];
+		let limit;
+		if (screen.width <= 767) {
+			limit = 9;
+		} else {
+			limit = 8;
+		}
+		
+		return axios.post(
+			'/server/api', {
+				"action": "data_follow",
+				"data_follow": JSON.stringify(data_follow_store),
+				"page_now": page,
+				"limit": limit,
+			}
+		);
+	}
+
+	followGuestmovie = (e, movie_id) => {
+		let local_store = localStorage.getItem("data_follow");
+		let data_follow_store = local_store ? JSON.parse(local_store) : [];
+		var index_this_movie = data_follow_store.indexOf(movie_id);
+		if (index_this_movie !== -1) {
+			data_follow_store.splice(index_this_movie, 1);
+			e.target.parentNode.remove();
+			Toast({
+				message: "Xoá theo dõi thành công!",
+				type: "success"
+			});
+		}
+		localStorage.setItem("data_follow", JSON.stringify(data_follow_store));
+	}
+
+	delFollowmovie = (e, movie_id) => {
+		e.preventDefault();
+		if (!$user.id) {
+			followGuestmovie(e, movie_id)
+		} else {
+			if (run_ax) {
+				run_ax = false;
+				axios.post('/server/api', {
+					"action": 'del_follow',
+					"movie_id": movie_id,
+				}).then(reponse => {
+					run_ax = true;
+					if (reponse.data == "success") {
+						followGuestmovie(e, movie_id)
+					} else {
+						alert('Xoá theo dõi thất bại, thử lại sau!');
+					}
+				}).catch(e => run_ax = true)
+			}
+		}
+	}
+
+	// End movie follow
+
+	// Notification
+	var loaded_noti = true;
+	(function() {
+		Observer("active_show", async function() {
+			if (loaded_noti) {
+				let id_load_more = document.getElementById("list-item").lastElementChild;
+				id_load_more = id_load_more ? parseInt(id_load_more.attributes[1].value) || 0 : 0;
+				console.log(id_load_more);
+				loaded_noti = await loadNotification("list-item", id_load_more, loaded_noti);
+				//if (loaded_noti.status == "failed") 
+				loaded_noti = false;
+			}
+		}, false)
+	}());
+	// End Notification
+
+	// Comment
+	$(document).ready(async function() {
+		let response = await getListComment();
+		let content = '';
+
+		if (response.status == 200) {
+			if (response.data.status == "success") {
+				content = response.data.result;
+			} else {
+				content = 'Không có bình luận';
+			}
+		} else {
+			content = 'Không có bình luận';
+		}
+		
+		$('#tab-comment .list-comment').html(content);
+	});
+
+	function getListComment() {
+		return axios.post('/server/api', {
+			"action": 'list_comment',
+			"token": $dt.token,
+		});
+	}
+	// End comment
+
+	//Deposit
+	let formDeposit = $('#form-deposit');
+	let depositMin = <?=!empty($configs['deposit_min']) ? $configs['deposit_min'] : 10?>;
+	let depositRate = <?=!empty($configs['deposit_rate']) ? $configs['deposit_rate'] : 10.000?>;
+	let depositExp = <?=!empty($configs['deposit_exp']) ? $configs['deposit_exp'] : 50?>;
+
+	$(document).ready(function() {
+		caculateDeposit();
+
+		formDeposit.on('input', '#deposit_money', function() {
+			caculateDeposit();
+		})
+
+		formDeposit.submit(function() {
+			validateFormDeposit();
+			return false;
+		});
+
+		paypal.Buttons({
+			onInit(data, actions)  {
+				// actions.disable();
+
+				// if (!validateFormDeposit()) {
+				// 	actions.enable();
+				// }
+			},
+			onClick() {
+				if (validateFormDeposit()) {
+					return false;
+				}
+			},
+			createOrder: function(data, actions) {
+				if (!validateFormDeposit()) {
+					return actions.order.create({
+						purchase_units: [
+							{
+								amount: {
+									currentcy: 'USD',
+									value: formDeposit.find('#deposit_money').val()
+								}
+							}
+						]
+					});
+				}
+				
+				return false;
+			},
+			onApprove: function(data, actions) {
+				return actions.order.capture().then(async function(details) {
+					await axios.post('/server/api', {
+						"action": 'add_deposit',
+						"token": $dt.token,
+						"data": details,
+					}).then(rs => {
+						if (rs.data.success) {
+							formDeposit.find('.alert-success').html(rs.data.message);
+							formDeposit.find('.alert-success').removeClass('d-none');
+							setTimeout(function() {
+								location.reload();
+							}, 2000);
+						} else {
+							formDeposit.find('.alert-danger').html(rs.data.message);
+							formDeposit.find('.alert-danger').removeClass('d-none');
+						}
+					});
+				});
+			}
+		}).render('#deposit-checkout');
+	});
+	
+	function caculateDeposit() {
+		let inputMoney = formDeposit.find('#deposit_money');
+		let inputEarn = formDeposit.find('#deposit_earn');
+		let inputExp = formDeposit.find('#deposit_exp');
+
+		inputEarn.val(new Intl.NumberFormat('vi-VN', { maximumSignificantDigits: 3 }).format(inputMoney.val() * depositRate));
+		inputExp.val(new Intl.NumberFormat('vi-VN', { maximumSignificantDigits: 3 }).format(inputMoney.val() * depositExp));
+	}
+
+	function validateFormDeposit() {
+		let inputMoney = formDeposit.find('#deposit_money');
+		let inputEarn = formDeposit.find('#deposit_earn');
+		let inputExp = formDeposit.find('#deposit_exp');
+		let error = 0;
+		let errorMsg = '';
+		formDeposit.find('.alert').addClass('d-none');
+
+		if (inputMoney.val() <= 0 || isNaN(inputMoney.val())) {
+			errorMsg = 'Chưa nhập số tiền muốn nạp';
+			error = 1;
+			inputMoney.addClass('is-invalid');
+		} else {
+			inputMoney.removeClass('is-invalid');
+		}
+
+		if (inputMoney.val() <= 9) {
+			errorMsg = 'Nạp ít nhất '+depositMin+'$';
+			inputMoney.addClass('is-invalid');
+			error = 1;
+		} else {
+			inputMoney.removeClass('is-invalid');
+		}
+
+		if (error == 1) {
+			formDeposit.find('.alert-danger').html(errorMsg);
+			formDeposit.find('.alert-danger').removeClass('d-none');
+		} else {
+			formDeposit.find('.alert-danger').html('');
+			formDeposit.find('.alert-danger').addClass('d-none');
+		}
+
+		return error;
+	}
+	//End deposit
+
 </script>
 
 </html>

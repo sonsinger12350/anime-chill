@@ -17,7 +17,9 @@ if (!$_SESSION['admin']) die(header("location:" . URL . "/admin_movie/login"));
         'comment',
         'first_upload_avatar',
         'vip_icon',
-        'deposit_money',
+        'deposit_min',
+        'deposit_rate',
+        'deposit_exp',
         'vip_fee',
     ]);
     
@@ -62,11 +64,17 @@ if (!$_SESSION['admin']) die(header("location:" . URL . "/admin_movie/login"));
                                         </div>
                                         <div class="col-lg-6 col-md-12 mb-3">
                                             <label>Tham gia nhóm Telegram:</label>
-                                            <input type="text" class="form-control" name="data[join_telegram]" value="<?= $configs['join_telegram'] ?>">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" name="data[join_telegram]" value="<?= $configs['join_telegram'] ?>">
+                                                <div class="input-group-text">XU</div>
+                                            </div>
                                         </div>
                                         <div class="col-lg-6 col-md-12 mb-3">
                                             <label>Đăng nhập mỗi ngày:</label>
-                                            <input type="text" class="form-control" name="data[first_login]" value="<?= $configs['first_login'] ?>">
+                                            <div class="input-group">
+                                                <input type="number" class="form-control" name="data[first_login]" value="<?= $configs['first_login'] ?>">
+                                                <div class="input-group-text">XU</div>
+                                            </div>
                                         </div>
                                         <div class="col-lg-6 col-md-12 mb-3">
                                             <label>Online:</label>
@@ -78,11 +86,19 @@ if (!$_SESSION['admin']) die(header("location:" . URL . "/admin_movie/login"));
                                         </div>
                                         <div class="col-lg-6 col-md-12 mb-3">
                                             <label>Bình luận:</label>
-                                            <input type="text" class="form-control" name="data[comment]" value="<?= $configs['comment'] ?>">
+                                            <div class="input-group">
+                                                <input type="number" class="form-control" name="data[comment]" value="<?= $configs['comment'] ?>">
+                                                <div class="input-group-text">XU</div>
+                                            </div>
+                                            <span>mỗi bình luận trong bộ phim trong 1 ngày + <?= $configs['comment'] ?> xu (chỉ tính bình luận đầu tiên trong ngày của bộ phim đó ).</span>
                                         </div>
                                         <div class="col-lg-6 col-md-12 mb-3">
                                             <label>Up Avatar:</label>
-                                            <input type="text" class="form-control" name="data[first_upload_avatar]" value="<?= $configs['first_upload_avatar'] ?>">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" name="data[first_upload_avatar]" value="<?= $configs['first_upload_avatar'] ?>">
+                                                <div class="input-group-text">XU</div>
+                                            </div>
+                                            <span>+<?= $configs['first_upload_avatar'] ?> xu ( lần đầu )</span>
                                         </div>
                                         <div class="col-lg-6 col-md-12 mb-3">
                                             <label>Vip Icon:</label>
@@ -90,20 +106,36 @@ if (!$_SESSION['admin']) die(header("location:" . URL . "/admin_movie/login"));
                                         </div>
                                         <div class="col-lg-6 col-md-12 mb-3">
                                             <label>Nạp Xu:</label>
-                                            <textarea class="form-control" name="data[deposit_money]"><?= $configs['deposit_money'] ?></textarea>
+                                            <div class="d-flex align-items-center mb-2" style="gap: 10px">
+                                                Nạp ít nhất 
+                                                <div class="input-group w-50">
+                                                    <input type="nunber" name="data[deposit_min]" value="<?=$configs['deposit_min']?>" class="form-control">
+                                                    <div class="input-group-text">$</div>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex align-items-center mb-2" style="gap: 10px">
+                                                Mỗi 1$ = 
+                                                <div class="input-group w-50">
+                                                    <input type="nunber" name="data[deposit_rate]" value="<?=$configs['deposit_rate']?>" class="form-control">
+                                                    <div class="input-group-text">XU</div>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex align-items-center" style="gap: 10px">
+                                                Kinh nghiệm nhận được 1$ = 
+                                                <div class="input-group w-50">
+                                                    <input type="nunber" name="data[deposit_exp]" value="<?=$configs['deposit_exp']?>" class="form-control">
+                                                    <div class="input-group-text">EXP</div>
+                                                </div>
+                                                
+                                            </div>
                                         </div>
                                         <div class="col-lg-6 col-md-12 mb-3">
                                             <label>Giá Vip / Tháng:</label>
-                                            <input type="text" class="form-control" name="data[vip_fee]" value="<?= $configs['vip_fee'] ?>">
+                                            <div class="input-group">
+                                                <input type="number" class="form-control" name="data[vip_fee]" value="<?= $configs['vip_fee'] ?>">
+                                                <div class="input-group-text">XU</div>
+                                            </div>
                                         </div>
-                                        
-                                        <!-- <div class="col-6 mb-3">
-                                            <label>Bật / Tắt Slider</label>
-                                            <select name="data[slider]" class="form-control">
-                                                <option value="true" <?= Selected($configs['slider'], 'true') ?>>Bật</option>
-                                                <option value="false" <?= Selected($configs['slider'], 'false') ?>>Tắt</option>
-                                            </select>
-                                        </div> -->
                                         <div class="col-12 text-center mb-3">
                                             <button class="btn btn-outline-info" type="submit">Cập Nhật Cài Đặt</button>
                                         </div>

@@ -11,6 +11,15 @@ FireWall();
     $description =  "Tủ Phim Bạn Đang Theo Dõi - {$cf['title']}";
     require_once(ROOT_DIR . '/view/head.php');
     ?>
+    <style>
+		.display_axios .pagination {
+			list-style: none;
+		}
+		
+		.display_axios .pagination .pagination-item.active a {
+			background-color: #4caf50;
+		}
+    </style>
 </head>
 
 <body class="scroll-bar">
@@ -40,20 +49,28 @@ FireWall();
                 var run_ax = true;
                 (() => {
                     document.addEventListener("DOMContentLoaded", function(event) {
-                        const dataFollow = async () => {
-                            try {
-                                let display_axios = document.getElementsByClassName('display_axios')[0];
-                                let response = await loadFollowmovie();
-                                let data = response.data;
-                                display_axios.innerHTML = data;
-                            } catch (e) {
-                                console.log(e)
-                            }
-                        };
-                        $user.id && asyncFollow();
-                        dataFollow();
+                        showMovieFollow(0);
                     });
                 })();
+                $('body').on('click', '.movie-follow-pagination', function() {
+                    if ($(this).parent().hasClass('active')) {
+                        return false;
+                    }
+
+                    let page = $(this).attr('data-page');
+                    showMovieFollow(page);
+                });
+                async function showMovieFollow(page) {
+                    try {
+                        let movie_follow = document.getElementsByClassName('display_axios')[0];
+                        let response = await loadFollowmovie(page);
+                        let data = response.data;
+                        movie_follow.innerHTML = data;
+                    } catch (e) {
+                        console.log(e)
+                    }
+                    $user.id && asyncFollow();
+                }
                 asyncFollow = async () => {
                     let local_store = localStorage.getItem("data_follow");
                     let data_follow_store = local_store ? JSON.parse(local_store) : [];
@@ -78,14 +95,21 @@ FireWall();
                         }).catch(e => run_ax = true)
                     }
                 }
-                loadFollowmovie = () => {
+                loadFollowmovie = (page = 0) => {
                     let local_store = localStorage.getItem("data_follow");
                     let data_follow_store = local_store ? JSON.parse(local_store) : [];
+                    let limit;
+                    if (screen.width <= 767) {
+                        limit = 9;
+                    } else {
+                        limit = 10;
+                    }
                     return axios.post(
                         '/server/api', {
                             "action": "data_follow",
                             "data_follow": JSON.stringify(data_follow_store),
-                            "page_now": 1
+                            "page_now": page,
+				            "limit": limit,
                         }
                     );
                 }
