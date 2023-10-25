@@ -23,16 +23,21 @@ FireWall();
     <script type="text/javascript" src="/themes/js_ob/home.js?v=1.7.4"></script>
 </head>
 <script src="https://www.vipads.live/vn/078C7391-A135-105-34-43993C0F2E09.blpha"></script>
+
 <body class="scroll-bar animethemes">
     <div id="fb-root"></div>
     <div id="ah_wrapper">
         <?php require_once(ROOT_DIR . '/view/header.php'); ?>
         <div class="ah_content">
-<center><p style="background-color: #404040; font-family: Comfortaa, sans-serif; font-weight: 900; margin: 0px;"><span style="text-align: left;"><span style="font-family: Comfortaa;"><span new="" roman="" style="color: black; font-size: 14px;" times=""><span style="color: #ff00fe;"><b><br /></b></span></span></span></span></p><p style="background-color: #404040; font-family: Comfortaa, sans-serif; font-weight: 900; margin: 0px;"><span style="text-align: left;"><span style="font-family: Comfortaa;"><span new="" roman="" style="color: black; font-size: 14px;" times=""><span style="color: #ff00fe;"><b>•</b></span></span><b -webkit-center="" new="" roman="" text-align:="" times=""><span lang="VI" style="line-height: 17.12px;"><span style="color: white; font-size: 14px;"> </span></span></b></span></span><span style="background-color: transparent; text-align: left;"><span style="font-family: Comfortaa;"><b -webkit-center="" new="" roman="" text-align:="" times=""><span lang="VI" style="line-height: 17.12px;"><span style="font-size: medium;"><span><b -webkit-center="" new="" roman="" text-align:="" times=""><span lang="VI" style="line-height: 17.12px;"><span style="color: white;">Hãy luôn truy cập web bằng tên miền </span><span><a href="https://hhchina.net" rel="noopener" style="background-color: transparent; box-sizing: border-box; font-family: Comfortaa, sans-serif; font-size: medium; text-decoration-line: none;" target="_blank"><span style="color: #ffa400; font-size: medium;">hhchina.net</span></a> <span style="color: white;">để khi bị chặn sẽ được chuyển hướng tới tên miền mới</span></span></span></b></span></span></span></b></span></span></p><p style="background-color: #404040; margin: 0px;"><span face="Comfortaa, sans-serif" style="font-weight: 900; text-align: left;"><span style="font-family: Comfortaa;"><b -webkit-center="" new="" roman="" text-align:="" times=""><span lang="VI" style="line-height: 17.12px;"><span style="font-size: medium;"><span><span new="" roman="" style="color: black; font-size: 14px;" times=""><span style="color: #ff00fe;"><b>•</b></span></span><b -webkit-center="" new="" roman="" text-align:="" times=""><span lang="VI" style="line-height: 17.12px;"><span style="color: white; font-size: 14px;"> </span></span></b></span></span></span></b></span></span><span style="background-color: transparent; text-align: left;"><span style="color: white; font-family: Comfortaa; font-size: medium;"><b>Do thiếu hút kinh phí nên quảng cáo có thể gây khó chịu, rất mong các bạn thông cảm!</b></span></span></p><p style="background-color: #404040; margin: 0px;"><span style="background-color: transparent; text-align: left;"><span style="color: white; font-family: Comfortaa; font-size: medium;"><span face="Comfortaa, sans-serif" style="color: black; font-size: medium; font-weight: 900;"><span style="font-family: Comfortaa;"><b -webkit-center="" new="" roman="" text-align:="" times=""><span lang="VI" style="line-height: 17.12px;"><span style="font-size: medium;"><span><span new="" roman="" style="color: black; font-size: 14px;" times=""><span style="color: #ff00fe;"><b>•</b></span></span><b -webkit-center="" new="" roman="" text-align:="" times=""><span lang="VI" style="line-height: 17.12px;"><span style="color: white; font-size: 14px;"></span></span></b></span></span></span></b></span></span><span face="Comfortaa, sans-serif" style="background-color: transparent; color: black; font-size: medium; font-weight: 900;"><span style="font-family: Comfortaa;"><b -webkit-center="" new="" roman="" text-align:="" times=""><span lang="VI" style="line-height: 17.12px;"><span style="font-size: medium;"><span style="color: white;">Theo </span></span></span></b></span></span><span face="Comfortaa, sans-serif" style="background-color: transparent; color: black; font-size: medium; font-weight: 900;"><span style="font-family: Comfortaa;"><b -webkit-center="" new="" roman="" text-align:="" times=""><span lang="VI" style="line-height: 17.12px;"><span style="font-size: medium;"><span style="color: white;">dõi Fanpage nhận lịch chiếu phim tại </span></span></span></b></span></span><a href="https://www.facebook.com/motanime247/" rel="noopener" style="background-color: transparent; box-sizing: border-box; font-family: Comfortaa, sans-serif; font-size: medium; font-weight: 900; text-decoration-line: none;" target="_blank"><span style="color: #ff00fe; font-size: medium;">[....Đây....]</span></a></span></span></p>
-</center>
+            <center>
+                <p style="background-color: #404040; font-family: Comfortaa, sans-serif; font-weight: 900; margin: 0px;"><span style="text-align: left;"><span style="font-family: Comfortaa;"><span new="" roman="" style="color: black; font-size: 14px;" times=""><span style="color: #ff00fe;"><b><br /></b></span></span></span></span></p>
+                <p style="background-color: #404040; font-family: Comfortaa, sans-serif; font-weight: 900; margin: 0px;"><span style="text-align: left;"><span style="font-family: Comfortaa;"><span new="" roman="" style="color: black; font-size: 14px;" times=""><span style="color: #ff00fe;"><b>•</b></span></span><b -webkit-center="" new="" roman="" text-align:="" times=""><span lang="VI" style="line-height: 17.12px;"><span style="color: white; font-size: 14px;"> </span></span></b></span></span><span style="background-color: transparent; text-align: left;"><span style="font-family: Comfortaa;"><b -webkit-center="" new="" roman="" text-align:="" times=""><span lang="VI" style="line-height: 17.12px;"><span style="font-size: medium;"><span><b -webkit-center="" new="" roman="" text-align:="" times=""><span lang="VI" style="line-height: 17.12px;"><span style="color: white;">Hãy luôn truy cập web bằng tên miền </span><span><a href="https://hhchina.net" rel="noopener" style="background-color: transparent; box-sizing: border-box; font-family: Comfortaa, sans-serif; font-size: medium; text-decoration-line: none;" target="_blank"><span style="color: #ffa400; font-size: medium;">hhchina.net</span></a> <span style="color: white;">để khi bị chặn sẽ được chuyển hướng tới tên miền mới</span></span></span></b></span></span></span></b></span></span></p>
+                <p style="background-color: #404040; margin: 0px;"><span face="Comfortaa, sans-serif" style="font-weight: 900; text-align: left;"><span style="font-family: Comfortaa;"><b -webkit-center="" new="" roman="" text-align:="" times=""><span lang="VI" style="line-height: 17.12px;"><span style="font-size: medium;"><span><span new="" roman="" style="color: black; font-size: 14px;" times=""><span style="color: #ff00fe;"><b>•</b></span></span><b -webkit-center="" new="" roman="" text-align:="" times=""><span lang="VI" style="line-height: 17.12px;"><span style="color: white; font-size: 14px;"> </span></span></b></span></span></span></b></span></span><span style="background-color: transparent; text-align: left;"><span style="color: white; font-family: Comfortaa; font-size: medium;"><b>Do thiếu hút kinh phí nên quảng cáo có thể gây khó chịu, rất mong các bạn thông cảm!</b></span></span></p>
+                <p style="background-color: #404040; margin: 0px;"><span style="background-color: transparent; text-align: left;"><span style="color: white; font-family: Comfortaa; font-size: medium;"><span face="Comfortaa, sans-serif" style="color: black; font-size: medium; font-weight: 900;"><span style="font-family: Comfortaa;"><b -webkit-center="" new="" roman="" text-align:="" times=""><span lang="VI" style="line-height: 17.12px;"><span style="font-size: medium;"><span><span new="" roman="" style="color: black; font-size: 14px;" times=""><span style="color: #ff00fe;"><b>•</b></span></span><b -webkit-center="" new="" roman="" text-align:="" times=""><span lang="VI" style="line-height: 17.12px;"><span style="color: white; font-size: 14px;"></span></span></b></span></span></span></b></span></span><span face="Comfortaa, sans-serif" style="background-color: transparent; color: black; font-size: medium; font-weight: 900;"><span style="font-family: Comfortaa;"><b -webkit-center="" new="" roman="" text-align:="" times=""><span lang="VI" style="line-height: 17.12px;"><span style="font-size: medium;"><span style="color: white;">Theo </span></span></span></b></span></span><span face="Comfortaa, sans-serif" style="background-color: transparent; color: black; font-size: medium; font-weight: 900;"><span style="font-family: Comfortaa;"><b -webkit-center="" new="" roman="" text-align:="" times=""><span lang="VI" style="line-height: 17.12px;"><span style="font-size: medium;"><span style="color: white;">dõi Fanpage nhận lịch chiếu phim tại </span></span></span></b></span></span><a href="https://www.facebook.com/motanime247/" rel="noopener" style="background-color: transparent; box-sizing: border-box; font-family: Comfortaa, sans-serif; font-size: medium; font-weight: 900; text-decoration-line: none;" target="_blank"><span style="color: #ff00fe; font-size: medium;">[....Đây....]</span></a></span></span></p>
+            </center>
             <?php require_once(ROOT_DIR . '/view/top-note.php'); ?>
             <?php require_once(ROOT_DIR . '/view/slider.php'); ?>
-<!--            
+            <!--            
                        <div class="ah-frame-bg">
                         
                         <div>
@@ -64,15 +69,15 @@ FireWall();
                         if ($row['loai_phim'] == 'Phim Lẻ') {
                             $statut = "{$row['movie_duration']} Phút";
                         } else $statut = "$NumEpisode/{$row['ep_num']}";
-  
+
                 ?>
                         <div class="movie-item" id="movie-id-3300">
                             <a href="<?= URL ?>/thong-tin-phim/<?= $row['slug'] ?>.html" title="<?= $row['name'] ?>">
-                                <div class="episode-latest"> 
-                    <span>
-                        <?= $statut ?>
-                        </span>
-                        </div>
+                                <div class="episode-latest">
+                                    <span>
+                                        <?= $statut ?>
+                                    </span>
+                                </div>
                                 <div>
                                     <img src="<?= $row['image'] ?>" alt="Phim <?= $row['name'] ?>" />
                                 </div>
@@ -92,7 +97,7 @@ FireWall();
                 } ?>
             </div>
             <?= view_pages($PAGE['total'], 30, 1, URL . "/phim-moi-cap-nhap.html?p=") ?>
-            
+
             <div class="margin-10-0 bg-gray-2 flex flex-space-auto">
                 <div class="fs-17 fw-700 padding-0-20 color-gray inline-flex height-40 flex-hozi-center bg-black border-l-t">
                     Lịch Chiếu Phim
@@ -231,33 +236,174 @@ FireWall();
                         <button type="button" name="huong_dan" onclick="btn_load_home(this,'huong_dan','Hướng Dẫn');" class="padding-5-10 btn-grad">Hướng Dẫn</button>
                     </div>
                 </div>
+                <style>
+                    /* css test  */
+                    .chat_div {
+                        width: 70%;
+                    }
+
+                    .desc {
+                        display: flex;
+                    }
+                </style>
                 <div class="desc ah-frame-bg">
-                    <ul class="chat_div" style="display: block;list-style: none outside none;height: 200px" id="HomeChatList">
+                    <ul class="chat_div " style="display: block;list-style: none outside none;height: 200px" id="HomeChatList">
                         <div class="home-status">Không Có Comment Nào</div>
                     </ul>
-                    <?php
-                    if ($_author_cookie) {
-                        $cache_key = "cache.BangXepHangProfile_" . $user['id'];
-                        if (!$InstanceCache->has($cache_key)) {
-                            $Top = 0;
-                            $arr = $mysql->query("SELECT * FROM " . DATABASE_FX . "user ORDER BY level DESC");
-                            while ($row = $arr->fetch(PDO::FETCH_ASSOC)) {
-                                $Top++;
+                    <ul style="display: block;list-style: none outside none;height: 440px;overflow: auto;" id="HomeListTop">
+                        <!-- // test html  -->
+                        <li class="home-rank">
+                            <div class="flex flex-hozi-center" style="padding: 14px 0px;">
+                                <div class="stt-rank">
+                                    <img src="/themes/img/top1.png">
+                                    <div class="top-rank">#TOP 1</div>
+                                </div>
+                                <div class="image-container-rank">
+                                    <img class="image-rank-home" src="https://ui-avatars.com/api/?background=random&amp;name=test12345" width="100" height="100" alt="test12345">
+                                    <span class="rank-level">Lv 1</span>
+                                    <span class="level-icon-rank" data-tooltip="Thối Thể">
+                                        <img style="border-radius: 5px;" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEin1mIUksb6MkOMIMnd5OXRh45lfuo709-III7RIonwXtOSdp7GrKVqgqgyrWzSymBYoLpV7pvGBp9Ulx36007Y32YmOOIsupeGtdO12gfyBrKuLBKLpEJkjJKopCCC4DzaZ6I5bemITmc5l2P3d95jKYNxNFT3MI9ba9oY3ca0jW0-FYugc4hOSoii/s2000/nha" width="20" height="20" alt="Thối Thể">
+                                    </span>
+                                </div>
+                                <div class="rank-info">
+                                    <span class="rank-text" style="color: #c86432;">test12345</span>
+                                    <span class="rank-text" style="color: #c86432;">Exp : 3</span>
+                                    <span class="rank-text" style="color: #c86432;">Cảnh Giới : Thối Thể</span>
+                                    <span class="rank-text" style="color: #c86432;">Icon : </span>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="home-rank">
+                            <div class="flex flex-hozi-center" style="padding: 14px 0px;">
+                                <div class="stt-rank">
+                                    <img src="/themes/img/top2.png">
+                                    <div class="top-rank">#TOP 2</div>
+                                </div>
+                                <div class="image-container-rank">
+                                    <img class="image-rank-home" src="https://ui-avatars.com/api/?background=random&amp;name=thinhbo" width="100" height="100" alt="thinhbo">
+                                    <span class="rank-level">Lv 1</span>
+                                    <span class="level-icon-rank" data-tooltip="Thối Thể">
+                                        <img style="border-radius: 5px;" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEin1mIUksb6MkOMIMnd5OXRh45lfuo709-III7RIonwXtOSdp7GrKVqgqgyrWzSymBYoLpV7pvGBp9Ulx36007Y32YmOOIsupeGtdO12gfyBrKuLBKLpEJkjJKopCCC4DzaZ6I5bemITmc5l2P3d95jKYNxNFT3MI9ba9oY3ca0jW0-FYugc4hOSoii/s2000/nha" width="20" height="20" alt="Thối Thể">
+                                    </span>
+                                </div>
+                                <div class="rank-info">
+                                    <span class="rank-text" style="color: #c86432;">thinhbo</span>
+                                    <span class="rank-text" style="color: #c86432;">Exp : 2</span>
+                                    <span class="rank-text" style="color: #c86432;">Cảnh Giới : Thối Thể</span>
+                                    <span class="rank-text" style="color: #c86432;">Icon : </span>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="home-rank">
+                            <div class="flex flex-hozi-center" style="padding: 14px 0px;">
+                                <div class="stt-rank">
+                                    <img src="/themes/img/top3.png">
+                                    <div class="top-rank">#TOP 3</div>
+                                </div>
+                                <div class="image-container-rank">
+                                    <img class="image-rank-home" src="https://ui-avatars.com/api/?background=random&amp;name=peterng" width="100" height="100" alt="peterng">
+                                    <span class="rank-level">Lv 1</span>
+                                    <span class="level-icon-rank" data-tooltip="Thối Thể">
+                                        <img style="border-radius: 5px;" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEin1mIUksb6MkOMIMnd5OXRh45lfuo709-III7RIonwXtOSdp7GrKVqgqgyrWzSymBYoLpV7pvGBp9Ulx36007Y32YmOOIsupeGtdO12gfyBrKuLBKLpEJkjJKopCCC4DzaZ6I5bemITmc5l2P3d95jKYNxNFT3MI9ba9oY3ca0jW0-FYugc4hOSoii/s2000/nha" width="20" height="20" alt="Thối Thể">
+                                    </span>
+                                </div>
+                                <div class="rank-info">
+                                    <span class="rank-text" style="color: #c86432;">peterng</span>
+                                    <span class="rank-text" style="color: #c86432;">Exp : 1</span>
+                                    <span class="rank-text" style="color: #c86432;">Cảnh Giới : Thối Thể</span>
+                                    <span class="rank-text" style="color: #c86432;">Icon : </span>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="home-rank">
+                            <div class="flex flex-hozi-center" style="padding: 14px 0px;">
+                                <div class="stt-rank">
+                                    <img src="/themes/img/top3.png">
+                                    <div class="top-rank">#TOP 3</div>
+                                </div>
+                                <div class="image-container-rank">
+                                    <img class="image-rank-home" src="https://ui-avatars.com/api/?background=random&amp;name=peterng" width="100" height="100" alt="peterng">
+                                    <span class="rank-level">Lv 1</span>
+                                    <span class="level-icon-rank" data-tooltip="Thối Thể">
+                                        <img style="border-radius: 5px;" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEin1mIUksb6MkOMIMnd5OXRh45lfuo709-III7RIonwXtOSdp7GrKVqgqgyrWzSymBYoLpV7pvGBp9Ulx36007Y32YmOOIsupeGtdO12gfyBrKuLBKLpEJkjJKopCCC4DzaZ6I5bemITmc5l2P3d95jKYNxNFT3MI9ba9oY3ca0jW0-FYugc4hOSoii/s2000/nha" width="20" height="20" alt="Thối Thể">
+                                    </span>
+                                </div>
+                                <div class="rank-info">
+                                    <span class="rank-text" style="color: #c86432;">peterng</span>
+                                    <span class="rank-text" style="color: #c86432;">Exp : 1</span>
+                                    <span class="rank-text" style="color: #c86432;">Cảnh Giới : Thối Thể</span>
+                                    <span class="rank-text" style="color: #c86432;">Icon : </span>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="home-rank">
+                            <div class="flex flex-hozi-center" style="padding: 14px 0px;">
+                                <div class="stt-rank">
+                                    <img src="/themes/img/top3.png">
+                                    <div class="top-rank">#TOP 3</div>
+                                </div>
+                                <div class="image-container-rank">
+                                    <img class="image-rank-home" src="https://ui-avatars.com/api/?background=random&amp;name=peterng" width="100" height="100" alt="peterng">
+                                    <span class="rank-level">Lv 1</span>
+                                    <span class="level-icon-rank" data-tooltip="Thối Thể">
+                                        <img style="border-radius: 5px;" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEin1mIUksb6MkOMIMnd5OXRh45lfuo709-III7RIonwXtOSdp7GrKVqgqgyrWzSymBYoLpV7pvGBp9Ulx36007Y32YmOOIsupeGtdO12gfyBrKuLBKLpEJkjJKopCCC4DzaZ6I5bemITmc5l2P3d95jKYNxNFT3MI9ba9oY3ca0jW0-FYugc4hOSoii/s2000/nha" width="20" height="20" alt="Thối Thể">
+                                    </span>
+                                </div>
+                                <div class="rank-info">
+                                    <span class="rank-text" style="color: #c86432;">peterng</span>
+                                    <span class="rank-text" style="color: #c86432;">Exp : 1</span>
+                                    <span class="rank-text" style="color: #c86432;">Cảnh Giới : Thối Thể</span>
+                                    <span class="rank-text" style="color: #c86432;">Icon : </span>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="home-rank">
+                            <div class="flex flex-hozi-center" style="padding: 14px 0px;">
+                                <div class="stt-rank">
+                                    <img src="/themes/img/top3.png">
+                                    <div class="top-rank">#TOP 3</div>
+                                </div>
+                                <div class="image-container-rank">
+                                    <img class="image-rank-home" src="https://ui-avatars.com/api/?background=random&amp;name=peterng" width="100" height="100" alt="peterng">
+                                    <span class="rank-level">Lv 1</span>
+                                    <span class="level-icon-rank" data-tooltip="Thối Thể">
+                                        <img style="border-radius: 5px;" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEin1mIUksb6MkOMIMnd5OXRh45lfuo709-III7RIonwXtOSdp7GrKVqgqgyrWzSymBYoLpV7pvGBp9Ulx36007Y32YmOOIsupeGtdO12gfyBrKuLBKLpEJkjJKopCCC4DzaZ6I5bemITmc5l2P3d95jKYNxNFT3MI9ba9oY3ca0jW0-FYugc4hOSoii/s2000/nha" width="20" height="20" alt="Thối Thể">
+                                    </span>
+                                </div>
+                                <div class="rank-info">
+                                    <span class="rank-text" style="color: #c86432;">peterng</span>
+                                    <span class="rank-text" style="color: #c86432;">Exp : 1</span>
+                                    <span class="rank-text" style="color: #c86432;">Cảnh Giới : Thối Thể</span>
+                                    <span class="rank-text" style="color: #c86432;">Icon : </span>
+                                </div>
+                            </div>
+                        </li>
+                        <!-- // end-test html  -->
+                    </ul>
+                </div>
+                <?php
+                if ($_author_cookie) {
+                    $cache_key = "cache.BangXepHangProfile_" . $user['id'];
+                    if (!$InstanceCache->has($cache_key)) {
+                        $Top = 0;
+                        $arr = $mysql->query("SELECT * FROM " . DATABASE_FX . "user ORDER BY level DESC");
+                        while ($row = $arr->fetch(PDO::FETCH_ASSOC)) {
+                            $Top++;
 
-                                if ($Top == 1) {
-                                    $TopImage = "/themes/img/top1.png";
-                                } else if ($Top == 2) {
-                                    $TopImage = "/themes/img/top2.png";
-                                } else if ($Top == 3) {
-                                    $TopImage = "/themes/img/top3.png";
-                                } else if ($Top == 4) {
-                                    $TopImage = "/themes/img/top4.png";
-                                } else if ($Top == 5) {
-                                    $TopImage = "/themes/img/top5.png";
-                                } else $TopImage = "/themes/img/out_top.png";
+                            if ($Top == 1) {
+                                $TopImage = "/themes/img/top1.png";
+                            } else if ($Top == 2) {
+                                $TopImage = "/themes/img/top2.png";
+                            } else if ($Top == 3) {
+                                $TopImage = "/themes/img/top3.png";
+                            } else if ($Top == 4) {
+                                $TopImage = "/themes/img/top4.png";
+                            } else if ($Top == 5) {
+                                $TopImage = "/themes/img/top5.png";
+                            } else $TopImage = "/themes/img/out_top.png";
 
-                                if ($row['id'] == $user['id']) {
-                                    echo '<div class="flex flex-hozi-center" id="BangXepHangProfile" style="display: none;">
+                            if ($row['id'] == $user['id']) {
+                                echo '<div class="flex flex-hozi-center" id="BangXepHangProfile" style="display: none;">
                                                 <div class="stt-rank">
                                                     <img src="' . $TopImage . '">
                                                     <div class="top-rank">#TOP ' . $Top . '</div>
@@ -274,12 +420,13 @@ FireWall();
                                                     <span class="rank-text" style="color: ' . LevelColor($row['level']) . ';">Icon : ' . UserIcon($row['id'], 18, 18) . '</span>
                                                 </div>
                                             </div>';
-                                    break;
-                                }
+                                break;
                             }
-                            $InstanceCache->set($cache_key, $MyRank, $cf['time_cache'] * 3600);
-                        } else echo $InstanceCache->get($cache_key);
-                    } ?>
+                        }
+                        $InstanceCache->set($cache_key, $MyRank, $cf['time_cache'] * 3600);
+                    } else echo $InstanceCache->get($cache_key);
+                } ?>
+                <div class="row">
                     <div class="flex" id="box-comment">
                         <script type="text/javascript" src="/themes/js_ob/fgEmojiPicker.js?v=1.7.4"></script>
                         <textarea class="comment-home" onkeydown="if(event.keyCode == 13) CommentHome();" name="HomeComment" placeholder="Nhập Bình Luận Của Bạn Vào Đây........" rows="3" maxlength="5000"></textarea>
@@ -287,40 +434,42 @@ FireWall();
                         <button type="button" onclick="CommentHome();" name="CommentButton" class="button-home-comment">Gửi <img src="/themes/img/message.png" width="25" height="25"></button>
                     </div>
                 </div>
-                <script>
-                    var btn_load_home = function(btn, action, txt) {
-                        if (action != 'LoadComment') {
-                            $('#box-comment').hide();
-                        } else {
-                            $('#box-comment').show();
-                        }
-                        if ($(btn).hasClass("btn-active")) {
-                            return;
-                        }
-                        $('.btn-grad').removeClass('btn-active');
-                        $(btn).addClass('btn-active');
-                        LoadHome(action);
-                    }
-                    BoxChatLoad();
-                    new FgEmojiPicker({
-                        trigger: ['#IconCommentHome'],
-                        position: ['bottom', 'right'],
-                        emit(obj, triggerElement) {
-                            const emoji = obj.emoji;
-                            //var result = $('.comment-home').val() + `&#x${emoji.codePointAt(0).toString(16)};`;
-                            var result = $('.comment-home').val() + emoji;
-                            $('.comment-home').val(result)
-                        }
-                    });
-                </script>
-            <?php } ?>
-
         </div>
         <script>
-            LoadLichChieu(<?= sw_get_current_weekday() ?>);
+            var btn_load_home = function(btn, action, txt) {
+                if (action != 'LoadComment') {
+                    // $('#box-comment').hide();
+                    $('#box-comment').show();
+                } else {
+                    $('#box-comment').show();
+                }
+                if ($(btn).hasClass("btn-active")) {
+                    return;
+                }
+                $('.btn-grad').removeClass('btn-active');
+                $(btn).addClass('btn-active');
+                LoadHome(action);
+            }
+            BoxChatLoad();
+            new FgEmojiPicker({
+                trigger: ['#IconCommentHome'],
+                position: ['bottom', 'right'],
+                emit(obj, triggerElement) {
+                    const emoji = obj.emoji;
+                    //var result = $('.comment-home').val() + `&#x${emoji.codePointAt(0).toString(16)};`;
+                    var result = $('.comment-home').val() + emoji;
+                    $('.comment-home').val(result)
+                }
+            });
         </script>
-        <?= PopUnder('pop_under_home') ?>
-        <?php require_once(ROOT_DIR . '/view/footer.php'); ?>
+    <?php } ?>
+
+    </div>
+    <script>
+        LoadLichChieu(<?= sw_get_current_weekday() ?>);
+    </script>
+    <?= PopUnder('pop_under_home') ?>
+    <?php require_once(ROOT_DIR . '/view/footer.php'); ?>
     </div>
 </body>
 

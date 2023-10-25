@@ -3,7 +3,7 @@ date_default_timezone_set('Asia/Ho_Chi_Minh');
 $config['db_host']    = 'localhost';
 $config['db_name']     = 'animechill'; // Tên Database
 $config['db_user']    = 'root'; // Tên Người Dùng Database
-$config['db_pass']    = ''; // Mật Khẩu Database
+$config['db_pass']    = 'root'; // Mật Khẩu Database
 $tb_prefix            = 'table_';
 define('SERVER_HOST', $config['db_host']);
 define('DATABASE_NAME', $config['db_name']);

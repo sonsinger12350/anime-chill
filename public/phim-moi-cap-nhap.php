@@ -41,8 +41,6 @@ $NumPage = GetParam('p') ? GetParam('p') : 1;
                             } else {
                                 $statut = "$NumEpisode/{$row['ep_num']}";
                             }
-                            // echo $row['timestap']; exit;
-                            $statut = date("d/m/Y", $row['timestap']);
                     ?>
                             <div class="movie-item" id="movie-id-<?= $row['id'] ?>">
                                 <a href="<?= URL ?>/thong-tin-phim/<?= $row['slug'] ?>.html" title="<?= $row['name'] ?>">

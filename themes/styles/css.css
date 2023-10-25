@@ -2931,6 +2931,10 @@ input:checked+.slider:before {
 }
 
 .home-rank {
+    /* Update List-Top */
+    /* clear: right; */
+    float: right;
+    clear:right;
     margin-bottom: 10px;
 }
 

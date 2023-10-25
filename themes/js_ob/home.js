@@ -1,10 +1,10 @@
 var onload_boxchat;
-var BoxChatLoad = function() {
+var BoxChatLoad = function () {
     console.log(`Onload => ${$config.boxchat_load}`);
     $(`button[name="boxchat"]`).addClass('btn-active');
     if ($config.boxchat_load == true) {
         LoadHome('Load_Comment_Home');
-        onload_boxchat = setInterval(function() {
+        onload_boxchat = setInterval(function () {
             LoadHome('Load_Comment_Home');
             $('.chat_div').animate({
                 scrollTop: 99999
@@ -14,7 +14,7 @@ var BoxChatLoad = function() {
         LoadHome('Load_Comment_Home');
     }
 }
-var LoadHome = async(action) => {
+var LoadHome = async (action) => {
     if (action == 'LoadComment') {
         BoxChatLoad();
         return;
@@ -28,11 +28,13 @@ var LoadHome = async(action) => {
         "action": action,
     }).then(reponse => {
         var res = reponse.data;
+        console.log(res);
         if (res.status != 'success') {
             $('#HomeChatList').html(res.result);
             return;
         }
         $('#HomeChatList').html(res.result);
+        
         if (action == 'Load_Comment_Home') {
             $('.chat_div').animate({
                 scrollTop: 99999
@@ -68,16 +70,16 @@ function LoadLichChieu(days) {
             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
         },
         dataType: "json",
-        beforeSend: function() {
+        beforeSend: function () {
             DivLichChieu.html(`<div class="flex flex-space-auto" style="position: relative;width: 100%;">
                                 <img src="/themes/img/4M4x.gif" width="150" height="150">
                                 <h2 style="bottom: 1px;position:absolute;">Đang Load Lịch Chiếu Xin Chờ ....</h2>
                             </div>`);
         },
-        success: function(res) {
+        success: function (res) {
             DivLichChieu.html(res.message);
         },
-        error: function(error) {
+        error: function (error) {
             DivLichChieu.html(`<div class="flex flex-space-auto" style="position: relative;width: 100%;">
                                 <img src="/themes/img/05de031e8bcc956934a89d5aa25901b0.gif" width="150" height="150">
                                 <h2 style="bottom: 1px;position:absolute;">Load Lịch Chiếu Không Thành Công</h2>
@@ -86,7 +88,7 @@ function LoadLichChieu(days) {
     };
     $.ajax(setting);
 }
-var CommentHome = async() => {
+var CommentHome = async () => {
     let CommentText = $('textarea[name="HomeComment"]').val();
     let CMT_Button = $('button[name="CommentButton"]');
     if (!$user.id) {
