@@ -88,6 +88,15 @@ function InputEdit_Table($table, $where)
 	}
 	return $input;
 }
+function checkVipUser($userId) {
+	global $mysqldb;
+	$sql = "SELECT COUNT(*) FROM `table_user` WHERE `id` = {$userId} AND `vip` = 1";
+	$result = $mysqldb->prepare($sql);
+	$result->execute();
+	$number_of_rows = $result->fetchColumn();
+	if($number_of_rows > 0) return true;
+	return false;
+}
 #################
 # GET CONFIG	#
 $cf = GetDataArr('config', "id = 1");

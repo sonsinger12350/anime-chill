@@ -457,7 +457,24 @@ function XoaDauPhay($str)
     return $str;
 }
 function PopUnder($Location)
-{
+{   
+    // Handler Stop Ads for User Vip
+    if (isset($_COOKIE['author'])) {
+        $_accesstoken = sql_escape($_COOKIE['_accesstoken']);
+        $_author_cookie = sql_escape($_COOKIE['author']);
+        if (get_total('user', "WHERE _accesstoken = '$_author_cookie'") >= 1) {
+            $user = GetDataArr('user', "_accesstoken = '$_author_cookie'");
+            $useremail = $user['email'];
+            UpdateLevel($user);
+            if ($_author_cookie != $user['_accesstoken']) {
+                RemoveCookie();
+            } else if (!$_author_cookie) {
+                RemoveCookie();
+            } else if ($user['id'] < 1) RemoveCookie();
+        } else RemoveCookie();
+    }
+    if(checkVipUser($user['id'])) return;
+    // [End] Stop Ads for User Vip
     if (get_total("ads", "WHERE position_name = '$Location' AND type = 'true'") < 1) return;
     $ads = GetDataArr("ads", "position_name = '$Location' AND type = 'true'");
     return '<div id="popup-giua-man-hinh">
