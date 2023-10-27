@@ -88,13 +88,39 @@ function InputEdit_Table($table, $where)
 	}
 	return $input;
 }
-function checkVipUser($userId) {
+function checkVipUser($userId)
+{
 	global $mysqldb;
 	$sql = "SELECT COUNT(*) FROM `table_user` WHERE `id` = {$userId} AND `vip` = 1";
 	$result = $mysqldb->prepare($sql);
 	$result->execute();
 	$number_of_rows = $result->fetchColumn();
-	if($number_of_rows > 0) return true;
+	if ($number_of_rows > 0) return true;
+	return false;
+}
+function UpdateVipUser($cash_return, $vip_icon, $vip_date_end, $vip_term, $user_id)
+{
+	global $mysql;
+	$sql = "UPDATE `table_user` SET `coins`='{$cash_return}',`vip`='1',`vip_icon`='{$vip_icon}',`vip_date_end`='{$vip_date_end}',`vip_term`='{$vip_term}' WHERE `id` = '{$user_id}'";
+	$result = $mysql->query($sql);
+	if ($result) {
+		return true;
+	} else {
+		return false;
+	}
+}
+function resetVipUser($vip_date_end, $user_id, $vip_user)
+{	
+	
+	$vip_date_end = date("Y-m-d");
+	// $vip_date_end = "2023-10-26";
+	$date_current = new DateTime();
+	$date_current_formatted = $date_current->format('Y-m-d');
+	if ($vip_date_end < $date_current_formatted && $vip_date_end <> NULL && $vip_user == 1) {
+		global $mysql;
+		$sql = "UPDATE `table_user` SET `vip`='0',`vip_icon`=NULL,`vip_term`='0' WHERE `id` = '{$user_id}'";
+		$result = $mysql->query($sql);
+	}
 	return false;
 }
 #################

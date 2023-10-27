@@ -56,6 +56,11 @@
 	<script type="text/javascript" src="/themes/js_ob/croppie.js?v=1.7.4"></script>
 	<link href="/themes/styles/croppie.css?v=1.4.0" rel="stylesheet" />
 	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/autonumeric/4.10.0/autoNumeric.min.js"></script> -->
+	<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 	<style>
 		body {
 			color: #ccc;
@@ -666,6 +671,21 @@
 				.cmt-time {
 					padding-left: 15px;
 				}
+
+				.profile .vip-info {
+					display: flex;
+					padding: 20px;
+					background-color: #505050;
+					margin-bottom: 24px;
+				}
+
+				.profile .vip-info .days {
+					display: flex;
+					align-items: center;
+					column-gap: 10px;
+					color: #ff9393;
+					font-weight: 600;
+				}
 			</style>
 			<!-- end-css-profile  -->
 
@@ -682,6 +702,16 @@
 							<p class="coin"><img src="/themes/img/coin_15.gif" alt=""> <?= number_format($user['coins']) ?> XU</p>
 						</div>
 					</div>
+					<!-- // doing  -->
+					<?php if ($user['vip'] == 1) {
+					?>
+						<div class="vip-info" data-vip_date_end=<?= date("Y-m-d H:i:s", $user['vip_date_end'])?>>
+							<img style="width: 50px;" src="<?= $user['vip_icon'] ?>" />
+							<p class="days"> </p>
+						</div>
+					<?php
+					} ?>
+
 					<!-- Level -->
 					<div class="level">
 						<div class="level-info">
@@ -744,6 +774,7 @@
 				<!-- Tab content -->
 				<div class="info">
 					<div class="tab-content">
+						<h4 class="text-while bg-primary" id="thongbao"></h4>
 						<div class="tab-pane fade show active" id="tab-profile">
 							<h4 class="tab-title">Thông tin chung</h4>
 							<div class="tab-body">
@@ -753,8 +784,12 @@
 										<div class="group">
 											<div class="label">Gói VIP ADS:</div>
 											<div class="detail">
-												<?=nl2br($configs['vip_package'])?><br>
-												<i class="fa fa-long-arrow-right" aria-hidden="true"></i> <a href="/store#vip">Mua VIP ADS tắt quảng cáo tại đây</a>
+												<?= nl2br($configs['vip_package']) ?><br>
+												<i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+												<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#VipModal">
+													Mua VIP ADS tắt quảng cáo tại đây
+												</button>
+												<!-- <a href="/store#vip">Mua VIP ADS tắt quảng cáo tại đây</a> -->
 											</div>
 										</div>
 										<div class="group">
@@ -943,8 +978,79 @@
 			</form>
 		</div>
 	</div>
+	<!-- Modal buy vip  -->
+	<div class="modal fade" id="VipModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<form action="" id="BuyVip" method="">
+					<div class="modal-header">
+						<h5 class="modal-title text-primary" id="exampleModalLabel">Chọn gói VIP</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="form-group">
+							<select class="form-control" name="vip_package" id="vip_package">
+								<option value="1" selected>1 Tháng (30.000 Xu)</option>
+								<option value="12"> 12 tháng (360.000 Xu) + Tặng kèm 1 tháng</option>
+							</select>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						<button type="button" id="btn_BuyVip" class="btn btn-primary">Tiếp tục mua</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 </body>
+<!-- Handler Buy Vip User -->
+<script>
+	$(document).ready(function() {
+		// Call ajax process 
+		$("#btn_BuyVip").click(function() {
+			var vip_package = $("#vip_package").val();
+			$.ajax({
+				url: "<?= URL ?>/buy-vip-user/" + vip_package + ".html",
+				method: 'GET',
+				data: {
+					vip_package: vip_package
+				},
+				success: function(response) {
+					// Xử lý dữ liệu nhận được từ server
+					var responseObject = JSON.parse(response);
+					// console.log(responseObject.message);
+					$('.modal-footer .btn.btn-secondary').click();
+					$("#thongbao").html(responseObject.message)
+				},
+				error: function(error) {
+					console.log('Error:', error);
+				}
+			});
+		});
+		// doing
 
+		$(window).on('load', function() {
+			var vip_date_end = $(".vip-info").data('vip_date_end');
+			// console.log(vip_date_end);
+			var currentDate = moment();
+			// console.log(currentDate);
+			// Chuyển vip_date_end monent 
+			var vip_date_end = moment(vip_date_end,"YYYY-MM-DD");
+			// Tính chênh lệnh time
+			var duration = moment.duration(vip_date_end.diff(currentDate));
+			// Lấy Số ngày về dạng ngày
+			var days = duration.asDays();
+			days = Math.round(days);
+			// console.log('Days remaining:', days);
+			$(".vip-info .days").text(days + ' Ngày');
+		});
+		// Show vip_date_remaning
+		// $(".vip-info")
+	});
+</script>
 <script type="text/javascript" src="/themes/js_ob/user.profile.js?v=1.7.4"></script>
 <script src="https://www.paypal.com/sdk/js?client-id=<?=$paypalConfig['client_id']?>&components=buttons&disable-funding=card"></script>
 

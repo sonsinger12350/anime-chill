@@ -44,6 +44,7 @@ if (isset($_COOKIE['author'])) {
         $user = GetDataArr('user', "_accesstoken = '$_author_cookie'");
         $useremail = $user['email'];
         UpdateLevel($user);
+        resetVipUser($user['vip_date_end'], $user['id'], $user['vip']);
         if ($_author_cookie != $user['_accesstoken']) {
             RemoveCookie();
         } else if (!$_author_cookie) {

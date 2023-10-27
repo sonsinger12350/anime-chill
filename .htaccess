@@ -53,7 +53,9 @@ RewriteRule ^dang-ky$ ./?author=/dang-ky/ [L]
 RewriteRule ^thay-doi-mat-khau$ ./?author=/change-password/ [L]
 RewriteRule ^tai-khoan/ho-so$ ./?author=/ho-so/ [L]
 RewriteRule ^tin-nhan/view/(.*)$ ./?author=/tin-nhan/$1 [L]
-RewriteRule ^thong-bao$ ./?author=/thong-bao/ [L]
+RewriteRule ^thong-bao$ ./?author=/thong-bao/ [L]   
+RewriteRule ^buy-vip-user/(.*).html$ ./?author=/buy-vip-user/&vip_package=$1 [L]
+
 #Api Http Request
 RewriteRule ^server/api$ ./?api=/api/ [L]
 RewriteRule ^admin/server/api$ ./?api=/admin-api/ [L]
