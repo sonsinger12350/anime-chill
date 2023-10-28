@@ -181,7 +181,8 @@ while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
 				<!-- Tab content -->
 				<div class="info">
 					<div class="tab-content">
-						<h4 class="text-while bg-primary" id="thongbao"></h4>
+						<!-- // doing  -->
+							<p class="text-while" id="thongbao"> </p>
 						<div class="tab-pane fade show active" id="tab-profile">
 							<h4 class="tab-title mb-3">Tủ đồ cá nhân</h4>
 							<div class="tab-body mb-4 tab-avatar-frame-content">
@@ -222,7 +223,7 @@ while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
 													Mua VIP ADS tắt quảng cáo tại đây
 												</button>
 												<!-- <a href="/store#vip">Mua VIP ADS tắt quảng cáo tại đây</a> -->
-												<i class="fa fa-long-arrow-right" aria-hidden="true"></i> <a href="/store#vip">Mua VIP ADS tắt quảng cáo tại đây</a>
+												<!-- <i class="fa fa-long-arrow-right" aria-hidden="true"></i> <a href="/store#vip">Mua VIP ADS tắt quảng cáo tại đây</a> -->
 											</div>
 										</div>
 										<div class="group">
@@ -495,6 +496,8 @@ while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
 					// console.log(responseObject.message);
 					$('.modal-footer .btn.btn-secondary').click();
 					$("#thongbao").html(responseObject.message)
+					$("#thongbao").addClass('alert alert-info');
+					window.location.hash = '#thongbao';
 				},
 				error: function(error) {
 					console.log('Error:', error);

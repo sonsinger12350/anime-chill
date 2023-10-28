@@ -517,5 +517,7 @@ FireWall();
         if($user['vip'] <> 1) {
             echo un_htmlchars($cf['script_footer']);
         }
+    }else{
+        echo un_htmlchars($cf['script_footer']);
     }
 ?>
