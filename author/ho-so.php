@@ -1,46 +1,66 @@
 <?php
-	if (!defined('MovieAnime')) die("You are illegally infiltrating our website");
-	if (!$_author_cookie) die(header("location:/login"));
-	if (isset($_POST['change_profile'])) {
-		$nickname = sql_escape($_POST['nickname']);
-		$quote = sql_escape($_POST['quote']);
-		$Success = 0;
-		if (!$nickname) {
-			$Success++;
-			$Notice .= '<div class="noti-error flex flex-hozi-center"><span class="material-icons-round margin-0-5">error</span>Vui Lòng Nhập Biệt Danh Của Bạn</div>';
-		}
-		if (strlen($nickname) < 6) {
-			$Success++;
-			$Notice .= '<div class="noti-error flex flex-hozi-center"><span class="material-icons-round margin-0-5">error</span>Biệt Danh phải nhiều hơn 6 kí tự</div>';
-		}
-		if (strlen($quote) > 50) {
-			$Success++;
-			$Notice .= '<div class="noti-error flex flex-hozi-center"><span class="material-icons-round margin-0-5">error</span>Châm Ngôn Sống Không Được Quá 50 Ký Tự</div>';
-		}
-		if ($Success == 0) {
-			$mysql->update("user", "nickname = '$nickname',quote = '$quote'", "email = '$useremail'");
-			header("Refresh:0");
-			$Notice .= '<div class="noti-success flex flex-hozi-center"><span class="material-icons-round margin-0-5">success</span>Cập Nhật Hồ Sơ Thành Công</div>';
-		}
+if (!defined('MovieAnime')) die("You are illegally infiltrating our website");
+if (!$_author_cookie) die(header("location:/login"));
+if (isset($_POST['change_profile'])) {
+	$nickname = sql_escape($_POST['nickname']);
+	$quote = sql_escape($_POST['quote']);
+	$Success = 0;
+	if (!$nickname) {
+		$Success++;
+		$Notice .= '<div class="noti-error flex flex-hozi-center"><span class="material-icons-round margin-0-5">error</span>Vui Lòng Nhập Biệt Danh Của Bạn</div>';
 	}
-	$configs = getConfigGeneralUserInfo([
-		'vip_package',
-		'join_telegram',
-		'first_login',
-		'online_reward',
-		'farm_tree',
-		'comment',
-		'first_upload_avatar',
-		'vip_icon',
-		'deposit_min',
-		'deposit_rate',
-		'deposit_exp',
-		'vip_fee',
-	]);
+	if (strlen($nickname) < 6) {
+		$Success++;
+		$Notice .= '<div class="noti-error flex flex-hozi-center"><span class="material-icons-round margin-0-5">error</span>Biệt Danh phải nhiều hơn 6 kí tự</div>';
+	}
+	if (strlen($quote) > 50) {
+		$Success++;
+		$Notice .= '<div class="noti-error flex flex-hozi-center"><span class="material-icons-round margin-0-5">error</span>Châm Ngôn Sống Không Được Quá 50 Ký Tự</div>';
+	}
+	if ($Success == 0) {
+		$mysql->update("user", "nickname = '$nickname',quote = '$quote'", "email = '$useremail'");
+		header("Refresh:0");
+		$Notice .= '<div class="noti-success flex flex-hozi-center"><span class="material-icons-round margin-0-5">success</span>Cập Nhật Hồ Sơ Thành Công</div>';
+	}
+}
+$configs = getConfigGeneralUserInfo([
+	'vip_package',
+	'join_telegram',
+	'first_login',
+	'online_reward',
+	'farm_tree',
+	'comment',
+	'first_upload_avatar',
+	'vip_icon',
+	'deposit_min',
+	'deposit_rate',
+	'deposit_exp',
+	'vip_fee',
+]);
 
-	$paypalConfig = [
-		'client_id'	=>	'AYldjoFRqHN-fq47TxTzcg9pQc6f-Z8jYqqbTaVniT4bCdoD4fZwp37Zjv--L2ffBnmkS7M99P8medCf',
+$paypalConfig = [
+	'client_id'	=>	'AYldjoFRqHN-fq47TxTzcg9pQc6f-Z8jYqqbTaVniT4bCdoD4fZwp37Zjv--L2ffBnmkS7M99P8medCf',
+];
+
+global $mysql;
+$sql = "SELECT `id`, `icon`, `price` FROM `table_khung_vien` ORDER BY `price` DESC LIMIT 100";
+$query = $mysql->query($sql);
+$listAvatarFrame = [];
+
+while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+	$listAvatarFrame[$row['id']] = [
+		'price'	=>	$row['price'],
+		'icon'	=>	$row['icon'],
 	];
+}
+
+$sql = "SELECT `frame_id` FROM table_user_avatar_frame WHERE `user_id` = " . $user['id'] . " LIMIT 100";
+$query = $mysql->query($sql);
+$listUserFrame = [];
+
+while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+	$listUserFrame[] = $row['frame_id'];
+}
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -51,418 +71,12 @@
 	require_once(ROOT_DIR . '/view/head.php');
 	?>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" />
-	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.min.js"></script> -->
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.min.js"></script>
+	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script> -->
 	<script type="text/javascript" src="/themes/js_ob/croppie.js?v=1.7.4"></script>
 	<link href="/themes/styles/croppie.css?v=1.4.0" rel="stylesheet" />
 	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/autonumeric/4.10.0/autoNumeric.min.js"></script> -->
-	<style>
-		body {
-			color: #ccc;
-		}
-
-		a {
-			color: #cac9c9;
-			text-decoration: none;
-		}
-
-		@keyframes cssProgressActive {
-			0% {
-				background-position: 0 0;
-			}
-
-			100% {
-				background-position: 35px 35px;
-			}
-		}
-
-		.hvr-sweep-to-right {
-			display: inline-block;
-			vertical-align: middle;
-			-webkit-transform: perspective(1px) translateZ(0);
-			transform: perspective(1px) translateZ(0);
-			box-shadow: 0 0 1px transparent;
-			position: relative;
-			-webkit-transition-property: color;
-			transition-property: color;
-			-webkit-transition-duration: .3s;
-			transition-duration: .3s;
-		}
-
-		.hvr-sweep-to-right::before {
-			content: "";
-			position: absolute;
-			z-index: -1;
-			top: 0;
-			left: 0;
-			right: 0;
-			bottom: 0;
-			background: #989898;
-			-webkit-transform: scaleX(0);
-			transform: scaleX(0);
-			-webkit-transform-origin: 0 50%;
-			transform-origin: 0 50%;
-			-webkit-transition-property: transform;
-			transition-property: transform;
-			-webkit-transition-duration: .3s;
-			transition-duration: .3s;
-			-webkit-transition-timing-function: ease-out;
-			transition-timing-function: ease-out;
-		}
-
-		.hvr-sweep-to-right:hover,
-		.hvr-sweep-to-right:focus,
-		.hvr-sweep-to-right:active {
-			color: #fff;
-		}
-
-		.hvr-sweep-to-right:hover:before,
-		.hvr-sweep-to-right:focus:before,
-		.hvr-sweep-to-right:active:before {
-			-webkit-transform: scaleX(1);
-			transform: scaleX(1);
-		}
-
-		.progress {
-			width: 100%;
-			height: 20px;
-			background: #858585;
-			border-radius: 3px;
-			overflow: hidden;
-			margin-top: 10px;
-			border: 0;
-			-webkit-box-shadow: inset 0 1px 2px 0 rgba(0, 0, 0, 0.5), 0px 1px 0 0 #FFF;
-			-moz-box-shadow: inset 0 1px 2px 0 rgba(0, 0, 0, 0.5), 0px 1px 0 0 #FFF;
-			box-shadow: inset 0 1px 2px 0 rgba(0, 0, 0, 0.5), 0px 1px 0 0 #FFF;
-		}
-
-		.progress .progress-bar {
-			display: block;
-			height: 100%;
-			text-align: center;
-			line-height: 20px;
-			font-size: 12px;
-			padding: 0;
-			font-weight: 700;
-			-webkit-background-size: 35px 35px;
-			background-color: #009dff;
-			background-image: linear-gradient(-45deg, rgba(255, 255, 255, 0.125) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.125) 50%, rgba(255, 255, 255, 0.125) 75%, transparent 75%, transparent);
-			box-shadow: inset 0 1px 0 0 #98d8ff, inset 0 -1px 1px #3a91c8;
-			border: 1px solid #31607d;
-			animation: cssProgressActive 2s linear infinite;
-		}
-
-		.profile {
-			background-color: #404040;
-			display: flex;
-			padding: 10px;
-		}
-
-		.profile .navigation {
-			width: 30%
-		}
-
-		.profile .navigation .avatar {
-			display: flex;
-			padding: 20px;
-			background-color: #505050;
-			margin-bottom: 24px;
-		}
-
-		.profile .navigation .avatar .img {
-			position: relative;
-		}
-
-		.profile .navigation .avatar .img .upload-avatar {
-			position: absolute;
-			bottom: -30px;
-			left: 0;
-			border: 1px solid transparent;
-			border-radius: 40px;
-			line-height: 1.3;
-			padding: 5px 7px;
-			font-size: 10px;
-			color: #fff;
-			min-width: 80px;
-			font-weight: bold;
-			background: #6b6a6a;
-			box-shadow: 0 1px 3px rgb(0 0 0 / 12%), 0 1px 2px rgb(0 0 0 / 24%);
-		}
-
-		.profile .navigation .avatar .img img {
-			width: 80px;
-			height: auto;
-			border-radius: 50%;
-		}
-
-		.profile .navigation .avatar .profile-info {
-			width: calc(100% - 90px);
-			margin-left: 10px;
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-		}
-
-		.profile .navigation .avatar .profile-info h3 {
-			margin-bottom: 5px;
-			color: #ffffff;
-		}
-
-		.profile .navigation .avatar .profile-info .coin img {
-			width: 15px;
-			height: 15px;
-			position: relative;
-		}
-
-		.profile .navigation .avatar .profile-info .coin {
-			display: flex;
-			align-items: center;
-			column-gap: 10px;
-			color: #ff9393;
-			font-weight: 600;
-		}
-
-		.profile .navigation .level {
-			padding: 10px;
-			background-color: #505050;
-			border-radius: 8px;
-			margin-bottom: 10px;
-		}
-
-		.profile .navigation .level .level-info {
-			display: flex;
-			align-items: center;
-			justify-content: space-between;
-		}
-
-		.profile .info {
-			width: 100%;
-		}
-
-		.profile .navigation .menu ul {
-			background: #666565;
-			list-style-type: none;
-			padding: 0;
-			border: 0;
-		}
-
-		.profile .navigation .menu ul li {
-			width: calc(100% - 3px);
-		}
-
-		.profile .navigation .menu ul li:has(a.active) {
-			background: #989898;
-			border-left: 3px solid #2aa5f2;
-		}
-
-
-		.profile .navigation .menu .nav-tabs .nav-link.active {
-			background-color: unset;
-			border: 0;
-		}
-
-
-		.profile .navigation .menu ul li a {
-			display: block !important;
-			color: #ffffff;
-			padding: 9px 30px;
-		}
-
-		.nav-tabs .nav-link:focus,
-		.nav-tabs .nav-link:hover {
-			border: 0;
-		}
-
-		.profile .navigation .menu ul li.active a {
-			font-weight: 700;
-		}
-
-		.profile .info {
-			padding: 10px;
-			padding-left: 16px;
-		}
-
-		.profile .info .tab-content .tab-title {
-			color: #ffffff;
-			border-left: 3px solid #2aa5f2;
-			padding-left: 10px;
-		}
-
-		.profile .info .tab-content .tab-body .input-zero .label {
-			background: unset;
-		}
-
-		.profile .info .tab-content .tab-body .input-zero {
-			display: flex;
-			margin-bottom: 16px;
-		}
-
-		.profile .info .tab-content .tab-body .input-zero .label {
-			min-width: 130px;
-		}
-
-		.profile .info .tab-content .tab-body .input-zero .input {
-			width: calc(100% - 130px);
-		}
-
-		.profile .info .tab-content .tab-body .input-zero p:not(.label) {
-			color: #ffffff;
-		}
-
-		.profile .info .tab-content #tab-movie-history .watch-history {
-			width: 100%;
-		}
-
-		.profile .info .tab-content #tab-movie-history .watch-history .item a>div:first-child {
-			width: 75px;
-			height: 75px;
-		}
-
-		.profile .info .tab-content #tab-movie-history .watch-history .item a>div:last-child:before {
-			height: 103%;
-		}
-
-		.profile .info .tab-content #tab-movie-history .watch-history .item a>div:last-child {
-			padding: 5px;
-		}
-
-		.profile .info .tab-content #tab-movie-history .watch-history .item a img {
-			width: 100%;
-		}
-
-		.profile .info .tab-content #tab-movie-follow .movie-follow .delete  {
-			position: absolute;
-			z-index: 3;
-			right: 0;
-			background: #000;
-			padding: 5px 10px;
-			top: 0;
-			color: #fff;
-		}
-
-		.profile .info .tab-content #tab-movie-follow .movie-follow .movies-list {
-			align-items: stretch;
-			justify-content: stretch;
-		}
-
-		.profile .info .tab-content #tab-movie-follow .movie-follow .movies-list .movie-item a:not(.delete) {
-			display: flex;
-			flex-direction: column;
-			justify-content: space-between;
-			height: 100%;
-		}
-
-		.profile .info .tab-content #tab-movie-follow .movie-follow .pagination {
-			list-style: none;
-		}
-		
-		.profile .info .tab-content #tab-movie-follow .movie-follow .pagination .pagination-item.active a {
-			background-color: #4caf50;
-		}
-
-		.profile .info .tab-content #tab-update-profile #form-change-password .invalid-feedback {
-			min-height: 20px;
-			display: block;
-			visibility: hidden;
-		}
-
-		.profile .info .tab-content #tab-update-profile #form-change-password .is-invalid~.invalid-feedback {
-			visibility: visible;
-		}
-
-		.profile .info .tab-content #tab-deposit .alert-deposit {
-			font-size: 14px;
-			padding: 10px;
-			background-color: #6d6d6d;
-			border-radius: 5px;
-			color: #fff;
-			box-shadow: 1px 1px 1px 1px #000;
-		}
-
-		.profile .info .tab-content #tab-deposit .deposit-method {
-			padding: 8px;
-			text-align: center;
-			background-color: #9c3737;
-			color: #fff;
-			margin-bottom: 16px;
-		}
-
-		.profile .info .tab-content #tab-deposit #form-deposit .form-group label {
-			font-weight: 500;
-			color: #ff9393;
-		}
-
-		@media (max-width: 991px) {
-			.profile {
-				flex-direction: column;
-			}
-
-			.profile .navigation {
-				width: 100%;
-				margin-bottom: 16px;
-			}
-		}
-
-		@media (max-width: 767px) {
-			.profile .info .tab-content #tab-movie-follow .movie-follow .movies-list .movie-item {
-				width: 33.33%;
-			}
-
-			.profile .info .tab-content #tab-movie-follow .movie-follow .movies-list .movie-item img {
-				height: 100%;
-				width: 100%;
-			}
-
-			.profile .info .tab-content #tab-movie-follow .movie-follow .movies-list .movie-item a:not(.delete) div:has(img) {
-				flex: 1;
-			}
-		}
-
-		@media (max-width: 591px) {
-			.profile .info .tab-content #tab-movie-follow .movie-follow .movies-list .movie-item .episode-latest {
-				font-size: 12px;
-			}
-
-			.profile .info .tab-content #tab-movie-follow .movie-follow .movies-list .movie-item .name-movie {
-				font-size: 13px;
-			}
-		}
-
-		@media (max-width: 480px) {
-			.profile .info .tab-content #tab-movie-follow .movie-follow .movies-list .movie-item .episode-latest {
-				left: 10px;
-				font-size: 10px;
-			}
-
-			.profile .info .tab-content #tab-movie-follow .movie-follow .movies-list .movie-item img {
-				height: 100% !important;
-				width: 100%;
-			}
-
-			.profile .info .tab-content #tab-movie-follow .movie-follow .delete {
-				padding: 1px 5px;
-			}
-
-			.profile .info .tab-content #tab-movie-follow .movie-follow .movies-list .movie-item .name-movie {
-				font-size: 12px;
-			}
-		}
-
-		@media (max-width: 400px) {
-			.profile .info .tab-content #tab-movie-follow .movie-follow .movies-list .movie-item .episode-latest {
-				font-size: 8px;
-			}
-
-			.profile .info {
-				padding-left: unset;
-				padding: 10px 0px;
-			}
-
-			.profile .info .tab-content #tab-movie-follow .movie-follow .movies-list .movie-item .name-movie {
-				font-size: 10px;
-			}
-		}
-	</style>
+	<link href="/themes/styles/ho-so.css?v=<?= time() ?>" rel="stylesheet" />
 </head>
 
 <body class="scroll-bar">
@@ -471,210 +85,13 @@
 		<?php require_once(ROOT_DIR . '/view/header.php'); ?>
 		<div class="ah_content">
 			<?php require_once(ROOT_DIR . '/view/top-note.php'); ?>
-			<!-- css profile  -->
-			<style>
-				/* #1. thông tin chung  */
-				#tab-profile a {
-					color: #0d6efd;
-				}
-
-				.account-info .info-detail .group .detail {
-					display: table-cell;
-					font-weight: 500;
-				}
-
-				.user-page .account-info {
-					position: relative;
-					margin-bottom: 30px;
-				}
-
-				.user-page .posttitle {
-					font-weight: 500;
-					border-left: 3px solid #2aa5f2;
-					padding-left: 10px;
-					font-size: 18px;
-					line-height: 1.5;
-					margin: 0 0 20px;
-					min-height: 27px;
-				}
-
-				.account-info .info-detail {
-					border: 1px solid #d9d9d9;
-					border-radius: 3px;
-					padding: 15px 20px;
-				}
-
-				.account-info .info-detail .group {
-					margin-bottom: 10px;
-				}
-
-				.account-info .info-detail .group .label {
-					min-width: 200px;
-					float: left;
-					width: 100px;
-					color: #ffffff;
-					font-size: 100%;
-					text-align: left;
-					font-weight: 400;
-					display: inline-table;
-				}
-
-				.info-detail {
-					font-size: 13px;
-				}
-
-				/* 1// end - thông tin chung  */
-				/* 3. [phim theo dõi]   */
-				.movies-list .movie-item {
-					width: 25%;
-					font-family: Comfortaa, sans-serif;
-				}
-
-				/* End #. [Phim theo dõi]  */
-
-				/* [Lịch Sử Xem Phim] */
-				ul.list-film {
-					overflow: hidden;
-					clear: both;
-					padding: 4px;
-					font-size: 11px;
-					padding: 3px;
-				}
-
-				.film_lastwatch_grid {
-					padding: 5px;
-					margin: 0 5px 10px;
-					position: relative;
-					color: #000;
-					line-height: 1.5em;
-					font-size: 1.1em;
-					display: grid;
-					grid-template-columns: 120px calc(100% - 120px);
-					height: 70px;
-					overflow: hidden;
-					border: 1px solid#e7e7e7;
-					border-radius: 10px;
-					background: #f9f9f9;
-				}
-
-				.film_lastwatch_round {
-					position: relative;
-					/* min-height: 70px; */
-					/* border-radius: 7px; */
-					overflow: hidden;
-				}
-
-				.film_lastwatch_iconplay {
-					width: 40px;
-					transform: translate(-50%, -50%) !important;
-					left: 50%;
-					top: 50%;
-					position: absolute;
-					display: none;
-				}
-
-				.film_lastwatch_title_deswap {
-					display: none;
-				}
-
-				.film_lastwatch_title_desweb {
-					padding-left: 15px;
-					max-height: 65px;
-					overflow: hidden;
-				}
-
-				.film_lastwatch_timeline {
-					display: none;
-					position: absolute;
-					left: 0;
-					bottom: 0;
-					padding: 2px;
-					background: red;
-					color: #fff;
-				}
-
-				/* [Lịch Sử Xem Phim] */
-
-				/* [thông báo -css] */
-				.wrappertab_notification {
-					background: #fff;
-					border-top: none;
-					border-bottom: none;
-					padding: 15px 5px 10px;
-					overflow: hidden;
-				}
-
-				.wrappertab_notification .tab_notification.active {
-					background: #2aa5f2;
-					border: 1px solid #2aa5f2;
-					color: #fff;
-				}
-
-				.wrappertab_notification .tab_notification {
-					color: #7e7e7e;
-					border: 1px solid #2aa5f2;
-					margin: 0 10px;
-					line-height: 26px;
-					font-family: Arial, Helvetica, sans-serif;
-					display: inline-block;
-					padding: 5px 10px;
-					border-radius: 10px;
-					cursor: pointer;
-				}
-
-				.tab_notification.active a {
-					color: #fff;
-				}
-
-				.wrappertab_notification .tab_notification {
-					color: #7e7e7e;
-					border: 1px solid #2aa5f2;
-					margin: 0 10px;
-					line-height: 26px;
-					font-family: Arial, Helvetica, sans-serif;
-					display: inline-block;
-					padding: 5px 10px;
-					border-radius: 10px;
-					cursor: pointer;
-				}
-
-				.noti {
-					padding: 10px;
-					border-bottom: 1px solid #e9e9e9;
-				}
-
-				.noti-two {
-					padding: 10px 0;
-					font-size: 0.8em;
-					color: #777;
-				}
-
-				.noti-two span {
-					color: #FFF;
-					padding-right: 10px;
-					cursor: pointer;
-				}
-
-				.center {
-					text-align: center;
-					cursor: pointer;
-				}
-
-				/* [End - thông báo ] */
-
-				/* [bình luận] */
-				.cmt-time {
-					padding-left: 15px;
-				}
-			</style>
-			<!-- end-css-profile  -->
-
 			<div class="profile">
 				<div class="navigation">
 					<!-- Avatar -->
 					<div class="avatar">
 						<div class="img">
 							<img src="<?= $user['avatar'] ?>" />
+							<img src="<?= getFrameAvatar($user['avatar_frame']) ?>" alt="" class="avatar-frame">
 							<button class="upload-avatar" type="button" onclick="showModal()"><i class="fa fa-cloud-upload"></i> Up Avatar</button>
 						</div>
 						<div class="profile-info">
@@ -690,9 +107,9 @@
 						</div>
 						<div class="progress">
 							<?php
-								$exp = number_format(($user['exp']*100)/getExpLevel($user['level']), 0, ',', '.');
+							$exp = number_format(($user['exp'] * 100) / getExpLevel($user['level']), 0, ',', '.');
 							?>
-							<span class="progress-bar" style="width: <?=$exp?>%"><?= $exp.'%' ?></span>
+							<span class="progress-bar" style="width: <?= $exp ?>%"><?= $exp . '%' ?></span>
 						</div>
 					</div>
 					<!-- Menu -->
@@ -711,6 +128,11 @@
 							<li class="nav-item menu-item hvr-sweep-to-right">
 								<a class="nav-link" href="#tab-update-profile" data-bs-toggle="tab">
 									<i class="fa-solid fa-pen-to-square"></i> Chỉnh sửa thông tin
+								</a>
+							</li>
+							<li class="nav-item menu-item hvr-sweep-to-right">
+								<a class="nav-link " href="#tab-cart" data-bs-toggle="tab">
+									<i class="fa-solid fa-cart-shopping"></i> Cửa hàng vật phẩm
 								</a>
 							</li>
 							<li class="nav-item menu-item hvr-sweep-to-right">
@@ -745,6 +167,31 @@
 				<div class="info">
 					<div class="tab-content">
 						<div class="tab-pane fade show active" id="tab-profile">
+							<h4 class="tab-title mb-3">Tủ đồ cá nhân</h4>
+							<div class="tab-body mb-4 tab-avatar-frame-content">
+								<ul class="nav nav-tabs mb-2" role="tablist">
+									<li class="nav-item menu-item hvr-sweep-to-right">
+										<a class="nav-link active" href="#tab-user-owned-frame" data-bs-toggle="tab">
+											KHUNG VIỀN
+										</a>
+									</li>
+								</ul>
+								<div class="tab-content">
+									<div class="tab-pane fade show active" id="tab-user-owned-frame">
+										<div class="tab-body">
+											<div class="list-owned-frame">
+												<?php foreach ($listAvatarFrame as $k => $v) : ?>
+													<?php if (in_array($k, $listUserFrame)) : ?>
+														<div class="frame-owned" data-id="<?= $k ?>" data-frame="<?= $v['icon'] ?>">
+															<img src="<?= $v['icon'] ?>" alt="">
+														</div>
+													<?php endif ?>
+												<?php endforeach ?>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
 							<h4 class="tab-title">Thông tin chung</h4>
 							<div class="tab-body">
 								<div class="account-info clearfix">
@@ -753,47 +200,47 @@
 										<div class="group">
 											<div class="label">Gói VIP ADS:</div>
 											<div class="detail">
-												<?=nl2br($configs['vip_package'])?><br>
+												<?= nl2br($configs['vip_package']) ?><br>
 												<i class="fa fa-long-arrow-right" aria-hidden="true"></i> <a href="/store#vip">Mua VIP ADS tắt quảng cáo tại đây</a>
 											</div>
 										</div>
 										<div class="group">
 											<div class="label">Tham gia nhóm Telegram:</div>
 											<div class="detail">
-												+<?=$configs['join_telegram']?> xu<br>
-												<i class="fa fa-long-arrow-right" aria-hidden="true"></i> 
+												+<?= $configs['join_telegram'] ?> xu<br>
+												<i class="fa fa-long-arrow-right" aria-hidden="true"></i>
 												<a href="/user_edit">Tham gia nhóm nhận thông báo quan trọng tại đây</a>
 											</div>
 										</div>
 										<div class="group">
 											<div class="label">Đăng nhập mỗi ngày:</div>
-											<div class="detail">+<?=$configs['first_login']?> xu</div>
+											<div class="detail">+<?= $configs['first_login'] ?> xu</div>
 										</div>
 										<div class="group">
 											<div class="label">OnLine:</div>
 											<div class="detail">
-												<?=nl2br($configs['online_reward'])?>
+												<?= nl2br($configs['online_reward']) ?>
 											</div>
 										</div>
 										<div class="group">
 											<div class="label">Cây khế nông trại:</div>
-											<div class="detail"><?=$configs['farm_tree']?></div>
+											<div class="detail"><?= $configs['farm_tree'] ?></div>
 										</div>
 										<div class="group">
 											<div class="label">Bình luận:</div>
 											<div class="detail">
-												mỗi bình luận trong bộ phim trong 1 ngày + <?=$configs['comment']?> xu (chỉ tính bình luận đầu tiên trong ngày của bộ phim đó ).
+												mỗi bình luận trong bộ phim trong 1 ngày + <?= $configs['comment'] ?> xu (chỉ tính bình luận đầu tiên trong ngày của bộ phim đó ).
 											</div>
 										</div>
 										<div class="group">
 											<div class="label">Up Avatar:</div>
 											<div class="detail">
-												+<?=$configs['first_upload_avatar']?> xu ( lần đầu )
+												+<?= $configs['first_upload_avatar'] ?> xu ( lần đầu )
 											</div>
 										</div>
 										<div class="group">
 											<div class="label">Vip Icon:</div>
-											<div class="detail"><?=$configs['vip_icon']?></div>
+											<div class="detail"><?= $configs['vip_icon'] ?></div>
 										</div>
 										<div class="group">
 											<div class="label">Sưu tầm khung viền:</div>
@@ -802,14 +249,14 @@
 										<div class="group">
 											<div class="label">Nạp Xu:</div>
 											<div class="detail">
-												nạp ít nhất <?=$configs['deposit_min']?>$<br>
-												mỗi 1$=<?=$configs['deposit_rate']?> xu<br>
+												nạp ít nhất <?= $configs['deposit_min'] ?>$<br>
+												mỗi 1$=<?= $configs['deposit_rate'] ?> xu<br>
 											</div>
 										</div>
 										<div class="group">
 											<div class="label">Giá Vip / Tháng:</div>
 											<div class="detail">
-												<?=$configs['vip_fee']?> xu
+												<?= $configs['vip_fee'] ?> xu
 											</div>
 										</div>
 									</div>
@@ -890,6 +337,44 @@
 							<h4 class="tab-title">Phim theo dõi</h4>
 							<div class="movie-follow"></div>
 						</div>
+						<div class="tab-pane fade" id="tab-cart">
+							<h4 class="tab-title">Cửa hàng vật phẩm</h4>
+							<div class="">
+								<ul class="nav nav-tabs" role="tablist">
+									<li class="nav-item menu-item hvr-sweep-to-right">
+										<a class="nav-link active" href="#tab-user-frame" data-bs-toggle="tab">
+											KHUNG VIỀN
+										</a>
+									</li>
+								</ul>
+								<div class="tab-content">
+									<div class="tab-pane fade show active" id="tab-user-frame">
+										<div class="tab-body">
+											<div class="list-avatar-frame mt-4">
+												<?php if (!empty($listAvatarFrame)) : ?>
+													<?php foreach ($listAvatarFrame as $key => $frame) : ?>
+														<div class="frame <?= in_array($key, $listUserFrame) ? 'owned' : '' ?>" data-id="<?= $key ?>" data-price="<?= numberFormat($frame['price']) ?>" data-frame="<?= $frame['icon'] ?>">
+															<img src="<?= $frame['icon'] ?>" alt="">
+														</div>
+													<?php endforeach ?>
+												<?php else : ?>
+													<p class="text-center">Nội dung đang cập nhật</p>
+												<?php endif ?>
+											</div>
+											<div class="current-coin mt-2">
+												<p class="coin fw-bold"><img src="/themes/img/coin_15.gif" alt=""> Tài sản: <?= number_format($user['coins']) ?> XU</p>
+											</div>
+											<div class="avatar-frame-price d-none">
+												<p>Giá: <span class="frame-price"></span> XU</p>
+												<input name="frame-id" type="text" hidden>
+												<button type="button" class="btn btn-primary" id="buy-frame"><i class="fa-solid fa-cart-plus"></i> Mua</button>
+											</div>
+											<div class="alert alert-danger mt-3 d-none"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
 						<div class="tab-pane fade" id="tab-movie-history">
 							<h4 class="tab-title">Lịch sử xem phim</h4>
 							<div class="tab-body">
@@ -946,19 +431,19 @@
 </body>
 
 <script type="text/javascript" src="/themes/js_ob/user.profile.js?v=1.7.4"></script>
-<script src="https://www.paypal.com/sdk/js?client-id=<?=$paypalConfig['client_id']?>&components=buttons&disable-funding=card"></script>
+<script src="https://www.paypal.com/sdk/js?client-id=<?= $paypalConfig['client_id'] ?>&components=buttons&disable-funding=card"></script>
 
 <script>
 	// show Tab Notificaiton 
 	function showTab(tabId) {
 		// #1. lấy all element tab content 
-		var tabContents = document.querySelectorAll('.tab_content_notification');
+		// var tabContents = document.querySelectorAll('.tab_content_notification');
 		// #2. ân tất cả
-		tabContents.forEach(function(content) {
-			content.style.display = 'none';
-		});
+		// tabContents.forEach(function(content) {
+		// content.style.display = 'none';
+		// });
 		// #3. show tab id được click
-		document.getElementById(tabId).style.display = 'block';
+		// document.getElementById(tabId).style.display = 'block';
 	}
 	// doing
 	function AddActive() {
@@ -967,39 +452,43 @@
 </script>
 
 <script type="text/javascript">
+	$('body').on('click', '[data-bs-toggle="tab"]', function(e) {
+		$('[data-bs-toggle="tab"]').css('display', 'block');
+	});
+
 	// Change password
-		$(document).ready(function() {
-			let form = $('#form-change-password');
-			let new_password = form.find('[name="new_password"]');
-			let btn = form.find('.btn[type="submit"]');
-			let form_error = form.find('.form-error');
-			
-			form.submit(function() {
-				let error = 0;
-				
-				if (!new_password.val()) {
-					new_password.focus();
-					new_password.addClass('is-invalid');
-					new_password.next().html('Nhập mật khẩu mới');
-					error = 1;
-				} else {
-					new_password.removeClass('is-invalid');
-				}
+	$(document).ready(function() {
+		let form = $('#form-change-password');
+		let new_password = form.find('[name="new_password"]');
+		let btn = form.find('.btn[type="submit"]');
+		let form_error = form.find('.form-error');
 
-				if (new_password.val().length < 6) {
-					new_password.focus();
-					new_password.addClass('is-invalid');
-					new_password.next().html('Mật khẩu đặt phải nhiều hơn 6 kí tự');
-					error = 1;
-				} else {
-					new_password.removeClass('is-invalid');
-				}
+		form.submit(function() {
+			let error = 0;
 
-				if (error == 0) {
-					Promise.all([changePassword(new_password.val())])
+			if (!new_password.val()) {
+				new_password.focus();
+				new_password.addClass('is-invalid');
+				new_password.next().html('Nhập mật khẩu mới');
+				error = 1;
+			} else {
+				new_password.removeClass('is-invalid');
+			}
+
+			if (new_password.val().length < 6) {
+				new_password.focus();
+				new_password.addClass('is-invalid');
+				new_password.next().html('Mật khẩu đặt phải nhiều hơn 6 kí tự');
+				error = 1;
+			} else {
+				new_password.removeClass('is-invalid');
+			}
+
+			if (error == 0) {
+				Promise.all([changePassword(new_password.val())])
 					.then(function(responses) {
 						let rs = responses[0].data;
-						if (rs.status=='success') {
+						if (rs.status == 'success') {
 							new_password.removeClass('is-invalid');
 							new_password.val('');
 							alert(rs.result);
@@ -1012,24 +501,24 @@
 					.catch(function(error) {
 						console.error(error);
 					});
-				}
-
-				return false;
-			});
-		});
-
-		function changePassword(new_password) {
-			if (new_password) {
-				return axios.post(
-					'/server/api', {
-						"action": "change_password",
-						"new_password": new_password,
-					}
-				);
 			}
 
 			return false;
+		});
+	});
+
+	function changePassword(new_password) {
+		if (new_password) {
+			return axios.post(
+				'/server/api', {
+					"action": "change_password",
+					"new_password": new_password,
+				}
+			);
 		}
+
+		return false;
+	}
 	// End change password
 
 	// Movie watch history
@@ -1134,12 +623,13 @@
 		let local_store = localStorage.getItem("data_follow");
 		let data_follow_store = local_store ? JSON.parse(local_store) : [];
 		let limit;
+		
 		if (screen.width <= 767) {
 			limit = 9;
 		} else {
 			limit = 8;
 		}
-		
+
 		return axios.post(
 			'/server/api', {
 				"action": "data_follow",
@@ -1219,7 +709,7 @@
 		} else {
 			content = 'Không có bình luận';
 		}
-		
+
 		$('#tab-comment .list-comment').html(content);
 	});
 
@@ -1233,9 +723,9 @@
 
 	//Deposit
 	let formDeposit = $('#form-deposit');
-	let depositMin = <?=!empty($configs['deposit_min']) ? $configs['deposit_min'] : 10?>;
-	let depositRate = <?=!empty($configs['deposit_rate']) ? $configs['deposit_rate'] : 10.000?>;
-	let depositExp = <?=!empty($configs['deposit_exp']) ? $configs['deposit_exp'] : 50?>;
+	let depositMin = <?= !empty($configs['deposit_min']) ? $configs['deposit_min'] : 10 ?>;
+	let depositRate = <?= !empty($configs['deposit_rate']) ? $configs['deposit_rate'] : 10.000 ?>;
+	let depositExp = <?= !empty($configs['deposit_exp']) ? $configs['deposit_exp'] : 50 ?>;
 
 	$(document).ready(function() {
 		caculateDeposit();
@@ -1250,7 +740,7 @@
 		});
 
 		paypal.Buttons({
-			onInit(data, actions)  {
+			onInit(data, actions) {
 				// actions.disable();
 
 				// if (!validateFormDeposit()) {
@@ -1265,17 +755,15 @@
 			createOrder: function(data, actions) {
 				if (!validateFormDeposit()) {
 					return actions.order.create({
-						purchase_units: [
-							{
-								amount: {
-									currentcy: 'USD',
-									value: formDeposit.find('#deposit_money').val()
-								}
+						purchase_units: [{
+							amount: {
+								currentcy: 'USD',
+								value: formDeposit.find('#deposit_money').val()
 							}
-						]
+						}]
 					});
 				}
-				
+
 				return false;
 			},
 			onApprove: function(data, actions) {
@@ -1300,14 +788,18 @@
 			}
 		}).render('#deposit-checkout');
 	});
-	
+
 	function caculateDeposit() {
 		let inputMoney = formDeposit.find('#deposit_money');
 		let inputEarn = formDeposit.find('#deposit_earn');
 		let inputExp = formDeposit.find('#deposit_exp');
 
-		inputEarn.val(new Intl.NumberFormat('vi-VN', { maximumSignificantDigits: 3 }).format(inputMoney.val() * depositRate));
-		inputExp.val(new Intl.NumberFormat('vi-VN', { maximumSignificantDigits: 3 }).format(inputMoney.val() * depositExp));
+		inputEarn.val(new Intl.NumberFormat('vi-VN', {
+			maximumSignificantDigits: 3
+		}).format(inputMoney.val() * depositRate));
+		inputExp.val(new Intl.NumberFormat('vi-VN', {
+			maximumSignificantDigits: 3
+		}).format(inputMoney.val() * depositExp));
 	}
 
 	function validateFormDeposit() {
@@ -1327,7 +819,7 @@
 		}
 
 		if (inputMoney.val() <= 9) {
-			errorMsg = 'Nạp ít nhất '+depositMin+'$';
+			errorMsg = 'Nạp ít nhất ' + depositMin + '$';
 			inputMoney.addClass('is-invalid');
 			error = 1;
 		} else {
@@ -1346,6 +838,100 @@
 	}
 	//End deposit
 
+	// Avatar Frame Store
+	$('body').on('click', '.frame', function() {
+		let id = $(this).attr('data-id');
+		let price = $(this).attr('data-price');
+		let frame = $(this).attr('data-frame');
+
+		$('.frame').removeClass('active');
+		$(this).addClass('active');
+
+		$('.avatar-frame-price .frame-price').html(price);
+		$('.avatar-frame-price [name="frame-id"]').val(id);
+		$('.avatar-frame-price').removeClass('d-none');
+
+		$('.avatar-frame').attr('src', frame);
+
+		$('#tab-user-frame .alert-danger').addClass('d-none');
+	});
+
+	// Buy avatar frame
+	$('body').on('click', '#buy-frame', function() {
+		let frame = $('[name="frame-id"]').val();
+		let errorDiv = $('#tab-user-frame .alert-danger');
+
+		errorDiv.addClass('d-none');
+
+		if (!frame) {
+			return false;
+		}
+
+		if ($(`[data-id="${frame}"]`).hasClass('owned')) {
+			errorDiv.html('Đã sở hữu');
+			errorDiv.removeClass('d-none');
+			return false;
+		}
+
+		Promise.all([
+				axios.post('/server/api', {
+					"action": 'buy_avatar_frame',
+					"token": $dt.token,
+					"data": {
+						'frame': frame
+					}
+				})
+			])
+			.then(function(responses) {
+				let rs = responses[0].data;
+
+				if (rs.success) {
+					location.reload();
+				} else {
+					errorDiv.html(rs.message);
+					errorDiv.removeClass('d-none');
+				}
+			})
+			.catch(function(error) {
+				console.error(error);
+			});
+	});
+
+	// User active avatar frame
+	$('body').on('click', '.frame-owned', function() {
+		let element = $(this);
+		let id = element.attr('data-id');
+		let frame = element.attr('data-frame');
+
+		if (!id) {
+			return false;
+		}
+
+		element.append('<img src="/themes/img/loading_spinner_24x24.gif" class="loading">');
+
+		Promise.all([
+			axios.post('/server/api', {
+				"action": 'active_avatar_frame',
+				"token": $dt.token,
+				"data": {
+					'frame': id
+				}
+			})
+		])
+		.then(function(responses) {
+			let rs = responses[0].data;
+
+			if (rs.success) {
+				$('.avatar-frame').attr('src', frame);
+			} else {
+				alert(ms.message);
+			}
+			element.find('.loading').remove();
+		})
+		.catch(function(error) {
+			console.error(error);
+		});
+	});
 </script>
 
 </html>

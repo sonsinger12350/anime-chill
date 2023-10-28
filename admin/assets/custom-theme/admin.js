@@ -411,7 +411,7 @@ var UploadImages = (async(InputFile, width, height) => {
         });
     }
 });
-var UploadImagesBase64 = (async(InputFile) => {
+var UploadImagesBase64 = (async(InputFile, folder = '') => {
     $(`input[name="New[${InputFile.id}]"]`).val('Xin Chờ Đang Tải Lên....');
     $(`input[name="New[${InputFile.id}]"]`).prop("disabled", true);
     var img = InputFile.files[0];
@@ -434,6 +434,7 @@ var UploadImagesBase64 = (async(InputFile) => {
         var formData = new FormData();
         formData.append('image', reader.result);
         formData.append('action', 'UploadImagesBase64');
+        formData.append('folder', folder);
         settings.data = formData;
         $.ajax(settings).done(function(response) {
             if (JSON.parse(response).code == 200) {

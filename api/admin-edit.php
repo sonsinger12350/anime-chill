@@ -9,9 +9,9 @@ $id = sql_escape($_POST['id']);
 <link rel="stylesheet" type="text/css" href="<?= URL ?>/admin/assets/css/vendors/select2.css">
 <link rel="stylesheet" type="text/css" href="<?= URL ?>/admin/assets/css/vendors/summernote.css">
 <?php
-if ($FormEdit == "server") {
+if ($FormEdit == "server") {    
     $data = GetDataArr("server", "id = $id");
-?>
+    ?>
     <form submit-ajax="ngockush" form-action="UpdateDatabase" action="<?= URL ?>/admin/server/api" method="POST" form-check="true">
         <input type="text" name="table" value="server" style="display: none;">
         <input type="text" name="id" value="<?= $id ?>" style="display: none;">
@@ -32,7 +32,7 @@ if ($FormEdit == "server") {
     </form>
 <?php } else if ($FormEdit == "movie") {
     $data = GetDataArr("movie", "id = $id");
-?>
+    ?>
     <form submit-ajax="ngockush" form-action="UpdateDatabase" action="<?= URL ?>/admin/server/api" method="POST" form-check="false">
         <div class="col-12 text-center mb-3">
             <button class="btn btn-outline-info mt-2" type="submit">Cập Nhật Movie</button>
@@ -214,7 +214,7 @@ if ($FormEdit == "server") {
     </form>
 <?php } else if ($FormEdit == "ServerAddEpisode") {
     $data = GetDataArr("episode", "id = $id");
-?>
+    ?>
     <div class="mb-5">
         <h4 class="card-title">Chỉnh Sửa Episode <?= $data['ep_name'] ?></h4>
         <?php
@@ -299,7 +299,7 @@ if ($FormEdit == "server") {
     </script>
 <?php } else if ($FormEdit == "level_color") {
     $data = GetDataArr("level_color", "id = $id");
-?>
+    ?>
     <form submit-ajax="ngockush" form-action="UpdateDatabase" action="<?= URL ?>/admin/server/api" method="POST" form-check="true">
         <input type="text" name="table" value="level_color" style="display: none;">
         <input type="text" name="id" value="<?= $id ?>" style="display: none;">
@@ -331,7 +331,7 @@ if ($FormEdit == "server") {
     </form>
 <?php } else if ($FormEdit == "user") {
     $data = GetDataArr("user", "id = $id");
-?>
+    ?>
     <form submit-ajax="ngockush" form-action="UpdateDatabase" action="<?= URL ?>/admin/server/api" method="POST" form-check="true">
         <input type="text" name="table" value="user" style="display: none;">
         <input type="text" name="id" value="<?= $id ?>" style="display: none;">
@@ -425,7 +425,7 @@ if ($FormEdit == "server") {
     </form>
 <?php } else if ($FormEdit == "ads") {
     $data = GetDataArr("ads", "id = $id");
-?>
+    ?>
     <form submit-ajax="ngockush" form-action="UpdateDatabase" action="<?= URL ?>/admin/server/api" method="POST" form-check="true">
         <input type="text" class="form-control" name="table" value="ads" style="display: none;">
         <input type="text" name="id" value="<?= $id ?>" style="display: none;">
@@ -458,6 +458,57 @@ if ($FormEdit == "server") {
                 <label>Lượt Click</label>
                 <input type="number" class="form-control" name="data[click]" value="<?= $data['click'] ?>">
             </div>
+            <div class="col-12 text-center mb-3">
+                <button class="btn btn-outline-info mt-" type="submit">Cập Nhật</button>
+            </div>
+        </div>
+    </form>
+<?php } else if ($FormEdit == "khung_vien") {
+    $data = GetDataArr("khung_vien", "id = $id");
+    ?>
+    <form submit-ajax="ngockush" form-action="UpdateDatabase" action="<?= URL ?>/admin/server/api" method="POST" form-check="true">
+        <input type="text" class="form-control" name="table" value="khung_vien" style="display: none;">
+        <input type="text" name="id" value="<?= $id ?>" style="display: none;">
+        <div class="form-group row">
+            <div class="col-lg-12 col-md-12 mb-3">
+                <label>Khung viền</label>
+                <div class="input-group">
+                    <input class="form-control" type="text" name="data[icon]" value="<?=$data['icon']?>">
+                    <button type="button" class="btn btn-primary" onclick="$('#icon').click();">Chọn File</button>
+                    <input id="icon" type="file" style="display: none;" onchange="UploadImagesBase64(this, 'khung_vien');" accept="image/*" />
+                </div>
+            </div>
+            <div class="col-12 mb-3">
+                <label>Giá tiền</label>
+                <input type="number" class="form-control" name="data[price]" value="<?=$data['price']?>">
+            </div>
+            <!-- <div class="col-12 mb-3">
+                <label>Loại Quảng Cáo</label>
+                <input type="text" class="form-control" value="<?= ADS_Name($data['position_name']) ?>" readonly>
+            </div>
+            <div class="col-12 mb-3">
+                <label>Link Đích</label>
+                <input type="text" class="form-control" name="data[href]" value="<?= $data['href'] ?>">
+            </div>
+            <div class="col-lg-6 col-md-12 mb-3">
+                <label>Hình Ảnh</label>
+                <div class="input-group">
+                    <input class="form-control" type="text" name="data[image]" value="<?= $data['image'] ?>">
+                    <button type="button" class="btn btn-primary" onclick="$('#image').click();">Chọn File</button>
+                    <input id="image" type="file" style="display: none;" onchange="UploadImages(this, 250, 350);" accept="image/*" />
+                </div>
+            </div>
+            <div class="col-6 mb-3">
+                <label>Bật Tắt Quảng Cáo</label>
+                <select class="form-control" name="data[type]">
+                    <option value="true" <?= Selected($data['type'], 'true') ?>>Bật</option>
+                    <option value="false" <?= Selected($data['type'], 'false') ?>>Tắt</option>
+                </select>
+            </div>
+            <div class="col-12 mb-3">
+                <label>Lượt Click</label>
+                <input type="number" class="form-control" name="data[click]" value="<?= $data['click'] ?>">
+            </div> -->
             <div class="col-12 text-center mb-3">
                 <button class="btn btn-outline-info mt-" type="submit">Cập Nhật</button>
             </div>
