@@ -634,6 +634,21 @@ ul.list-film {
 }
 /* End Avatar Frame */
 
+.profile .vip-info {
+	display: flex;
+	padding: 20px;
+	background-color: #505050;
+	margin-bottom: 24px;
+}
+
+.profile .vip-info .days {
+	display: flex;
+	align-items: center;
+	column-gap: 10px;
+	color: #ff9393;
+	font-weight: 600;
+}
+
 @media (max-width: 991px) {
 	.profile {
 		flex-direction: column;
