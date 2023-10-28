@@ -176,8 +176,7 @@ if ($Json['action'] == 'live_search') {
     }
 
     $HTML_DATA .= '</div>';
-
-    if (!empty($pagination)) {
+    if (!empty($pagination) && count($pagination) > 1) {
         $totalPage = count($pagination);
         $HTML_DATA .= '<ul class="pagination">';
 
