@@ -1,46 +1,66 @@
 <?php
-	if (!defined('MovieAnime')) die("You are illegally infiltrating our website");
-	if (!$_author_cookie) die(header("location:/login"));
-	if (isset($_POST['change_profile'])) {
-		$nickname = sql_escape($_POST['nickname']);
-		$quote = sql_escape($_POST['quote']);
-		$Success = 0;
-		if (!$nickname) {
-			$Success++;
-			$Notice .= '<div class="noti-error flex flex-hozi-center"><span class="material-icons-round margin-0-5">error</span>Vui Lòng Nhập Biệt Danh Của Bạn</div>';
-		}
-		if (strlen($nickname) < 6) {
-			$Success++;
-			$Notice .= '<div class="noti-error flex flex-hozi-center"><span class="material-icons-round margin-0-5">error</span>Biệt Danh phải nhiều hơn 6 kí tự</div>';
-		}
-		if (strlen($quote) > 50) {
-			$Success++;
-			$Notice .= '<div class="noti-error flex flex-hozi-center"><span class="material-icons-round margin-0-5">error</span>Châm Ngôn Sống Không Được Quá 50 Ký Tự</div>';
-		}
-		if ($Success == 0) {
-			$mysql->update("user", "nickname = '$nickname',quote = '$quote'", "email = '$useremail'");
-			header("Refresh:0");
-			$Notice .= '<div class="noti-success flex flex-hozi-center"><span class="material-icons-round margin-0-5">success</span>Cập Nhật Hồ Sơ Thành Công</div>';
-		}
+if (!defined('MovieAnime')) die("You are illegally infiltrating our website");
+if (!$_author_cookie) die(header("location:/login"));
+if (isset($_POST['change_profile'])) {
+	$nickname = sql_escape($_POST['nickname']);
+	$quote = sql_escape($_POST['quote']);
+	$Success = 0;
+	if (!$nickname) {
+		$Success++;
+		$Notice .= '<div class="noti-error flex flex-hozi-center"><span class="material-icons-round margin-0-5">error</span>Vui Lòng Nhập Biệt Danh Của Bạn</div>';
 	}
-	$configs = getConfigGeneralUserInfo([
-		'vip_package',
-		'join_telegram',
-		'first_login',
-		'online_reward',
-		'farm_tree',
-		'comment',
-		'first_upload_avatar',
-		'vip_icon',
-		'deposit_min',
-		'deposit_rate',
-		'deposit_exp',
-		'vip_fee',
-	]);
+	if (strlen($nickname) < 6) {
+		$Success++;
+		$Notice .= '<div class="noti-error flex flex-hozi-center"><span class="material-icons-round margin-0-5">error</span>Biệt Danh phải nhiều hơn 6 kí tự</div>';
+	}
+	if (strlen($quote) > 50) {
+		$Success++;
+		$Notice .= '<div class="noti-error flex flex-hozi-center"><span class="material-icons-round margin-0-5">error</span>Châm Ngôn Sống Không Được Quá 50 Ký Tự</div>';
+	}
+	if ($Success == 0) {
+		$mysql->update("user", "nickname = '$nickname',quote = '$quote'", "email = '$useremail'");
+		header("Refresh:0");
+		$Notice .= '<div class="noti-success flex flex-hozi-center"><span class="material-icons-round margin-0-5">success</span>Cập Nhật Hồ Sơ Thành Công</div>';
+	}
+}
+$configs = getConfigGeneralUserInfo([
+	'vip_package',
+	'join_telegram',
+	'first_login',
+	'online_reward',
+	'farm_tree',
+	'comment',
+	'first_upload_avatar',
+	'vip_icon',
+	'deposit_min',
+	'deposit_rate',
+	'deposit_exp',
+	'vip_fee',
+]);
 
-	$paypalConfig = [
-		'client_id'	=>	'AYldjoFRqHN-fq47TxTzcg9pQc6f-Z8jYqqbTaVniT4bCdoD4fZwp37Zjv--L2ffBnmkS7M99P8medCf',
+$paypalConfig = [
+	'client_id'	=>	'AYldjoFRqHN-fq47TxTzcg9pQc6f-Z8jYqqbTaVniT4bCdoD4fZwp37Zjv--L2ffBnmkS7M99P8medCf',
+];
+
+global $mysql;
+$sql = "SELECT `id`, `icon`, `price` FROM `table_khung_vien` ORDER BY `price` DESC LIMIT 100";
+$query = $mysql->query($sql);
+$listAvatarFrame = [];
+
+while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+	$listAvatarFrame[$row['id']] = [
+		'price'	=>	$row['price'],
+		'icon'	=>	$row['icon'],
 	];
+}
+
+$sql = "SELECT `frame_id` FROM table_user_avatar_frame WHERE `user_id` = " . $user['id'] . " LIMIT 100";
+$query = $mysql->query($sql);
+$listUserFrame = [];
+
+while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+	$listUserFrame[] = $row['frame_id'];
+}
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -51,8 +71,8 @@
 	require_once(ROOT_DIR . '/view/head.php');
 	?>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" />
-	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.min.js"></script> -->
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.min.js"></script>
+	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script> -->
 	<script type="text/javascript" src="/themes/js_ob/croppie.js?v=1.7.4"></script>
 	<link href="/themes/styles/croppie.css?v=1.4.0" rel="stylesheet" />
 	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/autonumeric/4.10.0/autoNumeric.min.js"></script> -->
@@ -468,6 +488,7 @@
 			}
 		}
 	</style>
+	<link href="/themes/styles/ho-so.css?v=<?= time() ?>" rel="stylesheet" />
 </head>
 
 <body class="scroll-bar">
@@ -695,6 +716,7 @@
 					<div class="avatar">
 						<div class="img">
 							<img src="<?= $user['avatar'] ?>" />
+							<img src="<?= getFrameAvatar($user['avatar_frame']) ?>" alt="" class="avatar-frame">
 							<button class="upload-avatar" type="button" onclick="showModal()"><i class="fa fa-cloud-upload"></i> Up Avatar</button>
 						</div>
 						<div class="profile-info">
@@ -720,9 +742,9 @@
 						</div>
 						<div class="progress">
 							<?php
-								$exp = number_format(($user['exp']*100)/getExpLevel($user['level']), 0, ',', '.');
+							$exp = number_format(($user['exp'] * 100) / getExpLevel($user['level']), 0, ',', '.');
 							?>
-							<span class="progress-bar" style="width: <?=$exp?>%"><?= $exp.'%' ?></span>
+							<span class="progress-bar" style="width: <?= $exp ?>%"><?= $exp . '%' ?></span>
 						</div>
 					</div>
 					<!-- Menu -->
@@ -741,6 +763,11 @@
 							<li class="nav-item menu-item hvr-sweep-to-right">
 								<a class="nav-link" href="#tab-update-profile" data-bs-toggle="tab">
 									<i class="fa-solid fa-pen-to-square"></i> Chỉnh sửa thông tin
+								</a>
+							</li>
+							<li class="nav-item menu-item hvr-sweep-to-right">
+								<a class="nav-link " href="#tab-cart" data-bs-toggle="tab">
+									<i class="fa-solid fa-cart-shopping"></i> Cửa hàng vật phẩm
 								</a>
 							</li>
 							<li class="nav-item menu-item hvr-sweep-to-right">
@@ -776,6 +803,31 @@
 					<div class="tab-content">
 						<h4 class="text-while bg-primary" id="thongbao"></h4>
 						<div class="tab-pane fade show active" id="tab-profile">
+							<h4 class="tab-title mb-3">Tủ đồ cá nhân</h4>
+							<div class="tab-body mb-4 tab-avatar-frame-content">
+								<ul class="nav nav-tabs mb-2" role="tablist">
+									<li class="nav-item menu-item hvr-sweep-to-right">
+										<a class="nav-link active" href="#tab-user-owned-frame" data-bs-toggle="tab">
+											KHUNG VIỀN
+										</a>
+									</li>
+								</ul>
+								<div class="tab-content">
+									<div class="tab-pane fade show active" id="tab-user-owned-frame">
+										<div class="tab-body">
+											<div class="list-owned-frame">
+												<?php foreach ($listAvatarFrame as $k => $v) : ?>
+													<?php if (in_array($k, $listUserFrame)) : ?>
+														<div class="frame-owned" data-id="<?= $k ?>" data-frame="<?= $v['icon'] ?>">
+															<img src="<?= $v['icon'] ?>" alt="">
+														</div>
+													<?php endif ?>
+												<?php endforeach ?>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
 							<h4 class="tab-title">Thông tin chung</h4>
 							<div class="tab-body">
 								<div class="account-info clearfix">
@@ -790,45 +842,46 @@
 													Mua VIP ADS tắt quảng cáo tại đây
 												</button>
 												<!-- <a href="/store#vip">Mua VIP ADS tắt quảng cáo tại đây</a> -->
+												<i class="fa fa-long-arrow-right" aria-hidden="true"></i> <a href="/store#vip">Mua VIP ADS tắt quảng cáo tại đây</a>
 											</div>
 										</div>
 										<div class="group">
 											<div class="label">Tham gia nhóm Telegram:</div>
 											<div class="detail">
-												+<?=$configs['join_telegram']?> xu<br>
-												<i class="fa fa-long-arrow-right" aria-hidden="true"></i> 
+												+<?= $configs['join_telegram'] ?> xu<br>
+												<i class="fa fa-long-arrow-right" aria-hidden="true"></i>
 												<a href="/user_edit">Tham gia nhóm nhận thông báo quan trọng tại đây</a>
 											</div>
 										</div>
 										<div class="group">
 											<div class="label">Đăng nhập mỗi ngày:</div>
-											<div class="detail">+<?=$configs['first_login']?> xu</div>
+											<div class="detail">+<?= $configs['first_login'] ?> xu</div>
 										</div>
 										<div class="group">
 											<div class="label">OnLine:</div>
 											<div class="detail">
-												<?=nl2br($configs['online_reward'])?>
+												<?= nl2br($configs['online_reward']) ?>
 											</div>
 										</div>
 										<div class="group">
 											<div class="label">Cây khế nông trại:</div>
-											<div class="detail"><?=$configs['farm_tree']?></div>
+											<div class="detail"><?= $configs['farm_tree'] ?></div>
 										</div>
 										<div class="group">
 											<div class="label">Bình luận:</div>
 											<div class="detail">
-												mỗi bình luận trong bộ phim trong 1 ngày + <?=$configs['comment']?> xu (chỉ tính bình luận đầu tiên trong ngày của bộ phim đó ).
+												mỗi bình luận trong bộ phim trong 1 ngày + <?= $configs['comment'] ?> xu (chỉ tính bình luận đầu tiên trong ngày của bộ phim đó ).
 											</div>
 										</div>
 										<div class="group">
 											<div class="label">Up Avatar:</div>
 											<div class="detail">
-												+<?=$configs['first_upload_avatar']?> xu ( lần đầu )
+												+<?= $configs['first_upload_avatar'] ?> xu ( lần đầu )
 											</div>
 										</div>
 										<div class="group">
 											<div class="label">Vip Icon:</div>
-											<div class="detail"><?=$configs['vip_icon']?></div>
+											<div class="detail"><?= $configs['vip_icon'] ?></div>
 										</div>
 										<div class="group">
 											<div class="label">Sưu tầm khung viền:</div>
@@ -837,14 +890,14 @@
 										<div class="group">
 											<div class="label">Nạp Xu:</div>
 											<div class="detail">
-												nạp ít nhất <?=$configs['deposit_min']?>$<br>
-												mỗi 1$=<?=$configs['deposit_rate']?> xu<br>
+												nạp ít nhất <?= $configs['deposit_min'] ?>$<br>
+												mỗi 1$=<?= $configs['deposit_rate'] ?> xu<br>
 											</div>
 										</div>
 										<div class="group">
 											<div class="label">Giá Vip / Tháng:</div>
 											<div class="detail">
-												<?=$configs['vip_fee']?> xu
+												<?= $configs['vip_fee'] ?> xu
 											</div>
 										</div>
 									</div>
@@ -924,6 +977,44 @@
 						<div class="tab-pane fade" id="tab-movie-follow">
 							<h4 class="tab-title">Phim theo dõi</h4>
 							<div class="movie-follow"></div>
+						</div>
+						<div class="tab-pane fade" id="tab-cart">
+							<h4 class="tab-title">Cửa hàng vật phẩm</h4>
+							<div class="">
+								<ul class="nav nav-tabs" role="tablist">
+									<li class="nav-item menu-item hvr-sweep-to-right">
+										<a class="nav-link active" href="#tab-user-frame" data-bs-toggle="tab">
+											KHUNG VIỀN
+										</a>
+									</li>
+								</ul>
+								<div class="tab-content">
+									<div class="tab-pane fade show active" id="tab-user-frame">
+										<div class="tab-body">
+											<div class="list-avatar-frame mt-4">
+												<?php if (!empty($listAvatarFrame)) : ?>
+													<?php foreach ($listAvatarFrame as $key => $frame) : ?>
+														<div class="frame <?= in_array($key, $listUserFrame) ? 'owned' : '' ?>" data-id="<?= $key ?>" data-price="<?= numberFormat($frame['price']) ?>" data-frame="<?= $frame['icon'] ?>">
+															<img src="<?= $frame['icon'] ?>" alt="">
+														</div>
+													<?php endforeach ?>
+												<?php else : ?>
+													<p class="text-center">Nội dung đang cập nhật</p>
+												<?php endif ?>
+											</div>
+											<div class="current-coin mt-2">
+												<p class="coin fw-bold"><img src="/themes/img/coin_15.gif" alt=""> Tài sản: <?= number_format($user['coins']) ?> XU</p>
+											</div>
+											<div class="avatar-frame-price d-none">
+												<p>Giá: <span class="frame-price"></span> XU</p>
+												<input name="frame-id" type="text" hidden>
+												<button type="button" class="btn btn-primary" id="buy-frame"><i class="fa-solid fa-cart-plus"></i> Mua</button>
+											</div>
+											<div class="alert alert-danger mt-3 d-none"></div>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 						<div class="tab-pane fade" id="tab-movie-history">
 							<h4 class="tab-title">Lịch sử xem phim</h4>
@@ -1052,19 +1143,19 @@
 	});
 </script>
 <script type="text/javascript" src="/themes/js_ob/user.profile.js?v=1.7.4"></script>
-<script src="https://www.paypal.com/sdk/js?client-id=<?=$paypalConfig['client_id']?>&components=buttons&disable-funding=card"></script>
+<script src="https://www.paypal.com/sdk/js?client-id=<?= $paypalConfig['client_id'] ?>&components=buttons&disable-funding=card"></script>
 
 <script>
 	// show Tab Notificaiton 
 	function showTab(tabId) {
 		// #1. lấy all element tab content 
-		var tabContents = document.querySelectorAll('.tab_content_notification');
+		// var tabContents = document.querySelectorAll('.tab_content_notification');
 		// #2. ân tất cả
-		tabContents.forEach(function(content) {
-			content.style.display = 'none';
-		});
+		// tabContents.forEach(function(content) {
+		// content.style.display = 'none';
+		// });
 		// #3. show tab id được click
-		document.getElementById(tabId).style.display = 'block';
+		// document.getElementById(tabId).style.display = 'block';
 	}
 	// doing
 	function AddActive() {
@@ -1073,39 +1164,43 @@
 </script>
 
 <script type="text/javascript">
+	$('body').on('click', '[data-bs-toggle="tab"]', function(e) {
+		$('[data-bs-toggle="tab"]').css('display', 'block');
+	});
+
 	// Change password
-		$(document).ready(function() {
-			let form = $('#form-change-password');
-			let new_password = form.find('[name="new_password"]');
-			let btn = form.find('.btn[type="submit"]');
-			let form_error = form.find('.form-error');
-			
-			form.submit(function() {
-				let error = 0;
-				
-				if (!new_password.val()) {
-					new_password.focus();
-					new_password.addClass('is-invalid');
-					new_password.next().html('Nhập mật khẩu mới');
-					error = 1;
-				} else {
-					new_password.removeClass('is-invalid');
-				}
+	$(document).ready(function() {
+		let form = $('#form-change-password');
+		let new_password = form.find('[name="new_password"]');
+		let btn = form.find('.btn[type="submit"]');
+		let form_error = form.find('.form-error');
 
-				if (new_password.val().length < 6) {
-					new_password.focus();
-					new_password.addClass('is-invalid');
-					new_password.next().html('Mật khẩu đặt phải nhiều hơn 6 kí tự');
-					error = 1;
-				} else {
-					new_password.removeClass('is-invalid');
-				}
+		form.submit(function() {
+			let error = 0;
 
-				if (error == 0) {
-					Promise.all([changePassword(new_password.val())])
+			if (!new_password.val()) {
+				new_password.focus();
+				new_password.addClass('is-invalid');
+				new_password.next().html('Nhập mật khẩu mới');
+				error = 1;
+			} else {
+				new_password.removeClass('is-invalid');
+			}
+
+			if (new_password.val().length < 6) {
+				new_password.focus();
+				new_password.addClass('is-invalid');
+				new_password.next().html('Mật khẩu đặt phải nhiều hơn 6 kí tự');
+				error = 1;
+			} else {
+				new_password.removeClass('is-invalid');
+			}
+
+			if (error == 0) {
+				Promise.all([changePassword(new_password.val())])
 					.then(function(responses) {
 						let rs = responses[0].data;
-						if (rs.status=='success') {
+						if (rs.status == 'success') {
 							new_password.removeClass('is-invalid');
 							new_password.val('');
 							alert(rs.result);
@@ -1118,24 +1213,24 @@
 					.catch(function(error) {
 						console.error(error);
 					});
-				}
-
-				return false;
-			});
-		});
-
-		function changePassword(new_password) {
-			if (new_password) {
-				return axios.post(
-					'/server/api', {
-						"action": "change_password",
-						"new_password": new_password,
-					}
-				);
 			}
 
 			return false;
+		});
+	});
+
+	function changePassword(new_password) {
+		if (new_password) {
+			return axios.post(
+				'/server/api', {
+					"action": "change_password",
+					"new_password": new_password,
+				}
+			);
 		}
+
+		return false;
+	}
 	// End change password
 
 	// Movie watch history
@@ -1240,12 +1335,13 @@
 		let local_store = localStorage.getItem("data_follow");
 		let data_follow_store = local_store ? JSON.parse(local_store) : [];
 		let limit;
+		
 		if (screen.width <= 767) {
 			limit = 9;
 		} else {
 			limit = 8;
 		}
-		
+
 		return axios.post(
 			'/server/api', {
 				"action": "data_follow",
@@ -1325,7 +1421,7 @@
 		} else {
 			content = 'Không có bình luận';
 		}
-		
+
 		$('#tab-comment .list-comment').html(content);
 	});
 
@@ -1339,9 +1435,9 @@
 
 	//Deposit
 	let formDeposit = $('#form-deposit');
-	let depositMin = <?=!empty($configs['deposit_min']) ? $configs['deposit_min'] : 10?>;
-	let depositRate = <?=!empty($configs['deposit_rate']) ? $configs['deposit_rate'] : 10.000?>;
-	let depositExp = <?=!empty($configs['deposit_exp']) ? $configs['deposit_exp'] : 50?>;
+	let depositMin = <?= !empty($configs['deposit_min']) ? $configs['deposit_min'] : 10 ?>;
+	let depositRate = <?= !empty($configs['deposit_rate']) ? $configs['deposit_rate'] : 10.000 ?>;
+	let depositExp = <?= !empty($configs['deposit_exp']) ? $configs['deposit_exp'] : 50 ?>;
 
 	$(document).ready(function() {
 		caculateDeposit();
@@ -1356,7 +1452,7 @@
 		});
 
 		paypal.Buttons({
-			onInit(data, actions)  {
+			onInit(data, actions) {
 				// actions.disable();
 
 				// if (!validateFormDeposit()) {
@@ -1371,17 +1467,15 @@
 			createOrder: function(data, actions) {
 				if (!validateFormDeposit()) {
 					return actions.order.create({
-						purchase_units: [
-							{
-								amount: {
-									currentcy: 'USD',
-									value: formDeposit.find('#deposit_money').val()
-								}
+						purchase_units: [{
+							amount: {
+								currentcy: 'USD',
+								value: formDeposit.find('#deposit_money').val()
 							}
-						]
+						}]
 					});
 				}
-				
+
 				return false;
 			},
 			onApprove: function(data, actions) {
@@ -1406,14 +1500,18 @@
 			}
 		}).render('#deposit-checkout');
 	});
-	
+
 	function caculateDeposit() {
 		let inputMoney = formDeposit.find('#deposit_money');
 		let inputEarn = formDeposit.find('#deposit_earn');
 		let inputExp = formDeposit.find('#deposit_exp');
 
-		inputEarn.val(new Intl.NumberFormat('vi-VN', { maximumSignificantDigits: 3 }).format(inputMoney.val() * depositRate));
-		inputExp.val(new Intl.NumberFormat('vi-VN', { maximumSignificantDigits: 3 }).format(inputMoney.val() * depositExp));
+		inputEarn.val(new Intl.NumberFormat('vi-VN', {
+			maximumSignificantDigits: 3
+		}).format(inputMoney.val() * depositRate));
+		inputExp.val(new Intl.NumberFormat('vi-VN', {
+			maximumSignificantDigits: 3
+		}).format(inputMoney.val() * depositExp));
 	}
 
 	function validateFormDeposit() {
@@ -1433,7 +1531,7 @@
 		}
 
 		if (inputMoney.val() <= 9) {
-			errorMsg = 'Nạp ít nhất '+depositMin+'$';
+			errorMsg = 'Nạp ít nhất ' + depositMin + '$';
 			inputMoney.addClass('is-invalid');
 			error = 1;
 		} else {
@@ -1452,6 +1550,100 @@
 	}
 	//End deposit
 
+	// Avatar Frame Store
+	$('body').on('click', '.frame', function() {
+		let id = $(this).attr('data-id');
+		let price = $(this).attr('data-price');
+		let frame = $(this).attr('data-frame');
+
+		$('.frame').removeClass('active');
+		$(this).addClass('active');
+
+		$('.avatar-frame-price .frame-price').html(price);
+		$('.avatar-frame-price [name="frame-id"]').val(id);
+		$('.avatar-frame-price').removeClass('d-none');
+
+		$('.avatar-frame').attr('src', frame);
+
+		$('#tab-user-frame .alert-danger').addClass('d-none');
+	});
+
+	// Buy avatar frame
+	$('body').on('click', '#buy-frame', function() {
+		let frame = $('[name="frame-id"]').val();
+		let errorDiv = $('#tab-user-frame .alert-danger');
+
+		errorDiv.addClass('d-none');
+
+		if (!frame) {
+			return false;
+		}
+
+		if ($(`[data-id="${frame}"]`).hasClass('owned')) {
+			errorDiv.html('Đã sở hữu');
+			errorDiv.removeClass('d-none');
+			return false;
+		}
+
+		Promise.all([
+				axios.post('/server/api', {
+					"action": 'buy_avatar_frame',
+					"token": $dt.token,
+					"data": {
+						'frame': frame
+					}
+				})
+			])
+			.then(function(responses) {
+				let rs = responses[0].data;
+
+				if (rs.success) {
+					location.reload();
+				} else {
+					errorDiv.html(rs.message);
+					errorDiv.removeClass('d-none');
+				}
+			})
+			.catch(function(error) {
+				console.error(error);
+			});
+	});
+
+	// User active avatar frame
+	$('body').on('click', '.frame-owned', function() {
+		let element = $(this);
+		let id = element.attr('data-id');
+		let frame = element.attr('data-frame');
+
+		if (!id) {
+			return false;
+		}
+
+		element.append('<img src="/themes/img/loading_spinner_24x24.gif" class="loading">');
+
+		Promise.all([
+			axios.post('/server/api', {
+				"action": 'active_avatar_frame',
+				"token": $dt.token,
+				"data": {
+					'frame': id
+				}
+			})
+		])
+		.then(function(responses) {
+			let rs = responses[0].data;
+
+			if (rs.success) {
+				$('.avatar-frame').attr('src', frame);
+			} else {
+				alert(ms.message);
+			}
+			element.find('.loading').remove();
+		})
+		.catch(function(error) {
+			console.error(error);
+		});
+	});
 </script>
 
 </html>

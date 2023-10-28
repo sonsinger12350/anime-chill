@@ -15,6 +15,30 @@ FireWall();
         color: #666;
         right: 0;
     }
+
+    #drop-down-2 .row-1 .avatar {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: visible;
+        width: 85px;
+        height: 85px;
+    }
+
+    #drop-down-2 .row-1 .avatar img:not(.avatar-frame) {
+        width: 75px;
+        height: auto;
+        border-radius: 50%;
+    }
+
+    #drop-down-2 .row-1 .avatar .avatar-frame {
+        position: absolute;
+        width: 90px;
+        height: auto;
+        top: -5px;
+        left: -3px;
+    }
 </style>
 <div id="navbar">
     <div style="background: #000;">
@@ -152,6 +176,7 @@ FireWall();
                     <div class="row-1 flex flex-column flex-hozi-center">
                         <div class="avatar">
                             <img src="<?= $user['avatar'] ?>" />
+                            <img src="<?= getFrameAvatar($user['avatar_frame']) ?>" alt="" class="avatar-frame">
                         </div>
                         <div class="nickname fs-17 fw-700 margin-t-10 color-yellow"><?= $user['nickname'] ?></div>
                     </div>

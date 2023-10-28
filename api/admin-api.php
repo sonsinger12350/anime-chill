@@ -233,7 +233,7 @@ if ($action == 'loginadmin') {
         die(JsonMessage(200, "https://playhydrax.com/?v=$LinkHydrax"));
     } else die(JsonMessage(200, $URL));
 } else if ($action == 'UploadImagesBase64') {
-    $Uploader = imagesaver($_POST['image']);
+    $Uploader = imagesaver($_POST['image'], $_POST['folder']);
     if (!$Uploader) die(JsonMessage(404, 'Upload Ảnh Không Thành Công'));
     die(JsonMessage(200, $Uploader));
 } else if ($action == 'AddNewADS') {

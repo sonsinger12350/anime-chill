@@ -768,4 +768,92 @@ if ($Json['action'] == 'live_search') {
     $rs['success'] = true;
     $rs['message'] = 'Nạp xu thành công';
     die(json_encode($rs));
+} else if ($Json['action'] == 'buy_avatar_frame') {
+    if ($user['banned'] == 'true') {
+        die(json_encode(["result" => "Tài Khoản Bị Khóa", "status" => "failed"]));
+    }
+
+    $data = $Json['data'];
+    $response = [
+        'success'   => false,
+        'message'   => '',
+        'exist'     => false
+    ];
+
+    if (empty($data['frame'])) {
+        $response['message'] = 'Có lỗi. Vui lòng thử lại';
+        die(json_encode($response));
+    }
+
+    $rs = $mysql->query('SELECT `user_id` FROM `table_user_avatar_frame` WHERE `user_id` = '.$user['id'].' AND `frame_id` = '.$data['frame']);
+    $existFrame = $rs->fetch(PDO::FETCH_ASSOC);
+
+    if (!empty($existFrame)) {
+        $response['message'] = 'Đã sở hữu';
+        $response['exist'] = true;
+        die(json_encode($response));
+    }
+
+    $rs = $mysql->query('SELECT `id`,`icon`,`price` FROM `table_khung_vien` WHERE `id` = '.$data['frame']);
+    $frame = $rs->fetch(PDO::FETCH_ASSOC);
+    
+    if (empty($frame)) {
+        $response['message'] = 'Có lỗi. Vui lòng thử lại.';
+        die(json_encode($response));
+    }
+
+    // insert to table transaction
+    $insertTransaction = [
+        'amount' => $frame['price'],
+        'type' => 1,
+        'desc' => "User ".$user['id']." đã mua khung viền ".$frame['id'],
+    ];
+    
+    $insert = $mysql->insert('transaction', '`'.implode('`,`', array_keys($insertTransaction)).'`', '"'.implode('", "', $insertTransaction).'"');
+    $transactionId = getLastInsertId('table_transaction');
+
+    // insert to table_user_avatar_frame
+    $insertUserFrame = [
+        'user_id' => $user['id'],
+        'frame_id' => $frame['id'],
+        'transaction_id' => $transactionId
+    ];
+    
+    $insert = $mysql->insert('user_avatar_frame', '`'.implode('`,`', array_keys($insertUserFrame)).'`', '"'.implode('", "', $insertUserFrame).'"');
+
+    activeAvatarFrame($user['id'], $frame['id']);
+    
+    $response['success'] = true;
+    $response['message'] = 'Mua khung viền thành công';
+    die(json_encode($response));
+} else if ($Json['action'] == 'active_avatar_frame') {
+    if ($user['banned'] == 'true') {
+        die(json_encode(["result" => "Tài Khoản Bị Khóa", "status" => "failed"]));
+    }
+
+    $data = $Json['data'];
+    $response = [
+        'success'   => false,
+        'message'   => '',
+    ];
+
+    if (empty($data['frame'])) {
+        $response['message'] = 'Có lỗi. Vui lòng thử lại';
+        die(json_encode($response));
+    }
+
+    $rs = $mysql->query('SELECT `user_id` FROM `table_user_avatar_frame` WHERE `user_id` = '.$user['id'].' AND `frame_id` = '.$data['frame']);
+    
+    $existFrame = $rs->fetch(PDO::FETCH_ASSOC);
+
+    if (empty($existFrame)) {
+        $response['message'] = 'Chưa sở hữu';
+        die(json_encode($response));
+    }
+    
+    activeAvatarFrame($user['id'], $data['frame']);
+
+    $response['success'] = true;
+    $response['message'] = 'Kích hoạt thành công';
+    die(json_encode($response));
 }

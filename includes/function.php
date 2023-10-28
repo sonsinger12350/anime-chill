@@ -172,7 +172,7 @@ function InputJson()
     $json = json_decode(file_get_contents('php://input'), true);
     return $json;
 }
-function imagesaver($image_data)
+function imagesaver($image_data, $folder = '')
 {
 
     list($type, $data) = explode(';', $image_data); // exploding data for later checking and validating 
@@ -181,7 +181,7 @@ function imagesaver($image_data)
         $data = substr($data, strpos($data, ',') + 1);
         $type = strtolower($type[1]); // jpg, png, gif
 
-        if (!in_array($type, ['jpg', 'jpeg', 'gif', 'png'])) {
+        if (!in_array($type, ['jpg', 'jpeg', 'gif', 'png', 'webp'])) {
             return false;
         }
 
@@ -194,9 +194,9 @@ function imagesaver($image_data)
         return false;
     }
     $FileName = tokenString(15) . time();
-    $FileNew = UPLOAD_DIR . "/$FileName.$type";
+    $FileNew = !empty($folder) ? UPLOAD_DIR ."/". $folder . "/$FileName.$type"  : UPLOAD_DIR . "/$FileName.$type";
     if (file_put_contents($FileNew, $data)) {
-        $Images = URL . "/assets/upload/$FileName.$type";
+        $Images = !empty($folder) ? URL . "/assets/upload/$folder/$FileName.$type" : URL . "/assets/upload/$FileName.$type";
     } else {
         return false;;
     }
@@ -967,4 +967,44 @@ function getExpLevel($level) {
     }
     
     return $exp;
+}
+
+function numberFormat($num) {
+    return number_format($num, 0, ',', '.');
+}
+
+function getFrameAvatar($id) {
+    $frame =  URL . '/assets/upload/khung_vien/default.webp';
+    
+    if (!empty($id)) {
+        global $mysql;
+        $sql = "SELECT `icon` FROM `table_khung_vien` WHERE `id` = $id";
+        $query = $mysql->query($sql);
+        $rs = $query->fetch(PDO::FETCH_ASSOC);
+
+        if (!empty($rs)) {
+            $frame = $rs['icon'];
+        }
+    }
+
+    return $frame;
+}
+
+function getLastInsertId($table) {
+    global $mysql;
+
+    $rs = $mysql->query('SELECT MAX(id) id FROM table_transaction');
+    $last = $rs->fetch(PDO::FETCH_ASSOC);
+
+    if (empty($last['id'])) {
+        return null;
+    }
+
+    return $last['id'];
+}
+
+function activeAvatarFrame($user, $frame) {
+    global $mysql;
+
+    return $mysql->update("user", "avatar_frame = ".$frame, "id = ".$user);
 }
