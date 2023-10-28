@@ -322,7 +322,13 @@ $statut = ($Movie['loai_phim'] == 'Phim Lẻ' ? "{$Movie['movie_duration']} Phú
         <?= PopUnder('pop_under_info') ?>
         <?php require_once(ROOT_DIR . '/view/footer.php'); ?>
     </div>
-    <?= un_htmlchars($cf['script_footer']) ?>
+    <?php
+                if(!empty($user['vip'])){
+                    if($user['vip'] <> 1) {
+                        echo un_htmlchars($cf['script_footer']);
+                    }
+                }
+            ?>
 </body>
 
 </html>

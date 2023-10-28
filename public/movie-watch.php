@@ -683,7 +683,13 @@ if ($cf['tvc_on'] == 'true') $tvc = URL . "/tvc?url=";
         <?php require_once(ROOT_DIR . '/view/footer.php'); ?>
         <script type="text/javascript" src="<?= URL ?>/themes/js_ob/watching.js?v=1.7.4"></script>
     </div>
-    <?= un_htmlchars($cf['script_footer']) ?>
+            <?php
+                if(!empty($user['vip'])){
+                    if($user['vip'] <> 1) {
+                        echo un_htmlchars($cf['script_footer']);
+                    }
+                }
+            ?>
 </body>
 
 </html>
