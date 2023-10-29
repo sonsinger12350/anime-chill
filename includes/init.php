@@ -112,11 +112,11 @@ function UpdateVipUser($cash_return, $vip_icon, $vip_date_end, $vip_term, $user_
 function resetVipUser($vip_date_end, $user_id, $vip_user)
 {	
 	
-	$vip_date_end = date("Y-m-d");
+	$vip_date_end = date("Y-m-d", $vip_date_end);
 	// $vip_date_end = "2023-10-26";
 	$date_current = new DateTime();
 	$date_current_formatted = $date_current->format('Y-m-d');
-	if ($vip_date_end < $date_current_formatted && $vip_date_end <> NULL && $vip_user == 1) {
+	if ($vip_date_end < $date_current_formatted && $vip_date_end !== NULL) {
 		global $mysql;
 		$sql = "UPDATE `table_user` SET `vip`='0',`vip_icon`=NULL,`vip_term`='0' WHERE `id` = '{$user_id}'";
 		$result = $mysql->query($sql);

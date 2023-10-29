@@ -459,6 +459,8 @@ function XoaDauPhay($str)
 function PopUnder($Location)
 {   
     // Handler Stop Ads for User Vip
+    $user = [];
+    $user['id'] = 0;
     if (isset($_COOKIE['author'])) {
         $_accesstoken = sql_escape($_COOKIE['_accesstoken']);
         $_author_cookie = sql_escape($_COOKIE['author']);
