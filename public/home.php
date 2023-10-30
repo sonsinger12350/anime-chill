@@ -462,15 +462,15 @@ FireWall();
                 }
             });
         </script>
-    <?php } ?>
+        <script>
+            LoadLichChieu(<?= sw_get_current_weekday() ?>);
+        </script>
+        <?= PopUnder('pop_under_home') ?>
+        <?php require_once(ROOT_DIR . '/view/footer.php'); ?>
+    </div>
+    </div>
+<?php } ?>
 
-    </div>
-    <script>
-        LoadLichChieu(<?= sw_get_current_weekday() ?>);
-    </script>
-    <?= PopUnder('pop_under_home') ?>
-    <?php require_once(ROOT_DIR . '/view/footer.php'); ?>
-    </div>
 </body>
 
 </html>

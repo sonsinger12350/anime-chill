@@ -3,6 +3,7 @@ if (!defined('MovieAnime')) die("You are illegally infiltrating our website");
 FireWall();
 header("Content-type: text/xml");
 // if (get_total('ads', "WHERE position_name = 'vast_mp4' AND type = 'true'") < 1) die();
+if($user['vip'] == 1) return;
 $ads = GetDataArr('ads', "position_name = 'vast_mp4'");
 ?>
 <VAST version="2.0">
