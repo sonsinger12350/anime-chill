@@ -504,25 +504,27 @@ while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
 				}
 			});
 		});
-		// doing
 
-		$(window).on('load', function() {
+		// hàm cập nhật time
+		function updateTime() {
 			var vip_date_end = $(".vip-info").data('vip_date_end');
 			// console.log(vip_date_end);
 			var currentDate = moment();
 			// console.log(currentDate);
 			// Chuyển vip_date_end monent 
-			var vip_date_end = moment(vip_date_end,"YYYY-MM-DD");
+			var vip_date_end = moment(vip_date_end, "YYYY-MM-DD");
 			// Tính chênh lệnh time
 			var duration = moment.duration(vip_date_end.diff(currentDate));
-			// Lấy Số ngày về dạng ngày
-			var days = duration.asDays();
-			days = Math.round(days);
-			// console.log('Days remaining:', days);
-			$(".vip-info .days").text(days + ' Ngày');
-		});
-		// Show vip_date_remaning
-		// $(".vip-info")
+
+			// Chia duration thành các thành phần: ngày, giờ, phút
+			var days = Math.floor(duration.asDays());
+			var hours = Math.floor(duration.asHours() % 24);
+			var minutes = Math.floor(duration.asMinutes() % 60);
+			// console.log('Days remaining:', days , hours, minutes);
+			$(".vip-info .days").text(days + ' Ngày' + ' ' + hours + ' ' + 'Giờ' + ' ' + minutes + 'Phút');
+		}
+		updateTime();
+		setInterval(updateTime, 60000);
 	});
 </script>
 <script type="text/javascript" src="/themes/js_ob/user.profile.js?v=1.7.4"></script>
