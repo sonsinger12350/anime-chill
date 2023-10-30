@@ -43,6 +43,7 @@ FireWall();
     <zone id="ktimvs9i"></zone>
 </div>
 <div id="sponsor-balloon" class=""></div>
+
 <script type="text/javascript">
     let item = 4;
     let documentWidth = $(document).width();
@@ -82,19 +83,19 @@ FireWall();
     $(document).ready(function() {
         var vip = $(".vip_user[data-vip]");
         if (vip.data('vip') != 1) {
-                async function updateClickAds(adv_id) {
-                    await securityCode();
-                    await axios
-                        .post("/server/api", {
-                            action: "update_click_ads",
-                            adv_id,
-                            token: $dt.token,
-                        })
-                        .then((rps) => {
-                            let data = rps.data;
-                            console.log(data);
-                        });
-                }
+            async function updateClickAds(adv_id) {
+                await securityCode();
+                await axios
+                    .post("/server/api", {
+                        action: "update_click_ads",
+                        adv_id,
+                        token: $dt.token,
+                    })
+                    .then((rps) => {
+                        let data = rps.data;
+                        console.log(data);
+                    });
+            }
             const ad_floating_left = document.getElementById("ad-floating-left");
             const ad_floating_right = document.getElementById("ad-floating-right");
             const top_banner_pc = document.getElementById("top-banner-pc");
@@ -277,6 +278,10 @@ FireWall();
                 return false;
             });
         }
+        // Update Delete Banner Ads 
+        $('body').on('click', '.ff-banner .icon-close', function() {
+            $(this).closest('.ff-banner').empty();
+        });
     });
 </script>
 
@@ -513,11 +518,11 @@ FireWall();
     </div>
 </div>
 <?php
-    if(!empty($user['vip'])){
-        if($user['vip'] <> 1) {
-            echo un_htmlchars($cf['script_footer']);
-        }
-    }else{
+if (!empty($user['vip'])) {
+    if ($user['vip'] <> 1) {
         echo un_htmlchars($cf['script_footer']);
     }
+} else {
+    echo un_htmlchars($cf['script_footer']);
+}
 ?>
