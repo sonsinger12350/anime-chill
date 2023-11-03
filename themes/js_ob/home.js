@@ -28,22 +28,27 @@ var LoadHome = async (action) => {
         "action": action,
     }).then(reponse => {
         var res = reponse.data;
-        console.log(res);
+
         if (res.status != 'success') {
             $('#HomeChatList').html(res.result);
             return;
         }
-        $('#HomeChatList').html(res.result);
+        if (action == 'Load_Comment_Home') {
+            $('#HomeChatList').html(res.result);
+        } else {
+            $('#HomeListTop').html(res.result);
+        }
         
         if (action == 'Load_Comment_Home') {
             $('.chat_div').animate({
                 scrollTop: 99999
             }, 0);
+            $("#HomeChatList").animate({ scrollTop: $('#HomeChatList').prop("scrollHeight")}, 1000);
         } else if (action == 'top_bxh') {
             clearInterval(onload_boxchat);
             $('#BangXepHangProfile').show();
             $('.chat_div').animate({
-                scrollTop: 0
+                // scrollTop: 0
             }, 0);
         } else {
             clearInterval(onload_boxchat);
@@ -158,8 +163,10 @@ var CommentHome = async () => {
             $('textarea[name="HomeComment"]').val('');
             $('textarea[name="HomeComment"]').prop("disabled", true);
             $('.chat_div').append(`<li style="margin-bottom: 10px;">
-                        <img class="boxchat-images" src="${$user.avatar}" width="100" height="100" alt="${$user.nickname}">
-
+                        <div class="boxchat-images">
+                            <img class="avatar" src="${$user.avatar}" width="100" height="100" alt="${$user.nickname}">
+                            <img class="avatar-frame" src="${$user.frame}">
+                        </div>
                             <div class="p-comment-home">
                                 <div class="box-chat-nickname" style="color: ${$user.color};">${$user.nickname} (Lv.${$user.level}) ${$user.icon} <span class="Time-cmt-home">Vừa Xong</span></div>
                             </div>

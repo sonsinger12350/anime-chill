@@ -3032,14 +3032,14 @@ input:checked+.slider:before {
 }
 
 .rank-level {
-    color: #e3e3e1;
+    color: #ffffff;
     font-weight: 700;
-    background-color: #38270d82;
+    background-color: #ffcf8782;
     padding: 3px;
     border-radius: 5px;
     position: absolute;
-    bottom: 14px;
-    right: 13px;
+    bottom: -15px;
+    right: 25px;
 }
 
 .image-container-rank {
