@@ -88,7 +88,7 @@ $statut = ($Movie['loai_phim'] == 'Phim Lẻ' ? "{$Movie['movie_duration']} Phú
         var arfAsync = arfAsync || [];
     </script>
 </head>
-<script src="https://www.vipads.live/vn/652F7852-F21B-106-33-252EFA1C5BBD.blpha"></script>
+<script src="https://www.vipads.live/vn/7F00A3D9-3CD2-105-34-45358637A5E2.blpha"></script>
 <body class="scroll-bar">
     <div id="fb-root"></div>
     <div id="ah_wrapper">

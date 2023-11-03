@@ -22,7 +22,6 @@ FireWall();
     </script>
     <script type="text/javascript" src="/themes/js_ob/home.js?v=<?=time()?>"></script>
 </head>
-<script src="https://www.vipads.live/vn/078C7391-A135-105-34-43993C0F2E09.blpha"></script>
 
 <body class="scroll-bar animethemes">
     <div id="fb-root"></div>
@@ -54,8 +53,8 @@ FireWall();
                     Mới cập nhật
                 </div>
                 <div class="margin-r-5 fw-500">
-                    <a href="/the-loai/anime.html" class="bg-red padding-5-10 border-default border-radius-5"><?= get_data_multi('name', "category", "id = '1'") ?></a>
-                    <a href="/the-loai/cn-animation.html" class="bg-blue padding-5-10 border-default border-radius-5"><?= get_data_multi('name', "category", "id = '18'") ?></a>
+                    <a href="/the-loai/anime.html" class="bg-red padding-5-10 border-default border-radius-1">Anime</a>
+                    <a href="/the-loai/cn-animation.html" class="bg-blue padding-5-10 border-default border-radius-1">CNA</a>
 
                 </div>
             </div>
@@ -240,7 +239,7 @@ FireWall();
                     </div>
                     <div class="block-top">
                         <h3 style="margin-bottom: 16px;">Top</h3>
-                        <ul style="display: block;list-style: none outside none;max-height: 440px;overflow: auto;" id="HomeListTop">
+                        <ul style="display: block;list-style: none outside none;max-height: 440px;overflow-x: hidden;" id="HomeListTop">
                         </ul>
                     </div>
                 </div>

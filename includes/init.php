@@ -79,6 +79,7 @@ function InputEdit_Table($table, $where)
 	global $mysql;
 	$result = $mysql->query("SELECT * FROM " . DATABASE_FX . $table . " WHERE $where");
 	$fields = array_keys($result->fetch(PDO::FETCH_ASSOC));
+	$input = '';
 	foreach ($fields as $key => $colums) {
 		if ($colums != "id") :
 			$row = GetDataArr($table, $where);

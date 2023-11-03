@@ -62,7 +62,7 @@ $NumPage = GetParam("p");
                                         </div>
                                         <div class="col-lg-6 col-md-12 mb-3">
                                             <label>Tập Tiếp Theo: Tập 1 + Tập 2 + Tập 3</label>
-                                            <input type="text" class="form-control" name="data[seo_title]" value="<?= $data['seo_title'] ?>">
+                                            <input type="text" class="form-control" name="New[seo_title]">
                                         </div>
                                         <div class="col-lg-6 col-md-12 mb-3">
                                             <label>Seo Tập</label>

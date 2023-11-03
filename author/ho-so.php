@@ -89,7 +89,6 @@ while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
 	<div id="ah_wrapper">
 		<?php require_once(ROOT_DIR . '/view/header.php'); ?>
 		<div class="ah_content">
-			<?php require_once(ROOT_DIR . '/view/top-note.php'); ?>
 			<div class="profile">
 				<div class="navigation">
 					<!-- Avatar -->
@@ -101,7 +100,7 @@ while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
 						</div>
 						<div class="profile-info">
 							<h3><?= $user['nickname'] ?></h3>
-							<p class="coin"><img src="/themes/img/coin_15.gif" alt=""> <?= number_format($user['coins']) ?> XU</p>
+							<p class="coin"><img src="/themes/img/coin_15.gif" alt=""> <?= number_format($user['coins']) ?> Xu</p>
 						</div>
 					</div>
 					<!-- // doing  -->
@@ -137,7 +136,7 @@ while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
 							</li>
 							<li class="nav-item menu-item hvr-sweep-to-right">
 								<a class="nav-link" href="#tab-deposit" data-bs-toggle="tab">
-									<i class="fa-solid fa-cart-plus"></i> Nạp xu
+									<i class="fa-solid fa-cart-plus"></i> Nạp Xu
 								</a>
 							</li>
 							<li class="nav-item menu-item hvr-sweep-to-right">
@@ -229,14 +228,14 @@ while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
 										<div class="group">
 											<div class="label">Tham gia nhóm Telegram:</div>
 											<div class="detail">
-												+<?= $configs['join_telegram'] ?> xu<br>
+												+<?= $configs['join_telegram'] ?> Xu<br>
 												<i class="fa fa-long-arrow-right" aria-hidden="true"></i>
 												<a href="/user_edit">Tham gia nhóm nhận thông báo quan trọng tại đây</a>
 											</div>
 										</div>
 										<div class="group">
 											<div class="label">Đăng nhập mỗi ngày:</div>
-											<div class="detail">+<?= $configs['first_login'] ?> xu</div>
+											<div class="detail">+<?= $configs['first_login'] ?> Xu</div>
 										</div>
 										<div class="group">
 											<div class="label">OnLine:</div>
@@ -251,13 +250,13 @@ while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
 										<div class="group">
 											<div class="label">Bình luận:</div>
 											<div class="detail">
-												mỗi bình luận trong bộ phim trong 1 ngày + <?= $configs['comment'] ?> xu (chỉ tính bình luận đầu tiên trong ngày của bộ phim đó ).
+												Mỗi bình luận trong bộ phim trong 1 ngày + <?= $configs['comment'] ?> xu (chỉ tính bình luận đầu tiên trong ngày của bộ phim đó ).
 											</div>
 										</div>
 										<div class="group">
 											<div class="label">Up Avatar:</div>
 											<div class="detail">
-												+<?= $configs['first_upload_avatar'] ?> xu ( lần đầu )
+												+<?= $configs['first_upload_avatar'] ?> Xu ( lần đầu )
 											</div>
 										</div>
 										<div class="group">
@@ -271,14 +270,14 @@ while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
 										<div class="group">
 											<div class="label">Nạp Xu:</div>
 											<div class="detail">
-												nạp ít nhất <?= $configs['deposit_min'] ?>$<br>
-												mỗi 1$=<?= $configs['deposit_rate'] ?> xu<br>
+												Nạp ít nhất <?= $configs['deposit_min'] ?>$<br>
+												Mỗi 1$=<?= $configs['deposit_rate'] ?> Xu<br>
 											</div>
 										</div>
 										<div class="group">
 											<div class="label">Giá Vip / Tháng:</div>
 											<div class="detail">
-												<?= $configs['vip_fee'] ?> xu
+												<?= $configs['vip_fee'] ?> Xu
 											</div>
 										</div>
 									</div>
@@ -286,7 +285,7 @@ while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
 							</div>
 						</div>
 						<div class="tab-pane fade " id="tab-deposit">
-							<h4 class="tab-title">Nạp xu</h4>
+							<h4 class="tab-title">Nạp Xu</h4>
 							<div class="tab-body">
 								<div class="deposit-method">
 									<i class="fa-brands fa-paypal"></i> Paypal/Visa
@@ -321,14 +320,14 @@ while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
 							<h4 class="tab-title">Chỉnh sửa thông tin</h4>
 							<div class="tab-body">
 								<div class="account-info clearfix">
-									<h2 class="posttitle">Chỉnh sửa / cập nhật tài khoản</h2>
+									<h2 class="posttitle">Chỉnh sửa / Cập nhật tài khoản</h2>
 									<div class="info-detail">
 										<div class="grid-body no-border">
 											<div class="row">
 												<div class="col-md-12 col-sm-12 col-xs-12">
 													<div class="form-group">
 														<label class="form-label">Tham gia nhóm telegram nhận thông báo quan trọng bằng cách</label><br><br>
-														Cách 1: Click vào đường <a style="color: #009dff;" href="https://t.me/+P91IG7VRyvc1NGY9">link</a> này: <span style="color: #009dff;"> https://t.me/+P91IG7VRyvc1NGY9</span> <br><br>
+														Cách 1: Click vào đường link này: <a style="color: #009dff;" href="https://t.me/+P91IG7VRyvc1NGY9">https://t.me/+P91IG7VRyvc1NGY9</a><span style="color: #009dff;"></span> <br><br>
 														Cách 2: Truy cập telegram trên điện thoại hoặc máy tính </br>
 														Tìm kiếm người dùng với từ khóa: <span style="color: #00FF00;"> My-anime </span>
 														<br><br><img src="/assets/upload/1-img-anime.png" style="max-width:500px"><br><br>
@@ -384,10 +383,10 @@ while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
 												<?php endif ?>
 											</div>
 											<div class="current-coin mt-2">
-												<p class="coin fw-bold"><img src="/themes/img/coin_15.gif" alt=""> Tài sản: <?= number_format($user['coins']) ?> XU</p>
+												<p class="coin fw-bold"><img src="/themes/img/coin_15.gif" alt=""> Tài sản: <?= number_format($user['coins']) ?> Xu</p>
 											</div>
 											<div class="avatar-frame-price d-none">
-												<p>Giá: <span class="frame-price"></span> XU</p>
+												<p>Giá: <span class="frame-price"></span> Xu</p>
 												<input name="frame-id" type="text" hidden>
 												<button type="button" class="btn btn-primary" id="buy-frame"><i class="fa-solid fa-cart-plus"></i> Mua</button>
 											</div>
@@ -425,7 +424,6 @@ while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
 				</div>
 			</div>
 		</div>
-		<?php require_once(ROOT_DIR . '/view/footer.php'); ?>
 	</div>
 	<div id="modal" class="modal">
 		<div>
@@ -521,7 +519,7 @@ while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
 			var hours = Math.floor(duration.asHours() % 24);
 			var minutes = Math.floor(duration.asMinutes() % 60);
 			// console.log('Days remaining:', days , hours, minutes);
-			$(".vip-info .days").text(days + ' Ngày' + ' ' + hours + ' ' + 'Giờ' + ' ' + minutes + 'Phút');
+			$(".vip-info .days").text(days + ' Ngày' + ' ' + hours + ' ' + 'Giờ' + ' ' + minutes + ' Phút');
 		}
 		updateTime();
 		setInterval(updateTime, 60000);

@@ -74,7 +74,6 @@ if (isset($_POST['action_login'])) {
                 </div>
             </div>
         </div>
-        <?php require_once(ROOT_DIR . '/view/footer.php'); ?>
     </div>
 </body>
 

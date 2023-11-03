@@ -726,7 +726,7 @@ div#navbar .logo img {
     padding: 5px;
     box-sizing: border-box;
     position: relative;
-    border-radius: 8px;
+    border-radius: 0px;
     border: 2px solid #404040
 }
 
@@ -906,7 +906,7 @@ div#list-item-notification {
 }
 
 .owl-carousel .owl-item img {
-    height: 270px
+    height: 100%;
 }
 
 #filter-movie {
@@ -2094,10 +2094,6 @@ div#user-profile .right {
     margin-bottom: 5px;
 }
 
-.user-comment .left .avatar img {
-    width: 100%;
-}
-
 .user-comment .left .avatar .avatar-img {
     height: auto;
     width: 40px;
@@ -2902,9 +2898,9 @@ input:checked+.slider:before {
 }
 
 .ah_key_seo {
-    border-radius: 8px;
+    border-radius: 1px;
     border: 1px solid #ffffff;
-    padding: 1px 7px;
+    padding: 3px 7px;
 }
 
 #top-up {
@@ -3082,12 +3078,13 @@ input:checked+.slider:before {
 
 .rank-text {
     font-weight: 700;
+    font-size: 13px;
     display: block;
 }
 
 .top-rank {
     font-weight: 700;
-    font-size: 15px;
+    font-size: 12px;
     position: absolute;
     bottom: 0px;
     left: 2px;

@@ -15,7 +15,7 @@ $url = (GetParam("url") ? GetParam("url") : die());
 
         html,
         body {
-            background: #000000 url('https://i.imgur.com/pHPF7Bn.gif');
+            background: #000000 url('https://i.imgur.com/rS3fZQx.png');
             background-repeat: no-repeat;
             background-position: center;
             margin: 0;
