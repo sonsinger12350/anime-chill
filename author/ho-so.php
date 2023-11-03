@@ -107,8 +107,8 @@ while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
 					<?php if ($user['vip'] == 1) {
 					?>
 						<div class="vip-info" data-vip_date_end=<?= date("Y-m-d H:i:s", $user['vip_date_end'])?>>
-							<img style="width: 50px;" src="<?= $user['vip_icon'] ?>" />
-							<p class="days"> </p>
+							<img style="width: 70px;" src="<?= $user['vip_icon'] ?>" />
+							<p class="days mb-0"></p>
 						</div>
 					<?php
 					} ?>
@@ -519,7 +519,7 @@ while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
 			var hours = Math.floor(duration.asHours() % 24);
 			var minutes = Math.floor(duration.asMinutes() % 60);
 			// console.log('Days remaining:', days , hours, minutes);
-			$(".vip-info .days").text(days + ' Ngày' + ' ' + hours + ' ' + 'Giờ' + ' ' + minutes + ' Phút');
+			$(".vip-info .days").text('Còn ' + days + ' ngày' + ' ' + hours + ' ' + 'Giờ' + ' ' + minutes + ' Phút');
 		}
 		updateTime();
 		setInterval(updateTime, 60000);

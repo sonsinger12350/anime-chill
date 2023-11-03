@@ -29,7 +29,7 @@ if($user['coins'] < $pay){
     #1. coins
     $cash_return = $user['coins'] - $pay;
     #2. vip_icon
-    $vip_icon = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiceGOH6jSemvPPWZNRkdgv1pxWy6Th2ZgMLHNReixkU-tWA5WDQGgR3rlzEEvvd45tID_YjLvgejOoug1g_R_OowqBqndC4wvV5RH9UtpG_q3PQ82gYUlCytF02DHQibzX1U26onZHEJQTZGJbDeWbggMg6mYDJq_j-e2-05ysBlK1bKA6V-VG2x2A/s320/vip.";
+    $vip_icon = "http://localhost/themes/img/vip_icon.png";
     #3. vip_date_end
     if($user['vip_term'] > 0){
         $num_days =  "+{$user['vip_term']} days";
