@@ -45,6 +45,7 @@ if (isset($_COOKIE['author'])) {
         $useremail = $user['email'];
         UpdateLevel($user);
         resetVipUser($user['vip_date_end'], $user['id'], $user['vip']);
+        $user['frame'] = getFrameAvatar($user['avatar_frame']);
         if ($_author_cookie != $user['_accesstoken']) {
             RemoveCookie();
         } else if (!$_author_cookie) {

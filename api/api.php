@@ -291,7 +291,10 @@ if ($Json['action'] == 'live_search') {
             $Comment .= '<div id="comment_' . $row['id'] . '" class="user-comment relative">
                             <div class="flex bg-comment">
                                 <div class="left" onclick="initViewProfile(' . $row['user_id'] . ')">
-                                    <div class="avatar"> <img src="' . $User_Arr['avatar'] . '"></div>
+                                    <div class="avatar">
+                                        <img class="avatar-img" src="' . $User_Arr['avatar'] . '">
+                                        <img class="avatar-frame" src="'.getFrameAvatar($User_Arr['avatar_frame']).'">
+                                    </div>
                                 </div>
                                 <div class="right">
                                     <div class="flex flex-column">
@@ -357,7 +360,10 @@ if ($Json['action'] == 'live_search') {
     die(json_encode(["comment" => '<div id="comment_' . $User_Arr['id'] . '" class="user-comment relative">
             <div class="flex bg-comment">
                 <div class="left" onclick="initViewProfile(' . $User_Arr['id'] . ')">
-                    <div class="avatar"> <img src="' . $User_Arr['avatar'] . '"></div>
+                    <div class="avatar">
+                        <img class="avatar-img" src="' . $User_Arr['avatar'] . '">
+                        <img class="avatar-frame" src="'.getFrameAvatar($User_Arr['avatar_frame']).'">
+                    </div>
                 </div>
                 <div class="right">
                     <div class="flex flex-column">
@@ -409,15 +415,20 @@ if ($Json['action'] == 'live_search') {
     $token = sql_escape($Json['token']);
     if (!json_decode($_COOKIE["TokenTime"], true)[$token]) die(json_encode(["result" => "Token Hết Thời Hạn", "status" => "failed"]));
     if (get_total('user', "WHERE id = '$user_id'") < 1) die(json_encode(["result" => "Tài Khoản Không Tồn Tại", "status" => "failed"]));
-    $cache_key = "cache.Profile_$user_id";
-    if ($InstanceCache->has($cache_key)) die($InstanceCache->get($cache_key));
+    // $cache_key = "cache.Profile_$user_id";
+    // if ($InstanceCache->has($cache_key)) die($InstanceCache->get($cache_key));
     $Profile = GetDataArr('user', "id = '$user_id'");
     if ($Profile['quote']) {
         $quote = $Profile['quote'];
     } else $quote = "Thanh Niên Này Chưa Cập Nhật Châm Ngôn Sống";
 
     $HTMLProfile = '<div class="flex flex-hozi-center border-style-2" style="">
-                    <div class="avatar flex flex-column"><img src="' . $Profile['avatar'] . '">
+                    <div class="avatar flex flex-column">
+                        <div class="avatar-img">
+                            <img class="avatar-image" src="' . $Profile['avatar'] . '">
+                            <img class="avatar-frame" src="' . getFrameAvatar($Profile['avatar_frame']) . '">
+                        </div>
+                    
                         <div class="level padding-5 align-center color-white" style="color:' . LevelColor($Profile['level']) . '">Lv.' . $Profile['level'] . '</div>
                     </div>
                     <div class="flex flex-column">
@@ -449,7 +460,7 @@ if ($Json['action'] == 'live_search') {
                 <div class="flex flex-ver-center color-green-2 fs-19 fw-700">
                 ' . $quote . '
                 </div>';
-    $InstanceCache->set($cache_key, json_encode(["result" => $HTMLProfile, "status" => "success"]), $cf['time_cache'] * 3600);
+    // $InstanceCache->set($cache_key, json_encode(["result" => $HTMLProfile, "status" => "success"]), $cf['time_cache'] * 3600);
     die(json_encode(["result" => $HTMLProfile, "status" => "success"]));
 } else if ($Json['action'] == 'load_notification') {
     $token = sql_escape($Json['token']);
@@ -566,7 +577,11 @@ if ($Json['action'] == 'live_search') {
                 $mysql->delete('comment', "user_id = '{$row['user_id']}'");
             }
             $HTML .= '<li style="margin-bottom: 10px;">
-                        <img class="boxchat-images" src="' . $User_Arr['avatar'] . '" width="100" height="100" alt="' . $User_Arr['nickname'] . '">
+                        <div class="boxchat-images">
+                            <img class="avatar" src="' . $User_Arr['avatar'] . '" width="100" height="100" alt="' . $User_Arr['nickname'] . '">
+                            <img class="avatar-frame" src="'.getFrameAvatar($User_Arr['avatar_frame']).'">
+                        </div>
+                        
 
                             <div class="p-comment-home">
                                 <div class="box-chat-nickname" style="color:' . LevelColor($User_Arr['level']) . ';">' . $User_Arr['nickname'] . ' (Lv.' . $User_Arr['level'] . ') ' . LevelIcon($User_Arr['level'], 20, 20) . UserIcon($User_Arr['id'], 20, 20) . ' <span class="Time-cmt-home">' . RemainTime($row['timestap']) . '</span></div>
@@ -601,7 +616,11 @@ if ($Json['action'] == 'live_search') {
                             <div class="top-rank">#TOP ' . $Top . '</div>
                         </div>
                         <div class="image-container-rank">
-                            <img class="image-rank-home"  src="' . $row['avatar'] . '" width="100" height="100" alt="' . $row['nickname'] . '">
+                            <div class="image-rank-home">
+                                <img class="avatar"  src="' . $row['avatar'] . '" alt="' . $row['nickname'] . '">
+                                <img class="avatar-frame"  src="' . getFrameAvatar($row['avatar_frame']) . '">
+                            </div>
+                            
                             <span class="rank-level">Lv ' . $row['level'] . '</span>
                             ' . RankIcon($row['level']) . '
                         </div>
@@ -645,7 +664,10 @@ if ($Json['action'] == 'live_search') {
         <div class="comment-main user-comment cmt-438631">
             <div class="flex bg-comment">
                 <div class="left">
-                    <div class="avatar"><img src="'.$user['avatar'].'"></div>
+                    <div class="avatar">
+                        <img class="avatar-img" src="'.$user['avatar'].'">
+                        <img class="avatar-frame" src="'.getFrameAvatar($user['avatar_frame']).'">
+                    </div>
                 </div>
                 <div class="right">
                     <div class="flex flex-column">
@@ -801,8 +823,14 @@ if ($Json['action'] == 'live_search') {
         die(json_encode($response));
     }
 
+    if ($user['coins'] < $frame['price']) {
+        $response['message'] = 'Không đủ xu.';
+        die(json_encode($response));
+    }
+
     // insert to table transaction
     $insertTransaction = [
+        'user_id' => $user['id'],
         'amount' => $frame['price'],
         'type' => 1,
         'desc' => "User ".$user['id']." đã mua khung viền ".$frame['id'],
@@ -819,7 +847,7 @@ if ($Json['action'] == 'live_search') {
     ];
     
     $insert = $mysql->insert('user_avatar_frame', '`'.implode('`,`', array_keys($insertUserFrame)).'`', '"'.implode('", "', $insertUserFrame).'"');
-
+    $update = $mysql->update('user', 'coins = coins -'.$frame['price'], 'id = '.$user['id']);
     activeAvatarFrame($user['id'], $frame['id']);
     
     $response['success'] = true;

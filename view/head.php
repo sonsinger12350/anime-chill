@@ -21,7 +21,7 @@ FireWall();
 <meta property="og:locale" content="vi_VN" />
 <meta name="robots" content="index, follow, noodp">
 <meta property="fb:app_id" content="<?= $cf['fb_app_id'] ?>" />
-<link href="<?= URL ?>/themes/styles/css.css?v=1.4.0" rel="stylesheet" />
+<link href="<?= URL ?>/themes/styles/css.css?v=<?=time()?>" rel="stylesheet" />
 <script src="https://polyfill.io/v3/polyfill.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <link href="//cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
@@ -58,7 +58,8 @@ FireWall();
         "banned": "<?= $user['banned'] ?>",
         "quote": "<?= $user['quote'] ?>",
         "vip_expired": "<?= $user['vip'] ?>",
-        "is_vip": "<?= $user['vip'] ?>"
+        "is_vip": "<?= $user['vip'] ?>",
+        "frame": "<?= $user['frame'] ?>"
     };
     const $elem = new Object();
     const $_GET = new Object();

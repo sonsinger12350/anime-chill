@@ -61,12 +61,29 @@
     cursor: pointer
 }
 
-div#view-profile .avatar img {
+div#view-profile .avatar .avatar-img {
+    position: relative;
     width: 120px;
-    border-radius: 10px;
-    padding: 2px;
-    background: #000;
-    border: 1px solid #8d8d8d
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 7px;
+    margin-bottom: 5px;
+}
+
+div#view-profile .avatar .avatar-img .avatar-image {
+    height: auto;
+    width: 100px;
+    border-radius: 50%;
+}
+
+div#view-profile .avatar .avatar-img .avatar-frame {
+    position: absolute;
+    width: 120px;
+    height: auto;
+    top: -3px;
+    left: 0px;
 }
 
 div#view-profile>div>div>div>span:first-child {
@@ -372,6 +389,13 @@ button {
 }
 
 #ah_wrapper {
+    width: 1050px;
+    margin: 0 auto;
+    background: #2d2d2d;
+    position: relative
+}
+
+.ah_footer {
     width: 1050px;
     margin: 0 auto;
     background: #2d2d2d;
@@ -1144,19 +1168,19 @@ div#filtering {
 
 .ah-frame-bg {
     background: #404040;
-    padding: 10px;
+    padding: 16px;
     margin-bottom: 10px;
     border-radius: 5px;
     box-sizing: border-box
 }
 
-#ah_wrapper>.ah_footer {
+.ah_footer {
     padding: 30px 5px;
     border-top: 1px solid #525151;
     text-align: center;
 }
 
-#ah_wrapper>.ah_footer .logo-footer img {
+.ah_footer .logo-footer img {
     width: 200px;
     position: relative;
 }
@@ -2060,16 +2084,32 @@ div#user-profile .right {
 }
 
 .user-comment .left .avatar {
-    width: 50px;
     position: relative;
+    width: 50px;
     height: 50px;
-    overflow: hidden;
-    border: 3px solid #656565;
-    border-radius: 10px
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 7px;
+    margin-bottom: 5px;
 }
 
 .user-comment .left .avatar img {
-    width: 100%
+    width: 100%;
+}
+
+.user-comment .left .avatar .avatar-img {
+    height: auto;
+    width: 40px;
+    border-radius: 50%;
+}
+
+.user-comment .left .avatar .avatar-frame {
+    position: absolute;
+    width: 50px;
+    height: auto;
+    top: -3px;
+    left: 0px;
 }
 
 .frame-reply-comments {
@@ -2235,8 +2275,28 @@ input:checked+.slider:before {
     border-radius: 50%
 }
 
+.my-rank-profile {
+    max-width: 100%;
+    word-break: break-all;
+    background-color: #333333;
+    border-radius: 15px;
+}
+
+.box-chat {
+    width: 70%;
+    padding: 8px;
+}
+
+.block-top {
+    border-left: 1px solid;
+    padding: 8px;
+}
+
 @media only screen and (min-width:768px) and (max-width:1000px) {
     #ah_wrapper {
+        width: 100%!important
+    }
+    .ah_footer {
         width: 100%!important
     }
     .movies-list .movie-item {
@@ -2281,6 +2341,9 @@ input:checked+.slider:before {
     #ah_wrapper {
         width: 100%!important
     }
+    .ah_footer {
+        width: 100%!important
+    }
     div#navbar .logo {
         flex: 1
     }
@@ -2318,6 +2381,32 @@ input:checked+.slider:before {
         width: 70%!important;
         font-size: 12px
     }
+
+    .desc.ah-frame-bg {
+        display: flex;
+        flex-direction: column-reverse;
+    }
+
+    .desc.ah-frame-bg #HomeListTop {
+        width: 100%;
+        padding: 0;
+    }
+
+    .desc.ah-frame-bg .chat_div {
+        width: 100%;
+    }
+
+    .desc.ah-frame-bg #HomeListTop .home-rank {
+        float: unset;
+    }
+
+    .box-chat {
+        width: 100%;
+    }
+
+    .block-top {
+        border-left: 0px;
+    }
 }
 
 @media only screen and (min-width:650px) and (max-width:768px) {
@@ -2348,7 +2437,7 @@ input:checked+.slider:before {
 }
 
 @media only screen and (max-width:450px) {
-    #ah_wrapper>.ah_footer img {
+    .ah_footer img {
         width: 150px!important
     }
     div#navbar>div:first-child {
@@ -2686,14 +2775,30 @@ input:checked+.slider:before {
     float: right
 }
 
-.boxchat-images {
-    height: 35px;
-    width: 35px;
-    border-radius: 150px;
-    float: left;
+.chat_div .boxchat-images {
+    position: relative;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin-right: 7px;
-    border: 1px solid #e2e2e2;
     margin-bottom: 5px;
+    float: left;
+}
+
+.chat_div .boxchat-images .avatar {
+    height: auto;
+    width: 35px;
+    border-radius: 50%;
+}
+
+.chat_div .boxchat-images .avatar-frame {
+    position: absolute;
+    width: 45px;
+    height: auto;
+    top: -3px;
+    left: 0px;
 }
 
 .box_chat {
@@ -2906,12 +3011,28 @@ input:checked+.slider:before {
 }
 
 .image-rank-home {
+    position: relative;
     width: 70px;
     height: 70px;
-    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin-right: 7px;
-    border: 4px solid #68675f;
     margin-bottom: 5px;
+}
+
+.image-rank-home .avatar {
+    height: auto;
+    width: 55px;
+    border-radius: 50%;
+}
+
+.image-rank-home .avatar-frame {
+    position: absolute;
+    width: 70px;
+    height: auto;
+    top: -3px;
+    left: 0px;
 }
 
 .rank-level {
@@ -2956,6 +3077,7 @@ input:checked+.slider:before {
 
 .rank-info {
     padding: 0px 5px;
+    width: 200px;
 }
 
 .rank-text {

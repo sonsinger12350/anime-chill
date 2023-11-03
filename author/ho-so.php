@@ -96,7 +96,7 @@ while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
 					<div class="avatar">
 						<div class="img">
 							<img src="<?= $user['avatar'] ?>" />
-							<img src="<?= getFrameAvatar($user['avatar_frame']) ?>" alt="" class="avatar-frame">
+							<img src="<?= $user['frame'] ?>" alt="" class="avatar-frame">
 							<button class="upload-avatar" type="button" onclick="showModal()"><i class="fa fa-cloud-upload"></i> Up Avatar</button>
 						</div>
 						<div class="profile-info">

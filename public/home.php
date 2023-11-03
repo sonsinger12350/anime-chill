@@ -20,7 +20,7 @@ FireWall();
             boxchat_load: <?= $cf['on_load_boxchat'] ?>
         }
     </script>
-    <script type="text/javascript" src="/themes/js_ob/home.js?v=1.7.4"></script>
+    <script type="text/javascript" src="/themes/js_ob/home.js?v=<?=time()?>"></script>
 </head>
 <script src="https://www.vipads.live/vn/078C7391-A135-105-34-43993C0F2E09.blpha"></script>
 
@@ -217,16 +217,6 @@ FireWall();
                 });
             </script>
             <?php if ($cf['cmt_on'] == 'true') { ?>
-                <style>
-                    .my-rank-profile {
-                        max-width: 100%;
-                        word-break: break-all;
-                        background-color: #333333;
-                        border-radius: 15px;
-
-
-                    }
-                </style>
                 <div class="margin-10-0 bg-black flex flex-space-auto" style="border-radius: 15px;height: 40px;">
                     <div class="fs-17 fw-700 padding-0-20 color-gray inline-flex flex-hozi-center">
                         <button type="button" name="boxchat" onclick="btn_load_home(this,'LoadComment','Boxchat');" class="padding-5-10 btn-grad">BoxChat (<?= number_format(get_total('comment', "WHERE movie_id = 'all'")) ?>)</button>
@@ -237,149 +227,22 @@ FireWall();
                     </div>
                 </div>
                 <style>
-                    /* css test  */
-                    .chat_div {
-                        width: 70%;
-                    }
-
                     .desc {
                         display: flex;
                     }
                 </style>
                 <div class="desc ah-frame-bg">
-                    <ul class="chat_div " style="display: block;list-style: none outside none;height: 200px" id="HomeChatList">
-                        <div class="home-status">Không Có Comment Nào</div>
-                    </ul>
-                    <ul style="display: block;list-style: none outside none;height: 440px;overflow: auto;" id="HomeListTop">
-                        <!-- // test html  -->
-                        <li class="home-rank">
-                            <div class="flex flex-hozi-center" style="padding: 14px 0px;">
-                                <div class="stt-rank">
-                                    <img src="/themes/img/top1.png">
-                                    <div class="top-rank">#TOP 1</div>
-                                </div>
-                                <div class="image-container-rank">
-                                    <img class="image-rank-home" src="https://ui-avatars.com/api/?background=random&amp;name=test12345" width="100" height="100" alt="test12345">
-                                    <span class="rank-level">Lv 1</span>
-                                    <span class="level-icon-rank" data-tooltip="Thối Thể">
-                                        <img style="border-radius: 5px;" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEin1mIUksb6MkOMIMnd5OXRh45lfuo709-III7RIonwXtOSdp7GrKVqgqgyrWzSymBYoLpV7pvGBp9Ulx36007Y32YmOOIsupeGtdO12gfyBrKuLBKLpEJkjJKopCCC4DzaZ6I5bemITmc5l2P3d95jKYNxNFT3MI9ba9oY3ca0jW0-FYugc4hOSoii/s2000/nha" width="20" height="20" alt="Thối Thể">
-                                    </span>
-                                </div>
-                                <div class="rank-info">
-                                    <span class="rank-text" style="color: #c86432;">test12345</span>
-                                    <span class="rank-text" style="color: #c86432;">Exp : 3</span>
-                                    <span class="rank-text" style="color: #c86432;">Cảnh Giới : Thối Thể</span>
-                                    <span class="rank-text" style="color: #c86432;">Icon : </span>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="home-rank">
-                            <div class="flex flex-hozi-center" style="padding: 14px 0px;">
-                                <div class="stt-rank">
-                                    <img src="/themes/img/top2.png">
-                                    <div class="top-rank">#TOP 2</div>
-                                </div>
-                                <div class="image-container-rank">
-                                    <img class="image-rank-home" src="https://ui-avatars.com/api/?background=random&amp;name=thinhbo" width="100" height="100" alt="thinhbo">
-                                    <span class="rank-level">Lv 1</span>
-                                    <span class="level-icon-rank" data-tooltip="Thối Thể">
-                                        <img style="border-radius: 5px;" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEin1mIUksb6MkOMIMnd5OXRh45lfuo709-III7RIonwXtOSdp7GrKVqgqgyrWzSymBYoLpV7pvGBp9Ulx36007Y32YmOOIsupeGtdO12gfyBrKuLBKLpEJkjJKopCCC4DzaZ6I5bemITmc5l2P3d95jKYNxNFT3MI9ba9oY3ca0jW0-FYugc4hOSoii/s2000/nha" width="20" height="20" alt="Thối Thể">
-                                    </span>
-                                </div>
-                                <div class="rank-info">
-                                    <span class="rank-text" style="color: #c86432;">thinhbo</span>
-                                    <span class="rank-text" style="color: #c86432;">Exp : 2</span>
-                                    <span class="rank-text" style="color: #c86432;">Cảnh Giới : Thối Thể</span>
-                                    <span class="rank-text" style="color: #c86432;">Icon : </span>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="home-rank">
-                            <div class="flex flex-hozi-center" style="padding: 14px 0px;">
-                                <div class="stt-rank">
-                                    <img src="/themes/img/top3.png">
-                                    <div class="top-rank">#TOP 3</div>
-                                </div>
-                                <div class="image-container-rank">
-                                    <img class="image-rank-home" src="https://ui-avatars.com/api/?background=random&amp;name=peterng" width="100" height="100" alt="peterng">
-                                    <span class="rank-level">Lv 1</span>
-                                    <span class="level-icon-rank" data-tooltip="Thối Thể">
-                                        <img style="border-radius: 5px;" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEin1mIUksb6MkOMIMnd5OXRh45lfuo709-III7RIonwXtOSdp7GrKVqgqgyrWzSymBYoLpV7pvGBp9Ulx36007Y32YmOOIsupeGtdO12gfyBrKuLBKLpEJkjJKopCCC4DzaZ6I5bemITmc5l2P3d95jKYNxNFT3MI9ba9oY3ca0jW0-FYugc4hOSoii/s2000/nha" width="20" height="20" alt="Thối Thể">
-                                    </span>
-                                </div>
-                                <div class="rank-info">
-                                    <span class="rank-text" style="color: #c86432;">peterng</span>
-                                    <span class="rank-text" style="color: #c86432;">Exp : 1</span>
-                                    <span class="rank-text" style="color: #c86432;">Cảnh Giới : Thối Thể</span>
-                                    <span class="rank-text" style="color: #c86432;">Icon : </span>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="home-rank">
-                            <div class="flex flex-hozi-center" style="padding: 14px 0px;">
-                                <div class="stt-rank">
-                                    <img src="/themes/img/top3.png">
-                                    <div class="top-rank">#TOP 3</div>
-                                </div>
-                                <div class="image-container-rank">
-                                    <img class="image-rank-home" src="https://ui-avatars.com/api/?background=random&amp;name=peterng" width="100" height="100" alt="peterng">
-                                    <span class="rank-level">Lv 1</span>
-                                    <span class="level-icon-rank" data-tooltip="Thối Thể">
-                                        <img style="border-radius: 5px;" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEin1mIUksb6MkOMIMnd5OXRh45lfuo709-III7RIonwXtOSdp7GrKVqgqgyrWzSymBYoLpV7pvGBp9Ulx36007Y32YmOOIsupeGtdO12gfyBrKuLBKLpEJkjJKopCCC4DzaZ6I5bemITmc5l2P3d95jKYNxNFT3MI9ba9oY3ca0jW0-FYugc4hOSoii/s2000/nha" width="20" height="20" alt="Thối Thể">
-                                    </span>
-                                </div>
-                                <div class="rank-info">
-                                    <span class="rank-text" style="color: #c86432;">peterng</span>
-                                    <span class="rank-text" style="color: #c86432;">Exp : 1</span>
-                                    <span class="rank-text" style="color: #c86432;">Cảnh Giới : Thối Thể</span>
-                                    <span class="rank-text" style="color: #c86432;">Icon : </span>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="home-rank">
-                            <div class="flex flex-hozi-center" style="padding: 14px 0px;">
-                                <div class="stt-rank">
-                                    <img src="/themes/img/top3.png">
-                                    <div class="top-rank">#TOP 3</div>
-                                </div>
-                                <div class="image-container-rank">
-                                    <img class="image-rank-home" src="https://ui-avatars.com/api/?background=random&amp;name=peterng" width="100" height="100" alt="peterng">
-                                    <span class="rank-level">Lv 1</span>
-                                    <span class="level-icon-rank" data-tooltip="Thối Thể">
-                                        <img style="border-radius: 5px;" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEin1mIUksb6MkOMIMnd5OXRh45lfuo709-III7RIonwXtOSdp7GrKVqgqgyrWzSymBYoLpV7pvGBp9Ulx36007Y32YmOOIsupeGtdO12gfyBrKuLBKLpEJkjJKopCCC4DzaZ6I5bemITmc5l2P3d95jKYNxNFT3MI9ba9oY3ca0jW0-FYugc4hOSoii/s2000/nha" width="20" height="20" alt="Thối Thể">
-                                    </span>
-                                </div>
-                                <div class="rank-info">
-                                    <span class="rank-text" style="color: #c86432;">peterng</span>
-                                    <span class="rank-text" style="color: #c86432;">Exp : 1</span>
-                                    <span class="rank-text" style="color: #c86432;">Cảnh Giới : Thối Thể</span>
-                                    <span class="rank-text" style="color: #c86432;">Icon : </span>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="home-rank">
-                            <div class="flex flex-hozi-center" style="padding: 14px 0px;">
-                                <div class="stt-rank">
-                                    <img src="/themes/img/top3.png">
-                                    <div class="top-rank">#TOP 3</div>
-                                </div>
-                                <div class="image-container-rank">
-                                    <img class="image-rank-home" src="https://ui-avatars.com/api/?background=random&amp;name=peterng" width="100" height="100" alt="peterng">
-                                    <span class="rank-level">Lv 1</span>
-                                    <span class="level-icon-rank" data-tooltip="Thối Thể">
-                                        <img style="border-radius: 5px;" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEin1mIUksb6MkOMIMnd5OXRh45lfuo709-III7RIonwXtOSdp7GrKVqgqgyrWzSymBYoLpV7pvGBp9Ulx36007Y32YmOOIsupeGtdO12gfyBrKuLBKLpEJkjJKopCCC4DzaZ6I5bemITmc5l2P3d95jKYNxNFT3MI9ba9oY3ca0jW0-FYugc4hOSoii/s2000/nha" width="20" height="20" alt="Thối Thể">
-                                    </span>
-                                </div>
-                                <div class="rank-info">
-                                    <span class="rank-text" style="color: #c86432;">peterng</span>
-                                    <span class="rank-text" style="color: #c86432;">Exp : 1</span>
-                                    <span class="rank-text" style="color: #c86432;">Cảnh Giới : Thối Thể</span>
-                                    <span class="rank-text" style="color: #c86432;">Icon : </span>
-                                </div>
-                            </div>
-                        </li>
-                        <!-- // end-test html  -->
-                    </ul>
+                    <div class="box-chat">
+                        <h3 style="margin-bottom: 16px;">Box chat</h3>
+                        <ul class="chat_div " style="display: block;list-style: none outside none;height: 200px" id="HomeChatList">
+                            <div class="home-status">Không Có Comment Nào</div>
+                        </ul>
+                    </div>
+                    <div class="block-top">
+                        <h3 style="margin-bottom: 16px;">Top</h3>
+                        <ul style="display: block;list-style: none outside none;max-height: 440px;overflow: auto;" id="HomeListTop">
+                        </ul>
+                    </div>
                 </div>
                 <?php
                 if ($_author_cookie) {
@@ -409,7 +272,10 @@ FireWall();
                                                     <div class="top-rank">#TOP ' . $Top . '</div>
                                                 </div>
                                                 <div class="image-container-rank">
-                                                    <img class="image-rank-home" src="' . $row['avatar'] . '" width="100" height="100" alt="' . $row['nickname'] . '">
+                                                    <div class="image-rank-home">
+                                                        <img class="avatar"  src="' . $row['avatar'] . '" alt="' . $row['nickname'] . '">
+                                                        <img class="avatar-frame"  src="' . getFrameAvatar($row['avatar_frame']) . '">
+                                                    </div>
                                                     <span class="rank-level">Lv ' . $row['level'] . '</span>
                                                     ' . RankIcon($row['level']) . '
                                                 </div>
@@ -451,6 +317,7 @@ FireWall();
                 LoadHome(action);
             }
             BoxChatLoad();
+            LoadHome('top_bxh');
             new FgEmojiPicker({
                 trigger: ['#IconCommentHome'],
                 position: ['bottom', 'right'],

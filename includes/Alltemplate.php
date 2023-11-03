@@ -8,6 +8,7 @@ function UserIcon($user_id, $width, $height)
     global $mysql;
     if(get_total('user_icon'," WHERE user_id = '$user_id' ORDER BY id DESC") < 1) return "";
     $arr = $mysql->query("SELECT * FROM " . DATABASE_FX . "user_icon WHERE user_id = '$user_id' ORDER BY id DESC");
+    $IconList = '';
     while ($row = $arr->fetch(PDO::FETCH_ASSOC)) {
         if ($row['note']) {
             $tooltip = ' data-tooltip="' . $row['note'] . '"';
@@ -20,6 +21,7 @@ function ShowReplyComment($CommentID)
 {
     global $mysql, $user;
     $arr = $mysql->query("SELECT * FROM " . DATABASE_FX . "comment WHERE reply_comment = '$CommentID' AND show_cmt = 'true' AND reply_comment IS NOT NULL ORDER BY id ASC LIMIT 5");
+    $Comment = '';
     while ($row = $arr->fetch(PDO::FETCH_ASSOC)) {
         $User_Arr = GetDataArr("user", "id = '{$row['user_id']}'");
         if ($row['user_id'] == $user['id']) {
@@ -37,7 +39,10 @@ function ShowReplyComment($CommentID)
         $Comment .= '<div id="reply_' . $row['id'] . '" class="user-comment relative">
     <div class="flex bg-comment">
         <div class="left" onclick="initViewProfile(' . $User_Arr['id'] . ')">
-            <div class="avatar"> <img src="' . $User_Arr['avatar'] . '"></div>
+            <div class="avatar">
+                <img class="avatar-img" src="' . $User_Arr['avatar'] . '">
+                <img class="avatar-frame" src="'.getFrameAvatar($User_Arr['avatar_frame']).'">
+            </div>
         </div>
         <div class="right">
             <div class="flex flex-column">
