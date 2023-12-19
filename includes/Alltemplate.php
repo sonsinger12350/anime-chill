@@ -41,7 +41,7 @@ function ShowReplyComment($CommentID)
         <div class="left" onclick="initViewProfile(' . $User_Arr['id'] . ')">
             <div class="avatar">
                 <img class="avatar-img" src="' . $User_Arr['avatar'] . '">
-                <img class="avatar-frame" src="'.getFrameAvatar($User_Arr['avatar_frame']).'">
+                <img class="avatar-frame" src="'.getIconStoreActive($User_Arr['id'], 'khung-vien').'">
             </div>
         </div>
         <div class="right">

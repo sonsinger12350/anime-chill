@@ -293,7 +293,7 @@ if ($Json['action'] == 'live_search') {
                                 <div class="left" onclick="initViewProfile(' . $row['user_id'] . ')">
                                     <div class="avatar">
                                         <img class="avatar-img" src="' . $User_Arr['avatar'] . '">
-                                        <img class="avatar-frame" src="'.getFrameAvatar($User_Arr['avatar_frame']).'">
+                                        <img class="avatar-frame" src="'.getIconStoreActive($User_Arr['id'], 'khung-vien').'">
                                     </div>
                                 </div>
                                 <div class="right">
@@ -362,7 +362,7 @@ if ($Json['action'] == 'live_search') {
                 <div class="left" onclick="initViewProfile(' . $User_Arr['id'] . ')">
                     <div class="avatar">
                         <img class="avatar-img" src="' . $User_Arr['avatar'] . '">
-                        <img class="avatar-frame" src="'.getFrameAvatar($User_Arr['avatar_frame']).'">
+                        <img class="avatar-frame" src="'.getIconStoreActive($User_Arr['id'], 'khung-vien').'">
                     </div>
                 </div>
                 <div class="right">
@@ -426,7 +426,7 @@ if ($Json['action'] == 'live_search') {
                     <div class="avatar flex flex-column">
                         <div class="avatar-img">
                             <img class="avatar-image" src="' . $Profile['avatar'] . '">
-                            <img class="avatar-frame" src="' . getFrameAvatar($Profile['avatar_frame']) . '">
+                            <img class="avatar-frame" src="' . getIconStoreActive($Profile['id'], 'khung-vien') . '">
                         </div>
                     
                         <div class="level padding-5 align-center color-white" style="color:' . LevelColor($Profile['level']) . '">Lv.' . $Profile['level'] . '</div>
@@ -579,7 +579,7 @@ if ($Json['action'] == 'live_search') {
             $HTML .= '<li style="margin-bottom: 10px;">
                         <div class="boxchat-images">
                             <img class="avatar" src="' . $User_Arr['avatar'] . '" width="100" height="100" alt="' . $User_Arr['nickname'] . '">
-                            <img class="avatar-frame" src="'.getFrameAvatar($User_Arr['avatar_frame']).'">
+                            <img class="avatar-frame" src="'.getIconStoreActive($User_Arr['id'], 'khung-vien').'">
                         </div>
                         
 
@@ -618,7 +618,7 @@ if ($Json['action'] == 'live_search') {
                         <div class="image-container-rank">
                             <div class="image-rank-home">
                                 <img class="avatar"  src="' . $row['avatar'] . '" alt="' . $row['nickname'] . '">
-                                <img class="avatar-frame"  src="' . getFrameAvatar($row['avatar_frame']) . '">
+                                <img class="avatar-frame"  src="' . getIconStoreActive($row['id'], 'khung-vien') . '">
                             </div>
                             
                             <span class="rank-level">Lv ' . $row['level'] . '</span>
@@ -666,7 +666,7 @@ if ($Json['action'] == 'live_search') {
                 <div class="left">
                     <div class="avatar">
                         <img class="avatar-img" src="'.$user['avatar'].'">
-                        <img class="avatar-frame" src="'.getFrameAvatar($user['avatar_frame']).'">
+                        <img class="avatar-frame" src="'.getIconStoreActive($user['id'], 'khung-vien').'">
                     </div>
                 </div>
                 <div class="right">
@@ -789,7 +789,7 @@ if ($Json['action'] == 'live_search') {
     $rs['success'] = true;
     $rs['message'] = 'Nạp xu thành công';
     die(json_encode($rs));
-} else if ($Json['action'] == 'buy_avatar_frame') {
+} else if ($Json['action'] == 'buy_icon_store') {
     if ($user['banned'] == 'true') {
         die(json_encode(["result" => "Tài Khoản Bị Khóa", "status" => "failed"]));
     }
@@ -801,29 +801,29 @@ if ($Json['action'] == 'live_search') {
         'exist'     => false
     ];
 
-    if (empty($data['frame'])) {
+    if (empty($data['id'])) {
         $response['message'] = 'Có lỗi. Vui lòng thử lại';
         die(json_encode($response));
     }
 
-    $rs = $mysql->query('SELECT `user_id` FROM `table_user_avatar_frame` WHERE `user_id` = '.$user['id'].' AND `frame_id` = '.$data['frame']);
-    $existFrame = $rs->fetch(PDO::FETCH_ASSOC);
+    $rs = $mysql->query('SELECT `user_id` FROM `table_user_icon_store` WHERE `user_id` = '.$user['id'].' AND `icon_id` = '.$data['id']);
+    $existIcon = $rs->fetch(PDO::FETCH_ASSOC);
 
-    if (!empty($existFrame)) {
+    if (!empty($existIcon)) {
         $response['message'] = 'Đã sở hữu';
         $response['exist'] = true;
         die(json_encode($response));
     }
 
-    $rs = $mysql->query('SELECT `id`,`icon`,`price` FROM `table_khung_vien` WHERE `id` = '.$data['frame']);
-    $frame = $rs->fetch(PDO::FETCH_ASSOC);
+    $rs = $mysql->query('SELECT `id`,`image`,`price`, `type` FROM `table_vat_pham` WHERE `id` = '.$data['id']);
+    $icon = $rs->fetch(PDO::FETCH_ASSOC);
     
-    if (empty($frame)) {
+    if (empty($icon)) {
         $response['message'] = 'Có lỗi. Vui lòng thử lại.';
         die(json_encode($response));
     }
 
-    if ($user['coins'] < $frame['price']) {
+    if ($user['coins'] < $icon['price']) {
         $response['message'] = 'Không đủ xu.';
         die(json_encode($response));
     }
@@ -831,29 +831,30 @@ if ($Json['action'] == 'live_search') {
     // insert to table transaction
     $insertTransaction = [
         'user_id' => $user['id'],
-        'amount' => $frame['price'],
-        'type' => 1,
-        'desc' => "User ".$user['id']." đã mua khung viền ".$frame['id'],
+        'amount' => $icon['price'],
+        'type' => $icon['type'],
+        'desc' => "User ".$user['id']." đã mua ".$icon['type']." ".$icon['id'],
     ];
     
     $insert = $mysql->insert('transaction', '`'.implode('`,`', array_keys($insertTransaction)).'`', '"'.implode('", "', $insertTransaction).'"');
     $transactionId = getLastInsertId('table_transaction');
 
-    // insert to table_user_avatar_frame
+    // insert to table_user_icon_store
     $insertUserFrame = [
         'user_id' => $user['id'],
-        'frame_id' => $frame['id'],
+        'icon_id' => $icon['id'],
+        'type' => $icon['type'],
         'transaction_id' => $transactionId
     ];
     
-    $insert = $mysql->insert('user_avatar_frame', '`'.implode('`,`', array_keys($insertUserFrame)).'`', '"'.implode('", "', $insertUserFrame).'"');
-    $update = $mysql->update('user', 'coins = coins -'.$frame['price'], 'id = '.$user['id']);
-    activeAvatarFrame($user['id'], $frame['id']);
+    $insert = $mysql->insert('user_icon_store', '`'.implode('`,`', array_keys($insertUserFrame)).'`', '"'.implode('", "', $insertUserFrame).'"');
+    $update = $mysql->update('user', 'coins = coins -'.$icon['price'], 'id = '.$user['id']);
+    activeIconStore($user['id'], $icon['id'], $icon['type']);
     
     $response['success'] = true;
-    $response['message'] = 'Mua khung viền thành công';
+    $response['message'] = 'Mua vật phẩm thành công';
     die(json_encode($response));
-} else if ($Json['action'] == 'active_avatar_frame') {
+} else if ($Json['action'] == 'active_icon_store') {
     if ($user['banned'] == 'true') {
         die(json_encode(["result" => "Tài Khoản Bị Khóa", "status" => "failed"]));
     }
@@ -864,21 +865,20 @@ if ($Json['action'] == 'live_search') {
         'message'   => '',
     ];
 
-    if (empty($data['frame'])) {
+    if (empty($data['id'])) {
         $response['message'] = 'Có lỗi. Vui lòng thử lại';
         die(json_encode($response));
     }
 
-    $rs = $mysql->query('SELECT `user_id` FROM `table_user_avatar_frame` WHERE `user_id` = '.$user['id'].' AND `frame_id` = '.$data['frame']);
-    
-    $existFrame = $rs->fetch(PDO::FETCH_ASSOC);
+    $rs = $mysql->query('SELECT `user_id` FROM `table_user_icon_store` WHERE `user_id` = '.$user['id'].' AND `icon_id` = '.$data['id']);
+    $existIcon = $rs->fetch(PDO::FETCH_ASSOC);
 
-    if (empty($existFrame)) {
+    if (empty($existIcon)) {
         $response['message'] = 'Chưa sở hữu';
         die(json_encode($response));
     }
     
-    activeAvatarFrame($user['id'], $data['frame']);
+    activeIconStore($user['id'], $data['id'], $data['type']);
 
     $response['success'] = true;
     $response['message'] = 'Kích hoạt thành công';

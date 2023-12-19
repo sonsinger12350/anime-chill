@@ -273,7 +273,7 @@ FireWall();
                                                 <div class="image-container-rank">
                                                     <div class="image-rank-home">
                                                         <img class="avatar"  src="' . $row['avatar'] . '" alt="' . $row['nickname'] . '">
-                                                        <img class="avatar-frame"  src="' . getFrameAvatar($row['avatar_frame']) . '">
+                                                        <img class="avatar-frame"  src="' . getIconStoreActive($row['id'], 'khung-vien') . '">
                                                     </div>
                                                     <span class="rank-level">Lv ' . $row['level'] . '</span>
                                                     ' . RankIcon($row['level']) . '

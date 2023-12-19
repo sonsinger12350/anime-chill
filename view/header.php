@@ -176,7 +176,7 @@ FireWall();
                     <div class="row-1 flex flex-column flex-hozi-center">
                         <div class="avatar">
                             <img src="<?= $user['avatar'] ?>" />
-                            <img src="<?= $user['frame'] ?>" alt="" class="avatar-frame">
+                            <img src="<?= $user['khung-vien'] ?>" alt="" class="avatar-frame">
                         </div>
                         <div class="nickname fs-17 fw-700 margin-t-10 color-yellow"><?= $user['nickname'] ?></div>
                     </div>

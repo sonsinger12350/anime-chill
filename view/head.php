@@ -59,7 +59,7 @@ FireWall();
         "quote": "<?= $user['quote'] ?>",
         "vip_expired": "<?= $user['vip'] ?>",
         "is_vip": "<?= $user['vip'] ?>",
-        "frame": "<?= $user['frame'] ?>"
+        "khung-vien": "<?= $user['khung-vien'] ?>"
     };
     const $elem = new Object();
     const $_GET = new Object();

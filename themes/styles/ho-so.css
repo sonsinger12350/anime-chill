@@ -362,13 +362,13 @@ a {
 	border: 0px;
 }
 
-#tab-profile .list-owned-frame {
+#tab-profile .list-owned-icon {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 8px;
 }
 
-#tab-profile .list-owned-frame .frame-owned {
+#tab-profile .list-owned-icon .icon-owned {
 	width: 70px;
 	height: auto;
 	padding: 8px;
@@ -380,16 +380,16 @@ a {
 	opacity: 1;
 }
 
-#tab-profile .list-owned-frame .frame-owned:has(.loading) {
+#tab-profile .list-owned-icon .icon-owned:has(.loading) {
 	opacity: 0.6;
 }
 
-#tab-profile .list-owned-frame .frame-owned img:not(.loading) {
+#tab-profile .list-owned-icon .icon-owned img:not(.loading) {
 	width: 100%;
 	height: auto;
 }
 
-#tab-profile .list-owned-frame .frame-owned .loading {
+#tab-profile .list-owned-icon .icon-owned .loading {
 	width: 25px;
 	height: 25px;
 	position: absolute;
@@ -589,13 +589,13 @@ ul.list-film {
 }
 
 /* Avatar Frame */
-#tab-user-frame .list-avatar-frame {
+.list-store-item {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 8px;
 }
 
-#tab-user-frame .list-avatar-frame .frame {
+.list-store-item .store-item {
 	width: 70px;
 	height: auto;
 	padding: 8px;
@@ -604,32 +604,32 @@ ul.list-film {
 	cursor: pointer;
 }
 
-#tab-user-frame .list-avatar-frame .frame.active {
+.list-store-item .store-item.active {
 	background-color: #fff;
 	border: 1px solid red;
 }
 
-#tab-user-frame .list-avatar-frame .frame.owned {
+.list-store-item .store-item.owned {
 	background-color: #fff;
 	border: 1px solid red;
 }
 
-#tab-user-frame .list-avatar-frame .frame img {
+.list-store-item .store-item img {
 	width: 100%;
 	height: auto;
 }
 
-#tab-user-frame .avatar-frame-price {
+.icon-store-price {
 	padding-left: 30px;
 }
 
-#tab-user-frame .avatar-frame-price p {
+.icon-store-price p {
 	color: #ff8c8c;
 	font-weight: 500;
 	font-size: 22px;
 }
 
-#tab-user-frame .avatar-frame-price #buy-frame {
+.icon-store-price .buy-icon {
 	width: 120px;
 }
 /* End Avatar Frame */
@@ -647,6 +647,77 @@ ul.list-film {
 	column-gap: 10px;
 	color: #ff9393;
 	font-weight: 600;
+}
+
+#tab-profile a.tab-store,
+#tab-store a.tab-store {
+	color: #fff;
+}
+
+#tab-profile a.tab-store.active,
+#tab-store a.tab-store.active {
+	color: #0d6efd;
+}
+
+#tab-store .store-icon-price p {
+	color: #ff8c8c;
+    font-weight: 500;
+    font-size: 22px;
+}
+
+#tab-store .store-icon-price p.icon-name {
+	color: #7dcdff;
+	margin: 0;
+}
+
+#tab-store .store-icon-price .buy-icon {
+	width: 120px;
+}
+
+#tab-store .store-overview {
+	display: flex;
+	align-items: center;
+	column-gap: 16px;
+}
+
+.user-figure {
+	width: 70px;
+    height: 80px;
+    position: relative;
+    padding: 0;
+    left: -5px;
+}
+
+.user-figure img {
+	position: absolute;
+    left: 0;
+    top: 8px;
+	min-width: 70px;
+	z-index: 5;
+}
+
+.user-figure img.khuon-mat-default {
+	z-index: 4;
+}
+
+.user-figure img.canh-default {
+	z-index: 3;
+}
+
+.user-figure img.hao-quang-default {
+	z-index: 2;
+}
+
+.user-figure img.non-default {
+	z-index: 6;
+}
+
+.user-figure img.kinh-default {
+	z-index: 6;
+}
+
+.user-figure img.mat-na-default {
+	z-index: 7;
 }
 
 @media (max-width: 991px) {

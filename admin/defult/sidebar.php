@@ -59,6 +59,7 @@
                             <div class="according-menu"><i class="fa fa-angle-right"></i></div>
                         </a>
                         <ul class="sidebar-submenu" style="display: none;">
+                            <li><a href="/admin_movie/cua_hang_vat_pham/non.html">Quản lý cửa hàng vật phẩm</a></li>
                             <li><a href="/admin_movie/khung_vien">Quản lý khung viền</a></li>
                             <li><a href="/admin_movie/danh_hieu">Thêm Danh Hiệu & Màu Level</a></li>
                             <li><a href="/admin_movie/author/icon">Icon User</a></li>

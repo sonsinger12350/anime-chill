@@ -1,10 +1,25 @@
 <?php
-if (!defined('MovieAnime')) die("You are illegally infiltrating our website");
-if (!$_SESSION['admin']) die(header("location:" . URL . "/admin_movie/login"));
-$table = "khung_vien";
-$stt = 0;
-$NumPage = GetParam("p") ? GetParam("p") : 1;
-$LinkPage = URL . "/admin_movie/khung_vien?p=";
+	if (!defined('MovieAnime')) die("You are illegally infiltrating our website");
+	if (!$_SESSION['admin']) die(header("location:" . URL . "/admin_movie/login"));
+	$table = "vat_pham";
+	$stt = 0;
+	$NumPage = GetParam("p") ? GetParam("p") : 1;
+	$LinkPage = URL . "/admin_movie/cua_hang_vat_pham";
+	$type = !empty($_GET['type']) ? $_GET['type'] : 'non';
+	$listItem = [
+		'non'			=>	'Nón',
+		'toc'			=>	'Tóc',
+		'kinh'			=>	'Kính',
+		'mat'			=>	'Mắt',
+		'khuon-mat'		=>	'Khuôn mặt',
+		'mat-na'		=>	'Mặt nạ',
+		'ao'			=>	'Áo',
+		'quan'			=>	'Quần',
+		'canh'			=>	'Cánh',
+		'hao-quang'		=>	'Hào quang',
+		'do-cam-tay'	=>	'Đồ cầm tay',
+		'thu-cung'		=>	'Thú cưng',
+	];
 ?>
 
 <!DOCTYPE html>
@@ -12,9 +27,20 @@ $LinkPage = URL . "/admin_movie/khung_vien?p=";
 
 <head>
 	<?php
-	$title_admin = "Khung Viền";
-	require_once("defult/head.php");
+		$title_admin = "Cửa hàng vật phẩm";
+		require_once("defult/head.php");
 	?>
+	<style>
+		#current-item {
+			width: auto;
+		}
+
+		.col-12:has(#current-item) {
+			display: flex;
+			align-items: center;
+			column-gap: 10px;
+		}
+	</style>
 </head>
 
 <body>
@@ -36,8 +62,13 @@ $LinkPage = URL . "/admin_movie/khung_vien?p=";
 				<div class="container-fluid">
 					<div class="page-title">
 						<div class="row">
-							<div class="col-12 col-sm-6">
+							<div class="col-12">
 								<h3><?= $title_admin ?></h3>
+								<select id="current-item" class="form-control">
+									<?php foreach($listItem as $k => $v):?>
+										<option value="<?=$k?>" <?= $type==$k ? 'selected' : '' ?>><?=$v?></option>
+									<?php endforeach?>
+								</select>
 							</div>
 						</div>
 					</div>
@@ -52,18 +83,23 @@ $LinkPage = URL . "/admin_movie/khung_vien?p=";
 						</div>
 						<div class="card col-lg-12" id="NewItem">
 							<div class="card-header">
-								<h4 class="card-title">Thêm khung viền mới</h4>
+								<h4 class="card-title">Thêm vật phẩm mới</h4>
 							</div>
 							<div class="card-body">
 								<form submit-ajax="ngockush" form-action="AddNewDatabase" action="<?= URL ?>/admin/server/api" method="POST" form-check="true">
 									<input type="text" class="form-control" name="table" value="<?= $table ?>" style="display: none;">
+									<input type="text" class="form-control" name="New[type]" value="<?= $type ?>" style="display: none;">
 									<div class="form-group row">
+										<div class="col-12 mb-3">
+											<label>Tên</label>
+											<input type="text" class="form-control" name="New[name]">
+										</div>
 										<div class="col-lg-12 col-md-12 mb-3">
-											<label>Khung viền</label>
+											<label>Hình ảnh</label>
 											<div class="input-group">
-												<input class="form-control" type="text" name="New[icon]">
-												<button type="button" class="btn btn-primary" onclick="$('#icon').click();">Chọn File</button>
-												<input id="icon" type="file" style="display: none;" onchange="UploadImagesBase64(this, 'store/khung-vien');" accept="image/*" />
+												<input class="form-control" type="text" name="New[image]">
+												<button type="button" class="btn btn-primary" onclick="$('#image').click();">Chọn File</button>
+												<input id="image" type="file" style="display: none;" onchange="UploadImagesBase64(this, 'store/<?= $type ?>');" accept="image/*" />
 											</div>
 										</div>
 										<div class="col-12 mb-3">
@@ -89,16 +125,17 @@ $LinkPage = URL . "/admin_movie/khung_vien?p=";
 											<tr>
 												<th scope="col"><input class="form-check-input" id="chontatca" type="checkbox"></th>
 												<th scope="col">#</th>
-												<th scope="col">Khung viền</th>
+												<th scope="col">Tên</th>
+												<th scope="col">Hình ảnh</th>
 												<th scope="col">Giá tiền</th>
 												<th scope="col">Thao Tác</th>
 											</tr>
 										</thead>
 										<tbody>
 											<?php
-											$P = CheckPages($table, "", $cf['limits'], $NumPage);
+											$P = CheckPages($table, "WHERE type = '$type'", $cf['limits'], $NumPage);
 											if ($P['total'] >= 1) {
-												$arr = $mysql->query("SELECT * FROM " . DATABASE_FX . "$table ORDER BY price DESC LIMIT {$P['start']},{$cf['limits']}");
+												$arr = $mysql->query("SELECT * FROM " . DATABASE_FX . "$table WHERE type = '$type' ORDER BY price DESC LIMIT {$P['start']},{$cf['limits']}");
 												while ($row = $arr->fetch(PDO::FETCH_ASSOC)) {
 													$stt++;
 											?>
@@ -107,7 +144,8 @@ $LinkPage = URL . "/admin_movie/khung_vien?p=";
 															<input class="form-check-input" name="multi_del" type="checkbox" value="<?= $row['id'] ?>">
 														</td>
 														<th scope="row"><?= $stt ?></th>
-														<td><?= ($row['icon'] ? "<img src=\"{$row['icon']}\" width=\"50\" height=\"auto\">" : 'Không Có Icon') ?></td>
+														<td><?= $row['name'] ?></td>
+														<td><?= ($row['image'] ? "<img src=\"{$row['image']}\" width=\"50\" height=\"auto\">" : 'Không có ảnh') ?></td>
 														<td><?= numberFormat($row['price']) ?></td>
 														<td>
 															<div class="btn-group" role="group">
@@ -132,5 +170,14 @@ $LinkPage = URL . "/admin_movie/khung_vien?p=";
 	</div>
 	<?php require_once("defult/footer.php"); ?>
 </body>
-
+<script>
+	$('body').on('change', '#current-item', function() {
+		let item = $(this).val();
+		let currentItem = '<?=$type?>';
+		
+		if (item != currentItem) {
+			window.location.href=`<?=$LinkPage?>/${item}.html`;
+		}
+	});
+</script>									
 </html>

@@ -196,7 +196,7 @@ function imagesaver($image_data, $folder = '')
     $FileName = tokenString(15) . time();
     $FileNew = !empty($folder) ? UPLOAD_DIR ."/". $folder . "/$FileName.$type"  : UPLOAD_DIR . "/$FileName.$type";
     if (file_put_contents($FileNew, $data)) {
-        $Images = !empty($folder) ? URL . "/assets/upload/$folder/$FileName.$type" : URL . "/assets/upload/$FileName.$type";
+        $Images = !empty($folder) ? "/assets/upload/$folder/$FileName.$type" : URL . "/assets/upload/$FileName.$type";
     } else {
         return false;;
     }
@@ -975,21 +975,24 @@ function numberFormat($num) {
     return number_format($num, 0, ',', '.');
 }
 
-function getFrameAvatar($id) {
-    $frame =  URL . '/assets/upload/khung_vien/default.webp';
-    
+function getIconStoreActive($id, $type) {
+    $image =  URL . '/assets/upload/store/khung-vien/default.webp';
+
     if (!empty($id)) {
         global $mysql;
-        $sql = "SELECT `icon` FROM `table_khung_vien` WHERE `id` = $id";
+        $sql = "SELECT `image` 
+        FROM `table_vat_pham` `v` 
+        JOIN `table_user_icon_store` `i` ON `v`.`id` = `i`.`icon_id` 
+        WHERE `i`.`user_id` = $id AND `i`.`type` = '$type' AND `active` = 1";
         $query = $mysql->query($sql);
         $rs = $query->fetch(PDO::FETCH_ASSOC);
 
         if (!empty($rs)) {
-            $frame = $rs['icon'];
+            $image = $rs['image'];
         }
     }
-
-    return $frame;
+    
+    return $image;
 }
 
 function getLastInsertId($table) {
@@ -1005,8 +1008,9 @@ function getLastInsertId($table) {
     return $last['id'];
 }
 
-function activeAvatarFrame($user, $frame) {
+function activeIconStore($user, $id, $type) {
     global $mysql;
 
-    return $mysql->update("user", "avatar_frame = ".$frame, "id = ".$user);
+    $mysql->update("user_icon_store", "active = 0", "active = 1 AND type = '$type'");
+    return $mysql->update("user_icon_store", "active = 1", "user_id = $user AND icon_id = $id");
 }
