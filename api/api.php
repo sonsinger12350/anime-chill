@@ -798,6 +798,7 @@ if ($Json['action'] == 'live_search') {
     $response = [
         'success'   => false,
         'message'   => '',
+        'data'      => [],
         'exist'     => false
     ];
 
@@ -853,6 +854,7 @@ if ($Json['action'] == 'live_search') {
     
     $response['success'] = true;
     $response['message'] = 'Mua vật phẩm thành công';
+    $response['data']['coin'] = number_format(getUserCoin($user['id']));
     die(json_encode($response));
 } else if ($Json['action'] == 'active_icon_store') {
     if ($user['banned'] == 'true') {

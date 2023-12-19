@@ -1014,3 +1014,20 @@ function activeIconStore($user, $id, $type) {
     $mysql->update("user_icon_store", "active = 0", "active = 1 AND type = '$type'");
     return $mysql->update("user_icon_store", "active = 1", "user_id = $user AND icon_id = $id");
 }
+
+function getUserCoin($user_id) {
+    global $mysql;
+
+    if (empty($user_id)) {
+        return 0;
+    }
+
+    $rs = $mysql->query('SELECT `coins` FROM `table_user` WHERE `id` = '.$user_id);
+    $data = $rs->fetch(PDO::FETCH_ASSOC);
+
+    if (empty($data['coins'])) {
+        return 0;
+    }
+
+    return $data['coins'];
+}

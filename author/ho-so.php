@@ -124,7 +124,7 @@ foreach ($listItem as $k => $v) {
 						</div>
 						<div class="profile-info">
 							<h3><?= $user['nickname'] ?></h3>
-							<p class="coin"><img src="/themes/img/coin_15.gif" alt=""> <?= number_format($user['coins']) ?> Xu</p>
+							<p class="coin current-coin"><img src="/themes/img/coin_15.gif" alt=""> <span><?= number_format($user['coins']) ?></span> Xu</p>
 						</div>
 					</div>
 					<!-- // doing  -->
@@ -1057,7 +1057,7 @@ foreach ($listItem as $k => $v) {
 				let rs = responses[0].data;
 
 				if (rs.success) {
-					location.reload();
+					$('.current-coin span').html(rs.data.coin);
 				} else {
 					errorDiv.html(rs.message);
 					errorDiv.removeClass('d-none');
