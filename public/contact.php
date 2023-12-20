@@ -25,6 +25,7 @@ FireWall();
                 </div>
             </div>
             <div class="ah-frame-bg">
+                <a class="color-white-2 margin-r-5 fs-15" style="display: block;"><span>Gmail: hhchina.tv@gmail.com</span></a><br>
                 <?php
                 $arr = $mysql->query("SELECT * FROM " . DATABASE_FX . "lien_he ORDER BY id DESC");
                 while ($row = $arr->fetch(PDO::FETCH_ASSOC)) {
@@ -33,6 +34,7 @@ FireWall();
                     <div class="fs-15 flex" style="margin-bottom: 8px;">
                         <div class="color-red-2 margin-r-5" style="display: block;"><?= $row['name'] ?></div>
                         <a style="padding: 0px 5px;word-break: break-all;" href="<?= $row['url'] ?>" class="bg-blue border-default border-radius-5" target="_blank"><?= $row['url'] ?></a>
+                    
                     </div>
                 <?php } ?>
             </div>

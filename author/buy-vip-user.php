@@ -29,7 +29,7 @@ if($user['coins'] < $pay){
     #1. coins
     $cash_return = $user['coins'] - $pay;
     #2. vip_icon
-    $vip_icon = "http://localhost/themes/img/vip_icon.png";
+    $vip_icon = "https://hhtqtv.vip/assets/upload/aupvGDHrGf3jcUD1699022571.png";
     #3. vip_date_end
     if($user['vip_term'] > 0){
         $num_days =  "+{$user['vip_term']} days";

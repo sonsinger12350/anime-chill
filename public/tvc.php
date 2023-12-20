@@ -61,7 +61,7 @@ $url = (GetParam("url") ? GetParam("url") : die());
         var advertising = {
             client: 'vast',
             admessage: 'Quảng cáo còn XX giây.',
-            skipoffset: 5,
+            skipoffset: 3,
             skiptext: 'Bỏ qua quảng cáo',
             skipmessage: 'Bỏ qua sau xxs',
             width: '100%',

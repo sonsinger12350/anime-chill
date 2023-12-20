@@ -28,13 +28,20 @@ FireWall();
     <div id="ah_wrapper">
         <?php require_once(ROOT_DIR . '/view/header.php'); ?>
         <div class="ah_content">
-            <center>
-                <p style="background-color: #404040; font-family: Comfortaa, sans-serif; font-weight: 900; margin: 0px;"><span style="text-align: left;"><span style="font-family: Comfortaa;"><span new="" roman="" style="color: black; font-size: 14px;" times=""><span style="color: #ff00fe;"><b><br /></b></span></span></span></span></p>
-                <p style="background-color: #404040; font-family: Comfortaa, sans-serif; font-weight: 900; margin: 0px;"><span style="text-align: left;"><span style="font-family: Comfortaa;"><span new="" roman="" style="color: black; font-size: 14px;" times=""><span style="color: #ff00fe;"><b>•</b></span></span><b -webkit-center="" new="" roman="" text-align:="" times=""><span lang="VI" style="line-height: 17.12px;"><span style="color: white; font-size: 14px;"> </span></span></b></span></span><span style="background-color: transparent; text-align: left;"><span style="font-family: Comfortaa;"><b -webkit-center="" new="" roman="" text-align:="" times=""><span lang="VI" style="line-height: 17.12px;"><span style="font-size: medium;"><span><b -webkit-center="" new="" roman="" text-align:="" times=""><span lang="VI" style="line-height: 17.12px;"><span style="color: white;">Hãy luôn truy cập web bằng tên miền </span><span><a href="https://hhchina.net" rel="noopener" style="background-color: transparent; box-sizing: border-box; font-family: Comfortaa, sans-serif; font-size: medium; text-decoration-line: none;" target="_blank"><span style="color: #ffa400; font-size: medium;">hhchina.net</span></a> <span style="color: white;">để khi bị chặn sẽ được chuyển hướng tới tên miền mới</span></span></span></b></span></span></span></b></span></span></p>
-                <p style="background-color: #404040; margin: 0px;"><span face="Comfortaa, sans-serif" style="font-weight: 900; text-align: left;"><span style="font-family: Comfortaa;"><b -webkit-center="" new="" roman="" text-align:="" times=""><span lang="VI" style="line-height: 17.12px;"><span style="font-size: medium;"><span><span new="" roman="" style="color: black; font-size: 14px;" times=""><span style="color: #ff00fe;"><b>•</b></span></span><b -webkit-center="" new="" roman="" text-align:="" times=""><span lang="VI" style="line-height: 17.12px;"><span style="color: white; font-size: 14px;"> </span></span></b></span></span></span></b></span></span><span style="background-color: transparent; text-align: left;"><span style="color: white; font-family: Comfortaa; font-size: medium;"><b>Do thiếu hút kinh phí nên quảng cáo có thể gây khó chịu, rất mong các bạn thông cảm!</b></span></span></p>
-                <p style="background-color: #404040; margin: 0px;"><span style="background-color: transparent; text-align: left;"><span style="color: white; font-family: Comfortaa; font-size: medium;"><span face="Comfortaa, sans-serif" style="color: black; font-size: medium; font-weight: 900;"><span style="font-family: Comfortaa;"><b -webkit-center="" new="" roman="" text-align:="" times=""><span lang="VI" style="line-height: 17.12px;"><span style="font-size: medium;"><span><span new="" roman="" style="color: black; font-size: 14px;" times=""><span style="color: #ff00fe;"><b>•</b></span></span><b -webkit-center="" new="" roman="" text-align:="" times=""><span lang="VI" style="line-height: 17.12px;"><span style="color: white; font-size: 14px;"></span></span></b></span></span></span></b></span></span><span face="Comfortaa, sans-serif" style="background-color: transparent; color: black; font-size: medium; font-weight: 900;"><span style="font-family: Comfortaa;"><b -webkit-center="" new="" roman="" text-align:="" times=""><span lang="VI" style="line-height: 17.12px;"><span style="font-size: medium;"><span style="color: white;">Theo </span></span></span></b></span></span><span face="Comfortaa, sans-serif" style="background-color: transparent; color: black; font-size: medium; font-weight: 900;"><span style="font-family: Comfortaa;"><b -webkit-center="" new="" roman="" text-align:="" times=""><span lang="VI" style="line-height: 17.12px;"><span style="font-size: medium;"><span style="color: white;">dõi Fanpage nhận lịch chiếu phim tại </span></span></span></b></span></span><a href="https://www.facebook.com/motanime247/" rel="noopener" style="background-color: transparent; box-sizing: border-box; font-family: Comfortaa, sans-serif; font-size: medium; font-weight: 900; text-decoration-line: none;" target="_blank"><span style="color: #ff00fe; font-size: medium;">[....Đây....]</span></a></span></span></p>
-            </center>
             <?php require_once(ROOT_DIR . '/view/top-note.php'); ?>
+<!--
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4942643338675496"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-4942643338675496"
+     data-ad-slot="3049302767"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+-->
             <?php require_once(ROOT_DIR . '/view/slider.php'); ?>
             <!--            
                        <div class="ah-frame-bg">
@@ -48,6 +55,7 @@ FireWall();
                         </div>
                     </div>
 -->
+            <?php require_once(ROOT_DIR . '/view/bluder.php'); ?>
             <div class="margin-10-0 bg-gray-2 flex flex-space-auto">
                 <div class="fs-17 fw-700 padding-0-20 color-gray inline-flex height-40 flex-hozi-center bg-black border-l-t">
                     Mới cập nhật
@@ -216,7 +224,8 @@ FireWall();
                 });
             </script>
             <?php if ($cf['cmt_on'] == 'true') { ?>
-                <div class="margin-10-0 bg-black flex flex-space-auto" style="border-radius: 15px;height: 40px;">
+                <div class="margin-10-0 bg-black flex flex-space-auto" style="border-radius: 1px;height: 40px;">
+                    <!--
                     <div class="fs-17 fw-700 padding-0-20 color-gray inline-flex flex-hozi-center">
                         <button type="button" name="boxchat" onclick="btn_load_home(this,'LoadComment','Boxchat');" class="padding-5-10 btn-grad">BoxChat (<?= number_format(get_total('comment', "WHERE movie_id = 'all'")) ?>)</button>
                     </div>
@@ -224,6 +233,7 @@ FireWall();
                         <button type="button" name="top" onclick="btn_load_home(this,'top_bxh','TOP');" class="padding-5-10 btn-grad">TOP</button>
                         <button type="button" name="huong_dan" onclick="btn_load_home(this,'huong_dan','Hướng Dẫn');" class="padding-5-10 btn-grad">Hướng Dẫn</button>
                     </div>
+                    -->
                 </div>
                 <style>
                     .desc {
@@ -232,13 +242,13 @@ FireWall();
                 </style>
                 <div class="desc ah-frame-bg">
                     <div class="box-chat">
-                        <h3 style="margin-bottom: 16px;">Box chat</h3>
+                        <h3 class="padding-5-10 btn-grad">Box chat</h3>
                         <ul class="chat_div " style="display: block;list-style: none outside none;height: 200px" id="HomeChatList">
                             <div class="home-status">Không Có Comment Nào</div>
                         </ul>
                     </div>
                     <div class="block-top">
-                        <h3 style="margin-bottom: 16px;">Top</h3>
+                        <h3  class="padding-5-10 btn-grad">Top Cấp Bậc</h3>
                         <ul style="display: block;list-style: none outside none;max-height: 440px;overflow-x: hidden;" id="HomeListTop">
                         </ul>
                     </div>

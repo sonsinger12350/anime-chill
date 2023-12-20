@@ -43,47 +43,23 @@ $paypalConfig = [
 ];
 
 global $mysql;
+$sql = "SELECT `id`, `icon`, `price` FROM `table_khung_vien` ORDER BY `price` DESC LIMIT 100";
+$query = $mysql->query($sql);
+$listAvatarFrame = [];
 
-$listItem = [
-	'khung-vien'	=>	'Khung viền',
-	'non'			=>	'Nón',
-	'toc'			=>	'Tóc',
-	'kinh'			=>	'Kính',
-	'mat'			=>	'Mắt',
-	'khuon-mat'		=>	'Khuôn mặt',
-	'mat-na'		=>	'Mặt nạ',
-	'ao'			=>	'Áo',
-	'quan'			=>	'Quần',
-	'canh'			=>	'Cánh',
-	'hao-quang'		=>	'Hào quang',
-	'do-cam-tay'	=>	'Đồ cầm tay',
-	'thu-cung'		=>	'Thú cưng',
-];
+while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+	$listAvatarFrame[$row['id']] = [
+		'price'	=>	$row['price'],
+		'icon'	=>	$row['icon'],
+	];
+}
 
-$listItemData = [];
-$listItemOwned = [];
-$listItemActive =array_map(function($val){ return '';}, $listItem);
+$sql = "SELECT `frame_id` FROM table_user_avatar_frame WHERE `user_id` = " . $user['id'] . " LIMIT 100";
+$query = $mysql->query($sql);
+$listUserFrame = [];
 
-foreach ($listItem as $k => $v) {
-	$sql = "SELECT `id`, `name`, `price`, `image`, `type` FROM `table_vat_pham` WHERE `type` = '$k'";
-	$query = $mysql->query($sql);
-	$listItemData[$k] = [];
-
-	while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-		$listItemData[$k][$row['id']] = $row;
-	}
-
-	$sql2 = "SELECT `icon_id`, `active`, `type` FROM `table_user_icon_store` WHERE `user_id` = " . $user['id']." AND `type` = '$k'";
-	$query2 = $mysql->query($sql2);
-	$listItemOwned[$k] = [];
-
-	while ($row2 = $query2->fetch(PDO::FETCH_ASSOC)) {
-		$listItemOwned[$k][] = $row2['icon_id'];
-
-		if ($row2['active'] == 1) {
-			$listItemActive[$row2['type']] = $listItemData[$row2['type']][$row2['icon_id']]['image'];
-		}
-	}
+while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+	$listUserFrame[] = $row['frame_id'];
 }
 ?>
 <!DOCTYPE html>
@@ -119,12 +95,12 @@ foreach ($listItem as $k => $v) {
 					<div class="avatar">
 						<div class="img">
 							<img src="<?= $user['avatar'] ?>" />
-							<img src="<?= $user['khung-vien'] ?>" alt="" class="avatar-frame">
+							<img src="<?= $user['frame'] ?>" alt="" class="avatar-frame">
 							<button class="upload-avatar" type="button" onclick="showModal()"><i class="fa fa-cloud-upload"></i> Up Avatar</button>
 						</div>
 						<div class="profile-info">
 							<h3><?= $user['nickname'] ?></h3>
-							<p class="coin current-coin"><img src="/themes/img/coin_15.gif" alt=""> <span><?= number_format($user['coins']) ?></span> Xu</p>
+							<p class="coin"><img src="/themes/img/coin_15.gif" alt=""> <?= number_format($user['coins']) ?> Xu</p>
 						</div>
 					</div>
 					<!-- // doing  -->
@@ -132,7 +108,7 @@ foreach ($listItem as $k => $v) {
 					?>
 						<div class="vip-info" data-vip_date_end=<?= date("Y-m-d H:i:s", $user['vip_date_end'])?>>
 							<img style="width: 70px;" src="<?= $user['vip_icon'] ?>" />
-							<p class="days mb-0"></p>
+							<p class="days">Còn </p>
 						</div>
 					<?php
 					} ?>
@@ -154,7 +130,7 @@ foreach ($listItem as $k => $v) {
 					<nav class="menu">
 						<ul class="nav nav-tabs" role="tablist">
 							<li class="nav-item menu-item hvr-sweep-to-right">
-								<a class="nav-link active" href="#tab-profile" data-bs-toggle="tab">
+								<a class="nav-link" href="#tab-profile" data-bs-toggle="tab">
 									<i class="fa-solid fa-info-circle"></i> Thông tin chung
 								</a>
 							</li>
@@ -169,7 +145,7 @@ foreach ($listItem as $k => $v) {
 								</a>
 							</li>
 							<li class="nav-item menu-item hvr-sweep-to-right">
-								<a class="nav-link " href="#tab-store" data-bs-toggle="tab">
+								<a class="nav-link active " href="#tab-cart" data-bs-toggle="tab">
 									<i class="fa-solid fa-cart-shopping"></i> Cửa hàng vật phẩm
 								</a>
 							</li>
@@ -206,45 +182,29 @@ foreach ($listItem as $k => $v) {
 					<div class="tab-content">
 						<!-- // doing  -->
 							<p class="text-while" id="thongbao"> </p>
-						<div class="tab-pane fade show active" id="tab-profile">
+						<div class="tab-pane fade" id="tab-profile">
+						    
 							<h4 class="tab-title mb-3">Tủ đồ cá nhân</h4>
 							<div class="tab-body mb-4 tab-avatar-frame-content">
 								<ul class="nav nav-tabs mb-2" role="tablist">
-									<?php foreach($listItem as $k => $v):?>
-										<li class="nav-item menu-item hvr-sweep-to-right">
-											<a class="nav-link tab-store <?=$k=='khung-vien' ? 'active' : ''?>" href="#tab-store-owner-<?=$k?>" data-bs-toggle="tab">
-												<?=$v?>
-											</a>
-										</li>
-									<?php endforeach?>
+									<li class="nav-item menu-item hvr-sweep-to-right">
+										<a class="nav-link active" href="#tab-user-owned-frame" data-bs-toggle="tab">
+											KHUNG VIỀN
+										</a>
+									</li>
 								</ul>
 								<div class="tab-content">
-									<?php foreach($listItemData as $k => $v):?>
-										<div class="tab-pane fade <?=$k=='khung-vien' ? 'show active' : ''?>" id="tab-store-owner-<?=$k?>">
-											<div class="tab-body">
-												<div class="list-owned-icon">
-													<?php foreach ($v as $k1 => $v1):?>
-														<?php if (in_array($v1['id'], $listItemOwned[$k])) : ?>
-															<div class="icon-owned" data-id="<?= $v1['id'] ?>" data-type="<?= $v1['type'] ?>" data-icon="<?= $v1['image'] ?>">
-																<img src="<?= $v1['image'] ?>" alt="">
-															</div>
-														<?php endif ?>
-													<?php endforeach ?>
-												</div>
+									<div class="tab-pane fade show active" id="tab-user-owned-frame">
+										<div class="tab-body">
+											<div class="list-owned-frame">
+												<?php foreach ($listAvatarFrame as $k => $v) : ?>
+													<?php if (in_array($k, $listUserFrame)) : ?>
+														<div class="frame-owned" data-id="<?= $k ?>" data-frame="<?= $v['icon'] ?>">
+															<img src="<?= $v['icon'] ?>" alt="">
+														</div>
+													<?php endif ?>
+												<?php endforeach ?>
 											</div>
-										</div>
-									<?php endforeach?>
-									<div class="user-icon-store">
-										<div class="user-figure">
-											<?php foreach ($listItem as $k => $v):?>
-												<?php if ($k != 'khung-vien'):?>
-													<?php if (!empty($listItemActive[$k])):?>
-														<img src="<?=$listItemActive[$k]?>" alt="<?=$v?>" class="<?=$k?>-default">
-													<?php else:?>
-														<img src="/assets/upload/icon-default/<?=$k?>.webp" alt="<?=$v?>" class="<?=$k?>-default">
-													<?php endif?>
-												<?php endif?>
-											<?php endforeach?>
 										</div>
 									</div>
 								</div>
@@ -325,7 +285,7 @@ foreach ($listItem as $k => $v) {
 								</div>
 							</div>
 						</div>
-						<div class="tab-pane fade " id="tab-deposit">
+						<div class="tab-pane fade" id="tab-deposit">
 							<h4 class="tab-title">Nạp Xu</h4>
 							<div class="tab-body">
 								<div class="deposit-method">
@@ -399,64 +359,42 @@ foreach ($listItem as $k => $v) {
 							<h4 class="tab-title">Phim theo dõi</h4>
 							<div class="movie-follow"></div>
 						</div>
-						<div class="tab-pane fade " id="tab-store">
+						<div class="tab-pane fade show active" id="tab-cart">
 							<h4 class="tab-title">Cửa hàng vật phẩm</h4>
 							<div class="">
 								<ul class="nav nav-tabs" role="tablist">
-									<?php foreach($listItem as $k => $v):?>
-										<li class="nav-item menu-item hvr-sweep-to-right">
-											<a class="nav-link tab-store <?=$k=='khung-vien' ? 'active' : ''?>" href="#tab-store-<?=$k?>" data-bs-toggle="tab">
-												<?=$v?>
-											</a>
-										</li>
-									<?php endforeach?>
+									<li class="nav-item menu-item hvr-sweep-to-right">
+										<a class="nav-link active" href="#tab-user-frame" data-bs-toggle="tab">
+											KHUNG VIỀN
+										</a>
+									</li>
 								</ul>
 								<div class="tab-content">
-									<?php foreach($listItemData as $k => $v):?>
-										<div class="tab-pane fade <?=$k=='khung-vien' ? 'show active' : ''?>" id="tab-store-<?=$k?>">
-											<div class="tab-body">
-												<div class="list-store-item mt-4">
-													<?php if (!empty($v)):?>
-														<?php foreach ($v as $k1 => $v1):?>
-															<div class="store-item <?= in_array($v1['id'], $listItemOwned[$k]) ? 'owned' : '' ?>" data-id="<?= $v1['id'] ?>" data-type="<?= $v1['type'] ?>" data-price="<?= numberFormat($v1['price']) ?>" data-icon="<?= $v1['image'] ?>"
-															data-name="<?=$v1['name']?>">
-																<img src="<?= $v1['image'] ?>" alt="">
-															</div>
-														<?php endforeach ?>
-													<?php else : ?>
-														<p class="text-center">Nội dung đang cập nhật</p>
-													<?php endif ?>
-												</div>
+									<div class="tab-pane fade show active" id="tab-user-frame">
+										<div class="tab-body">
+											<div class="list-avatar-frame mt-4">
+												<?php if (!empty($listAvatarFrame)) : ?>
+													<?php foreach ($listAvatarFrame as $key => $frame) : ?>
+														<div class="frame <?= in_array($key, $listUserFrame) ? 'owned' : '' ?>" data-id="<?= $key ?>" data-price="<?= numberFormat($frame['price']) ?>" data-frame="<?= $frame['icon'] ?>">
+															<img src="<?= $frame['icon'] ?>" alt="">
+														</div>
+													<?php endforeach ?>
+												<?php else : ?>
+													<p class="text-center">Nội dung đang cập nhật</p>
+												<?php endif ?>
 											</div>
-										</div>
-									<?php endforeach?>
-								</div>
-								<div class="current-coin mt-2">
-									<p class="coin fw-bold"><img src="/themes/img/coin_15.gif" alt=""> Tài sản: <?= number_format($user['coins']) ?> Xu</p>
-								</div>
-								<div class="store-overview">
-									<div class="user-icon-store">
-										<div class="user-figure">
-											
-											<?php foreach ($listItem as $k => $v):?>
-												<?php if ($k != 'khung-vien'):?>
-													<?php if (!empty($listItemActive[$k])):?>
-														<img src="<?=$listItemActive[$k]?>" alt="<?=$v?>" class="<?=$k?>-default">
-													<?php else:?>
-														<img src="/assets/upload/icon-default/<?=$k?>.webp" alt="<?=$v?>" class="<?=$k?>-default">
-													<?php endif?>
-												<?php endif?>
-											<?php endforeach?>
+											<div class="current-coin mt-2">
+												<p class="coin fw-bold"><img src="/themes/img/coin_15.gif" alt=""> Tài sản: <?= number_format($user['coins']) ?> Xu</p>
+											</div>
+											<div class="avatar-frame-price d-none">
+												<p>Giá: <span class="frame-price"></span> Xu</p>
+												<input name="frame-id" type="text" hidden>
+												<button type="button" class="btn btn-primary" id="buy-frame"><i class="fa-solid fa-cart-plus"></i> Mua</button>
+											</div>
+											<div class="alert alert-danger mt-3 d-none"></div>
 										</div>
 									</div>
-									<div class="store-icon-price d-none">
-										<p class="icon-name d-none"></p>
-										<p>Giá: <span class="icon-price"></span> Xu</p>
-										<input name="icon-id" type="text" hidden>
-										<button type="button" class="btn btn-primary buy-icon"><i class="fa-solid fa-cart-plus"></i> Mua</button>
-									</div>
 								</div>
-								<div class="alert alert-danger mt-3 d-none"></div>
 							</div>
 						</div>
 						<div class="tab-pane fade" id="tab-movie-history">
@@ -593,7 +531,7 @@ foreach ($listItem as $k => $v) {
 
 <script>
 	// show Tab Notificaiton 
-	// function showTab(tabId) {
+	function showTab(tabId) {
 		// #1. lấy all element tab content 
 		// var tabContents = document.querySelectorAll('.tab_content_notification');
 		// #2. ân tất cả
@@ -602,11 +540,11 @@ foreach ($listItem as $k => $v) {
 		// });
 		// #3. show tab id được click
 		// document.getElementById(tabId).style.display = 'block';
-	// }
+	}
 	// doing
-	// function AddActive() {
+	function AddActive() {
 
-	// }
+	}
 </script>
 
 <script type="text/javascript">
@@ -997,48 +935,35 @@ foreach ($listItem as $k => $v) {
 	//End deposit
 
 	// Avatar Frame Store
-	$('body').on('click', '.store-item', function() {
+	$('body').on('click', '.frame', function() {
 		let id = $(this).attr('data-id');
 		let price = $(this).attr('data-price');
-		let icon = $(this).attr('data-icon');
-		let type = $(this).attr('data-type');
-		let name = $(this).attr('data-name');
+		let frame = $(this).attr('data-frame');
 
-		$('.store-item').removeClass('active');
+		$('.frame').removeClass('active');
 		$(this).addClass('active');
 
-		if (name != '') {
-			$('.store-icon-price .icon-name').html(name);
-			$('.store-icon-price .icon-name').removeClass('d-none');
-		} else {
-			$('.store-icon-price .icon-name').addClass('d-none');
-		}
+		$('.avatar-frame-price .frame-price').html(price);
+		$('.avatar-frame-price [name="frame-id"]').val(id);
+		$('.avatar-frame-price').removeClass('d-none');
 
-		$('.store-icon-price .icon-price').html(price);
-		$('.store-icon-price [name="icon-id"]').val(id);
-		$('.store-icon-price').removeClass('d-none');
-
-		if (type == 'khung-vien') {
-			$('.avatar-frame').attr('src', icon);
-		} else {
-			$(`.user-figure .${type}-default`).attr('src', icon);
-		}
+		$('.avatar-frame').attr('src', frame);
 
 		$('#tab-user-frame .alert-danger').addClass('d-none');
 	});
 
 	// Buy avatar frame
-	$('body').on('click', '.buy-icon', function() {
-		let icon = $('[name="icon-id"]').val();
+	$('body').on('click', '#buy-frame', function() {
+		let frame = $('[name="frame-id"]').val();
 		let errorDiv = $('#tab-user-frame .alert-danger');
 
 		errorDiv.addClass('d-none');
 
-		if (!icon) {
+		if (!frame) {
 			return false;
 		}
 
-		if ($(`[data-id="${icon}"]`).hasClass('owned')) {
+		if ($(`[data-id="${frame}"]`).hasClass('owned')) {
 			errorDiv.html('Đã sở hữu');
 			errorDiv.removeClass('d-none');
 			return false;
@@ -1046,10 +971,10 @@ foreach ($listItem as $k => $v) {
 
 		Promise.all([
 				axios.post('/server/api', {
-					"action": 'buy_icon_store',
+					"action": 'buy_avatar_frame',
 					"token": $dt.token,
 					"data": {
-						'id': icon
+						'frame': frame
 					}
 				})
 			])
@@ -1057,7 +982,7 @@ foreach ($listItem as $k => $v) {
 				let rs = responses[0].data;
 
 				if (rs.success) {
-					$('.current-coin span').html(rs.data.coin);
+					location.reload();
 				} else {
 					errorDiv.html(rs.message);
 					errorDiv.removeClass('d-none');
@@ -1069,11 +994,10 @@ foreach ($listItem as $k => $v) {
 	});
 
 	// User active avatar frame
-	$('body').on('click', '.icon-owned', function() {
+	$('body').on('click', '.frame-owned', function() {
 		let element = $(this);
 		let id = element.attr('data-id');
-		let icon = element.attr('data-icon');
-		let type = element.attr('data-type');
+		let frame = element.attr('data-frame');
 
 		if (!id) {
 			return false;
@@ -1083,10 +1007,10 @@ foreach ($listItem as $k => $v) {
 
 		Promise.all([
 			axios.post('/server/api', {
-				"action": 'active_icon_store',
+				"action": 'active_avatar_frame',
 				"token": $dt.token,
 				"data": {
-					id, type
+					'frame': id
 				}
 			})
 		])
@@ -1094,11 +1018,7 @@ foreach ($listItem as $k => $v) {
 			let rs = responses[0].data;
 
 			if (rs.success) {
-				if (type == 'khung-vien') {
-					$('.avatar-frame').attr('src', icon);
-				} else {
-					$(`.user-figure .${type}-default`).attr('src', icon);
-				}
+				$('.avatar-frame').attr('src', frame);
 			} else {
 				alert(ms.message);
 			}

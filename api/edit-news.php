@@ -30,8 +30,8 @@ if ($FormEdit == "server") {
             <button class="btn btn-outline-info mt-3" type="submit">Cập Nhật</button>
         </div>
     </form>
-<?php } else if ($FormEdit == "movie") {
-    $data = GetDataArr("movie", "id = $id");
+<?php } else if ($FormEdit == "news") {
+    $data = GetDataArr("news", "id = $id");
     ?>
     <form submit-ajax="ngockush" form-action="UpdateDatabase" action="<?= URL ?>/admin/server/api" method="POST" form-check="false">
         <div class="col-12 text-center mb-3">
@@ -40,7 +40,7 @@ if ($FormEdit == "server") {
             <button onclick="location.href = '/admin_movie/episode-movie?movie_id=<?= $data['id'] ?>'" class="btn btn-warning-gradien mt-2" type="button">Manager Episode</button>
             <button onclick="location.href = '/admin_movie/movie-lien-ket?movie_id=<?= $data['id'] ?>'" class="btn btn-primary-gradien mt-2" type="button">Thêm Liên Kết Phim</button>
         </div>
-        <input type="text" name="table" value="movie" style="display: none;">
+        <input type="text" name="table" value="news" style="display: none;">
         <input type="text" name="id" value="<?= $id ?>" style="display: none;">
         <div class="form-group row">
             <div class="col-lg-6 col-md-12 mb-3">
@@ -191,13 +191,14 @@ if ($FormEdit == "server") {
                     </optgroup>
                 </select>
             </div>
-
-            <!-- <div class="col-lg-6 col-md-12 mb-3">
+<!--
+            <div class="col-lg-6 col-md-12 mb-3">
                 <label>Từ Khóa Tìm Kiếm Phim</label>
                 <textarea name="data[keyword]" rows="5" class="form-control"><?php foreach (json_decode($data['keyword'], true) as $key => $value) {
                                                                                     echo $value['name'] . '|' . $value['url'] . "\n";
                                                                                 } ?></textarea>
-            </div> -->
+            </div>
+-->
             <div class="col-lg-12 col-md-12 mb-3">
                 <label>Nội Dung Phim</label>
                 <textarea name="data[content]" class="summernote form-control"><?= $data['content'] ?></textarea>

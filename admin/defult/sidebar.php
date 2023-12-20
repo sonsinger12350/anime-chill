@@ -18,9 +18,21 @@
                         </a>
                     </li>
                     <li class="sidebar-list">
+                        <a class="sidebar-link sidebar-title link-nav" href="<?= URL ?>/admin_movie/add-news">
+                            <i class="fa fa-smile-o fw-bold fs-6 text-primary"></i>
+                            <span>Thêm Tin Mới</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-list">
                         <a class="sidebar-link sidebar-title link-nav" href="<?= URL ?>/admin_movie/movie">
                             <i class="fa fa-smile-o fw-bold fs-6 text-primary"></i>
                             <span>Danh Sách Phim</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-list">
+                        <a class="sidebar-link sidebar-title link-nav" href="<?= URL ?>/admin_movie/news">
+                            <i class="fa fa-smile-o fw-bold fs-6 text-primary"></i>
+                            <span>Danh Sách News</span>
                         </a>
                     </li>
                     <li class="sidebar-list">

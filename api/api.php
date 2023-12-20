@@ -63,7 +63,7 @@ if ($Json['action'] == 'live_search') {
                 $Movie = GetDataArr("movie", "id = '$MovieID'");
                 $Ep = GetDataArr("episode", "ep_name = '$EpisodeID' AND movie_id = '$MovieID'");
                 $History .= '<div class="item">
-                <a href="' . URL . '/xem-phim/' . $Movie['slug'] . '-episode-id-' . $MovieID . '.html">
+                <a href="' . URL . '/xem-hhchina/' . $Movie['slug'] . '-episode-id-' . $MovieID . '.html">
                 <div>
                 <img src="' . $Movie['image'] . '" />
                 </div>
