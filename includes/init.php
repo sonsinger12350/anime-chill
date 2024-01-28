@@ -128,3 +128,83 @@ function resetVipUser($vip_date_end, $user_id, $vip_user)
 # GET CONFIG	#
 $cf = GetDataArr('config', "id = 1");
 #################
+
+function categoryStore() {
+	return [
+		'khung-vien'	=>	'Khung viền',
+		'non'			=>	'Nón',
+		'toc'			=>	'Tóc',
+		'kinh'			=>	'Kính',
+		'mat'			=>	'Mắt',
+		'khuon-mat'		=>	'Khuôn mặt',
+		'mat-na'		=>	'Mặt nạ',
+		'ao'			=>	'Áo',
+		'quan'			=>	'Quần',
+		'canh'			=>	'Cánh',
+		'hao-quang'		=>	'Hào quang',
+		'do-cam-tay'	=>	'Đồ cầm tay',
+		'thu-cung'		=>	'Thú cưng',
+	];
+}
+
+function listItemStore() {
+	global $mysql;
+
+	$data = array_map(function ($value) {return [];}, categoryStore());
+
+	$sql = "SELECT `id`, `name`, `price`, `image`, `type` FROM `table_vat_pham`";
+	$query = $mysql->query($sql);
+
+	while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+		$data[$row['type']][$row['id']] = $row;
+	}
+
+	return $data;
+}
+
+function listUserItemActive($userId) {
+	global $mysql;
+
+	$categoryStore = categoryStore();
+	$flipCategoryStore = array_flip($categoryStore);
+	
+	$data = array_map(
+		function ($value) use ($flipCategoryStore) {
+			return '/assets/upload/icon-default/'.$flipCategoryStore[$value].'.webp';
+		}, $categoryStore);
+
+	if (!empty($userId)) {
+		$sql = "SELECT `vp`.`type`,`vp`.`image`
+			FROM `table_user_icon_store` `uis`
+			JOIN `table_vat_pham` `vp` ON `uis`.`icon_id` = `vp`.`id`
+			WHERE `user_id` = $userId AND `active` = 1";
+
+		$query = $mysql->query($sql);
+
+		while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+			$data[$row['type']] = $row['image'];
+		}
+	}
+
+	return $data;
+}
+
+function listUserItemOwner($userId) {
+	global $mysql;
+
+	$data = array_map(function ($value) {return [];}, categoryStore());
+
+	if (!empty($userId)) {
+		$sql = "SELECT `icon_id`, `type` 
+			FROM `table_user_icon_store` 
+			WHERE `user_id` = $userId";
+
+		$query = $mysql->query($sql);
+
+		while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+			$data[$row['type']][] = $row['icon_id'];
+		}
+	}
+
+	return $data;
+}

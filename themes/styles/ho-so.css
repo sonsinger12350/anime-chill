@@ -680,44 +680,10 @@ ul.list-film {
 	column-gap: 16px;
 }
 
-.user-figure {
-	width: 70px;
-    height: 80px;
-    position: relative;
-    padding: 0;
-    left: -5px;
-}
-
-.user-figure img {
-	position: absolute;
-    left: 0;
-    top: 8px;
-	min-width: 70px;
-	z-index: 5;
-}
-
-.user-figure img.khuon-mat-default {
-	z-index: 4;
-}
-
-.user-figure img.canh-default {
-	z-index: 3;
-}
-
-.user-figure img.hao-quang-default {
-	z-index: 2;
-}
-
-.user-figure img.non-default {
-	z-index: 6;
-}
-
-.user-figure img.kinh-default {
-	z-index: 6;
-}
-
-.user-figure img.mat-na-default {
-	z-index: 7;
+#tab-store .tab-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }
 
 @media (max-width: 991px) {

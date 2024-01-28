@@ -1,0 +1,1 @@
+ALTER TABLE `table_user` ADD COLUMN `online` tinyint default 0;

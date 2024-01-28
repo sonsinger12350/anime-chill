@@ -264,30 +264,11 @@ if ($Json['action'] == 'live_search') {
 
     if ($P['total'] >= 1) {
         $arr = $mysql->query("SELECT * FROM " . DATABASE_FX . "comment WHERE movie_id = '$movie_id' AND show_cmt = 'true' AND reply_comment IS NULL ORDER BY id DESC LIMIT {$P['start']},$limit");
-        
-        
         while ($row = $arr->fetch(PDO::FETCH_ASSOC)) {
             $User_Arr = GetDataArr("user", "id = '{$row['user_id']}'");
-            $listItemStore = listUserItemActive($user['id']);
-            $htmlItemStore = '<div class="user-figure">';
-            $htmlVip = '';
-
-            foreach ($listItemStore as $k => $v) {
-                if ($k != 'khung-vien') {
-                    $htmlItemStore .= '<img src="'.$v.'" alt="'.$k.'" class="'.$k.'-default">';
-                }
-            }
-
-            $htmlItemStore .= '</div>';
-
-            if ($user['vip'] == 1) {
-                $htmlVip = '<div class="vip-icon"><img src="'.$user['vip_icon'].'" /></div>';
-            }
-
             if (get_total('user', "WHERE id = '{$row['user_id']}'") < 1) {
                 $mysql->delete('comment', "user_id = '{$row['user_id']}'");
             }
-
             if ($row['user_id'] == $user['id']) {
                 $CmtSetting = '<div class="flex flex-hozi-center relative"><a href="javascript:void(0)" onclick="clickEventDropDown(this,\'expand_more\')" class="toggle-dropdown fs-21 inline-flex" bind="drop-down-oc-' . $row['id'] . '"><span class="material-icons-round">expand_more</span></a>
                                     <div id="drop-down-oc-' . $row['id'] . '" class="dropdown-option bg-black">
@@ -313,16 +294,14 @@ if ($Json['action'] == 'live_search') {
                                     <div class="avatar">
                                         <img class="avatar-img" src="' . $User_Arr['avatar'] . '">
                                         <img class="avatar-frame" src="'.getIconStoreActive($User_Arr['id'], 'khung-vien').'">
-                                        <span class="rank-level">Lv ' . $User_Arr['level'] . '</span>
                                     </div>
-                                    <div class="item-store">'.$htmlItemStore.'</div>
                                 </div>
                                 <div class="right">
                                     <div class="flex flex-column">
                                         <div class="flex flex-space-auto">
                                             <div class="flex flex-hozi-center">
                                                 <div class="nickname">' . $User_Arr['nickname'] . LevelIcon($User_Arr['level'], 18, 18) . UserIcon($User_Arr['id'], 18, 18) . '</div>
-                                                '.$htmlVip.'
+                                                <div class="color-red fw-700 fs-12" style="color:' . LevelColor($User_Arr['level']) . '"> Lv.' . $User_Arr['level'] . ' </div>
                                             </div>
                                             ' . $CmtSetting . '
                                         </div>
@@ -378,38 +357,20 @@ if ($Json['action'] == 'live_search') {
     } else $mysql->insert('comment', 'user_id,movie_id,content,timestap,time', "'{$user['id']}','$movie_id','$content','" . time() . "','" . DATEFULL . "'");
     if (!$_SESSION['add_comments']) setcookie("add_comments", $user['nickname'], time() + 20);
     $User_Arr = GetDataArr("user", "id = '{$user['id']}'");
-    $listItemStore = listUserItemActive($user['id']);
-    $htmlItemStore = '<div class="user-figure">';
-    $htmlVip = '';
-
-    foreach ($listItemStore as $k => $v) {
-        if ($k != 'khung-vien') {
-            $htmlItemStore .= '<img src="'.$v.'" alt="'.$k.'" class="'.$k.'-default">';
-        }
-    }
-
-    $htmlItemStore .= '</div>';
-
-    if ($user['vip'] == 1) {
-        $htmlVip = '<div class="vip-icon"><img src="'.$user['vip_icon'].'" /></div>';
-    }
-
     die(json_encode(["comment" => '<div id="comment_' . $User_Arr['id'] . '" class="user-comment relative">
             <div class="flex bg-comment">
                 <div class="left" onclick="initViewProfile(' . $User_Arr['id'] . ')">
                     <div class="avatar">
                         <img class="avatar-img" src="' . $User_Arr['avatar'] . '">
                         <img class="avatar-frame" src="'.getIconStoreActive($User_Arr['id'], 'khung-vien').'">
-                        <span class="rank-level">Lv ' . $User_Arr['level'] . '</span>
                     </div>
-                    <div class="item-store">'.$htmlItemStore.'</div>
                 </div>
                 <div class="right">
                     <div class="flex flex-column">
                         <div class="flex flex-space-auto">
                             <div class="flex flex-hozi-center">
                                 <div class="nickname">' . $User_Arr['nickname'] . LevelIcon($User_Arr['level'], 18, 18) . UserIcon($User_Arr['id'], 18, 18) . '</div>
-                                '.$htmlVip.'
+                                <div class="color-red fw-700 fs-12" style="color:' . LevelColor($User_Arr['level']) . '"> Lv.' . $User_Arr['level'] . ' </div>
                             </div>
                             <div class="flex flex-hozi-center relative"><a href="javascript:void(0)" onclick="clickEventDropDown(this,\'expand_more\')" class="toggle-dropdown fs-21 inline-flex" bind="drop-down-oc-' . $User_Arr['id'] . '"><span class="material-icons-round">expand_more</span></a>
                                 <div id="drop-down-oc-' . $User_Arr['id'] . '" class="dropdown-option bg-black">
@@ -636,7 +597,6 @@ if ($Json['action'] == 'live_search') {
     $Top = 0;
     $arr = $mysql->query("SELECT * FROM " . DATABASE_FX . "user ORDER BY level DESC LIMIT {$cf['num_bxh']}");
     while ($row = $arr->fetch(PDO::FETCH_ASSOC)) {
-        $listItem = listUserItemActive($row['id']);
         $Top++;
         if ($Top == 1) {
             $TopImage = "/themes/img/top1.png";
@@ -649,33 +609,30 @@ if ($Json['action'] == 'live_search') {
         } else if ($Top == 5) {
             $TopImage = "/themes/img/top5.png";
         } else $TopImage = "/themes/img/out_top.png";
-        
-        $HTML .= '
-            <li class="home-rank">
-                <div class="flex flex-hozi-center" style="padding: 14px 0px;">
-                    <div class="stt-rank">
-                        <img src="' . $TopImage . '">
-                        <div class="top-rank">#TOP ' . $Top . '</div>
-                    </div>
-                    <div class="image-container-rank">
-                        <div class="user-figure">';
-                            foreach ($listItem as $k => $v) {
-                                if ($k != 'khung-vien') {
-                                    $HTML .= '<img src="'.$v.'" alt="'.$k.'" class="'.$k.'-default">';
-                                }
-                            }
-        $HTML .=    '   </div>
-                        
-                        <span class="rank-level">Lv ' . $row['level'] . '</span>
-                    </div>
-                    <div class="rank-info">
-                        <p class="rank-text name">' . $row['nickname'] . ' ' . RankIcon($row['level']) . '</p>
-                        <span class="rank-text coin">'.number_format($row['coins']). ' Xu - Exp: '.number_format(LevelExp($row['level'], $row['exp'])).'</span>
-                        <span class="rank-text activity-status '.($row['online'] == 1 ? 'online' : 'offline').'">'.($row['online'] == 1 ? 'Online' : 'Offline').'</span>
-                    </div>
+        $HTML .= '<li class="home-rank">
+                    <div class="flex flex-hozi-center" style="padding: 14px 0px;">
+                        <div class="stt-rank">
+                            <img src="' . $TopImage . '">
+                            <div class="top-rank">#TOP ' . $Top . '</div>
+                        </div>
+                        <div class="image-container-rank">
+                            <div class="image-rank-home">
+                                <img class="avatar"  src="' . $row['avatar'] . '" alt="' . $row['nickname'] . '">
+                                <img class="avatar-frame"  src="' . getIconStoreActive($row['id'], 'khung-vien') . '">
+                            </div>
+                            
+                            <span class="rank-level">Lv ' . $row['level'] . '</span>
+                            ' . RankIcon($row['level']) . '
+                        </div>
+                        <div class="rank-info">
+                            <span class="rank-text" style="color: ' . LevelColor($row['level']) . ';">' . $row['nickname'] . '</span>
+                            <span class="rank-text" style="color: ' . LevelColor($row['level']) . ';">Exp : ' . number_format(LevelExp($row['level'], $row['exp'])) . '</span>
+                            <span class="rank-text" style="color: ' . LevelColor($row['level']) . ';">Cảnh Giới : ' . Danh_Hieu($row['level']) . '</span>
+                            <span class="rank-text" style="color: ' . LevelColor($row['level']) . ';">Icon : ' . UserIcon($row['id'], 18, 18) . '</span>
+                        </div>
 
-                </div>
-            </li>';
+                    </div>
+                </li>';
     }
     $InstanceCache->set($cache_key, json_encode(["result" => $HTML, "status" => "success"]), $cf['time_cache'] * 3600);
     die(json_encode(["result" => $HTML, "status" => "success"]));

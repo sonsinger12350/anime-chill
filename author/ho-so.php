@@ -1,90 +1,54 @@
 <?php
-if (!defined('MovieAnime')) die("You are illegally infiltrating our website");
-if (!$_author_cookie) die(header("location:/login"));
-if (isset($_POST['change_profile'])) {
-	$nickname = sql_escape($_POST['nickname']);
-	$quote = sql_escape($_POST['quote']);
-	$Success = 0;
-	if (!$nickname) {
-		$Success++;
-		$Notice .= '<div class="noti-error flex flex-hozi-center"><span class="material-icons-round margin-0-5">error</span>Vui Lòng Nhập Biệt Danh Của Bạn</div>';
-	}
-	if (strlen($nickname) < 6) {
-		$Success++;
-		$Notice .= '<div class="noti-error flex flex-hozi-center"><span class="material-icons-round margin-0-5">error</span>Biệt Danh phải nhiều hơn 6 kí tự</div>';
-	}
-	if (strlen($quote) > 50) {
-		$Success++;
-		$Notice .= '<div class="noti-error flex flex-hozi-center"><span class="material-icons-round margin-0-5">error</span>Châm Ngôn Sống Không Được Quá 50 Ký Tự</div>';
-	}
-	if ($Success == 0) {
-		$mysql->update("user", "nickname = '$nickname',quote = '$quote'", "email = '$useremail'");
-		header("Refresh:0");
-		$Notice .= '<div class="noti-success flex flex-hozi-center"><span class="material-icons-round margin-0-5">success</span>Cập Nhật Hồ Sơ Thành Công</div>';
-	}
-}
-$configs = getConfigGeneralUserInfo([
-	'vip_package',
-	'join_telegram',
-	'first_login',
-	'online_reward',
-	'farm_tree',
-	'comment',
-	'first_upload_avatar',
-	'vip_icon',
-	'deposit_min',
-	'deposit_rate',
-	'deposit_exp',
-	'vip_fee',
-]);
-
-$paypalConfig = [
-	'client_id'	=>	'AYldjoFRqHN-fq47TxTzcg9pQc6f-Z8jYqqbTaVniT4bCdoD4fZwp37Zjv--L2ffBnmkS7M99P8medCf',
-];
-
-global $mysql;
-
-$listItem = [
-	'khung-vien'	=>	'Khung viền',
-	'non'			=>	'Nón',
-	'toc'			=>	'Tóc',
-	'kinh'			=>	'Kính',
-	'mat'			=>	'Mắt',
-	'khuon-mat'		=>	'Khuôn mặt',
-	'mat-na'		=>	'Mặt nạ',
-	'ao'			=>	'Áo',
-	'quan'			=>	'Quần',
-	'canh'			=>	'Cánh',
-	'hao-quang'		=>	'Hào quang',
-	'do-cam-tay'	=>	'Đồ cầm tay',
-	'thu-cung'		=>	'Thú cưng',
-];
-
-$listItemData = [];
-$listItemOwned = [];
-$listItemActive =array_map(function($val){ return '';}, $listItem);
-
-foreach ($listItem as $k => $v) {
-	$sql = "SELECT `id`, `name`, `price`, `image`, `type` FROM `table_vat_pham` WHERE `type` = '$k'";
-	$query = $mysql->query($sql);
-	$listItemData[$k] = [];
-
-	while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-		$listItemData[$k][$row['id']] = $row;
-	}
-
-	$sql2 = "SELECT `icon_id`, `active`, `type` FROM `table_user_icon_store` WHERE `user_id` = " . $user['id']." AND `type` = '$k'";
-	$query2 = $mysql->query($sql2);
-	$listItemOwned[$k] = [];
-
-	while ($row2 = $query2->fetch(PDO::FETCH_ASSOC)) {
-		$listItemOwned[$k][] = $row2['icon_id'];
-
-		if ($row2['active'] == 1) {
-			$listItemActive[$row2['type']] = $listItemData[$row2['type']][$row2['icon_id']]['image'];
+	if (!defined('MovieAnime')) die("You are illegally infiltrating our website");
+	if (!$_author_cookie) die(header("location:/login"));
+	if (isset($_POST['change_profile'])) {
+		$nickname = sql_escape($_POST['nickname']);
+		$quote = sql_escape($_POST['quote']);
+		$Success = 0;
+		if (!$nickname) {
+			$Success++;
+			$Notice .= '<div class="noti-error flex flex-hozi-center"><span class="material-icons-round margin-0-5">error</span>Vui Lòng Nhập Biệt Danh Của Bạn</div>';
+		}
+		if (strlen($nickname) < 6) {
+			$Success++;
+			$Notice .= '<div class="noti-error flex flex-hozi-center"><span class="material-icons-round margin-0-5">error</span>Biệt Danh phải nhiều hơn 6 kí tự</div>';
+		}
+		if (strlen($quote) > 50) {
+			$Success++;
+			$Notice .= '<div class="noti-error flex flex-hozi-center"><span class="material-icons-round margin-0-5">error</span>Châm Ngôn Sống Không Được Quá 50 Ký Tự</div>';
+		}
+		if ($Success == 0) {
+			$mysql->update("user", "nickname = '$nickname',quote = '$quote'", "email = '$useremail'");
+			header("Refresh:0");
+			$Notice .= '<div class="noti-success flex flex-hozi-center"><span class="material-icons-round margin-0-5">success</span>Cập Nhật Hồ Sơ Thành Công</div>';
 		}
 	}
-}
+	$configs = getConfigGeneralUserInfo([
+		'vip_package',
+		'join_telegram',
+		'first_login',
+		'online_reward',
+		'farm_tree',
+		'comment',
+		'first_upload_avatar',
+		'vip_icon',
+		'deposit_min',
+		'deposit_rate',
+		'deposit_exp',
+		'vip_fee',
+	]);
+
+	$paypalConfig = [
+		'client_id'	=>	'AYldjoFRqHN-fq47TxTzcg9pQc6f-Z8jYqqbTaVniT4bCdoD4fZwp37Zjv--L2ffBnmkS7M99P8medCf',
+	];
+
+	global $mysql;
+
+	$listItem = categoryStore();
+
+	$listItemStore = listItemStore();
+	$listItemOwned = listUserItemOwner($user['id']);
+	$listItemActive = listUserItemActive($user['id']);
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -219,7 +183,7 @@ foreach ($listItem as $k => $v) {
 									<?php endforeach?>
 								</ul>
 								<div class="tab-content">
-									<?php foreach($listItemData as $k => $v):?>
+									<?php foreach($listItemStore as $k => $v):?>
 										<div class="tab-pane fade <?=$k=='khung-vien' ? 'show active' : ''?>" id="tab-store-owner-<?=$k?>">
 											<div class="tab-body">
 												<div class="list-owned-icon">
@@ -236,13 +200,9 @@ foreach ($listItem as $k => $v) {
 									<?php endforeach?>
 									<div class="user-icon-store">
 										<div class="user-figure">
-											<?php foreach ($listItem as $k => $v):?>
+											<?php foreach ($listItemActive as $k => $v):?>
 												<?php if ($k != 'khung-vien'):?>
-													<?php if (!empty($listItemActive[$k])):?>
-														<img src="<?=$listItemActive[$k]?>" alt="<?=$v?>" class="<?=$k?>-default">
-													<?php else:?>
-														<img src="/assets/upload/icon-default/<?=$k?>.webp" alt="<?=$v?>" class="<?=$k?>-default">
-													<?php endif?>
+													<img src="<?=$v?>" alt="<?=$k?>" class="<?=$k?>-default">
 												<?php endif?>
 											<?php endforeach?>
 										</div>
@@ -400,7 +360,12 @@ foreach ($listItem as $k => $v) {
 							<div class="movie-follow"></div>
 						</div>
 						<div class="tab-pane fade " id="tab-store">
-							<h4 class="tab-title">Cửa hàng vật phẩm</h4>
+							<div class="tab-header">
+								<h4 class="tab-title">Cửa hàng vật phẩm</h4>
+								<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#VipModal">
+									Mua VIP ADS tắt quảng cáo tại đây
+								</button>
+							</div>
 							<div class="">
 								<ul class="nav nav-tabs" role="tablist">
 									<?php foreach($listItem as $k => $v):?>
@@ -412,7 +377,7 @@ foreach ($listItem as $k => $v) {
 									<?php endforeach?>
 								</ul>
 								<div class="tab-content">
-									<?php foreach($listItemData as $k => $v):?>
+									<?php foreach($listItemStore as $k => $v):?>
 										<div class="tab-pane fade <?=$k=='khung-vien' ? 'show active' : ''?>" id="tab-store-<?=$k?>">
 											<div class="tab-body">
 												<div class="list-store-item mt-4">

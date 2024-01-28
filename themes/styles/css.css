@@ -2175,6 +2175,12 @@ div#user-profile .right {
     box-sizing: border-box
 }
 
+.user-comment .left {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .user-comment .left .avatar {
     position: relative;
     width: 50px;
@@ -2198,6 +2204,35 @@ div#user-profile .right {
     height: auto;
     top: -3px;
     left: 0px;
+}
+
+.user-comment .left .avatar .rank-level {
+    display: flex;
+    justify-content: center;
+    padding: 2px 8px;
+    right: 0px;
+    bottom: -20px;
+}
+
+.user-comment .left .item-store .user-figure {
+    width: 50px;
+    height: 50px;
+}
+
+.user-comment .left .item-store .user-figure img {
+    top: -8px;
+    min-width: 60px;
+}
+
+.user-comment .right .vip-icon {
+    width: 25px;
+    height: 25px;
+    border: 2px solid #f0fd6b;
+    border-radius: 50%;
+}
+
+.user-comment .right .vip-icon img {
+    width: 100%;
 }
 
 .frame-reply-comments {
@@ -3125,13 +3160,15 @@ input:checked+.slider:before {
 
 .rank-level {
     color: #ffffff;
-    font-weight: 700;
-    background-color: #ffcf8782;
-    padding: 3px;
-    border-radius: 5px;
+    font-weight: 600;
+    font-size: 12px;
+    padding: 3px 10px;
+    width: 30px;
+    border: 1px solid #ffffff;
+    border-radius: 20px;
     position: absolute;
     bottom: -15px;
-    right: 25px;
+    right: 15px;
 }
 
 .image-container-rank {
@@ -3144,7 +3181,7 @@ input:checked+.slider:before {
     /* clear: right; */
     float: right;
     clear:right;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 }
 
 .stt-rank {
@@ -3169,9 +3206,31 @@ input:checked+.slider:before {
 }
 
 .rank-text {
-    font-weight: 700;
+    font-weight: 500;
     font-size: 13px;
     display: block;
+    margin-bottom: 4px;
+}
+
+.rank-text.name {
+    font-weight: 700;
+    color: #62d4e4;
+}
+
+.rank-text.name .level-icon-rank {
+    position: unset;
+}
+
+.rank-text.coin {
+    color: #e4a462;
+}
+
+.rank-text.activity-status.online {
+    color: #3de42d;
+}
+
+.rank-text.activity-status.offline {
+    color: #e11b1b;
 }
 
 .top-rank {
@@ -3197,4 +3256,48 @@ input:checked+.slider:before {
     .boxchat-content {
         max-width: 75%;
     }
+}
+
+.user-figure {
+	width: 70px;
+    height: 70px;
+    position: relative;
+    padding: 0;
+    left: -5px;
+}
+
+.home-rank .user-figure {
+	top: -20px;
+}
+
+.user-figure img {
+	position: absolute;
+    left: 0;
+    top: 8px;
+	min-width: 70px;
+	z-index: 5;
+}
+
+.user-figure img.khuon-mat-default {
+	z-index: 4;
+}
+
+.user-figure img.canh-default {
+	z-index: 3;
+}
+
+.user-figure img.hao-quang-default {
+	z-index: 2;
+}
+
+.user-figure img.non-default {
+	z-index: 6;
+}
+
+.user-figure img.kinh-default {
+	z-index: 6;
+}
+
+.user-figure img.mat-na-default {
+	z-index: 7;
 }

@@ -24,6 +24,22 @@ function ShowReplyComment($CommentID)
     $Comment = '';
     while ($row = $arr->fetch(PDO::FETCH_ASSOC)) {
         $User_Arr = GetDataArr("user", "id = '{$row['user_id']}'");
+        $listItemStore = listUserItemActive($user['id']);
+        $htmlItemStore = '<div class="user-figure">';
+        $htmlVip = '';
+
+        foreach ($listItemStore as $k => $v) {
+            if ($k != 'khung-vien') {
+                $htmlItemStore .= '<img src="'.$v.'" alt="'.$k.'" class="'.$k.'-default">';
+            }
+        }
+
+        $htmlItemStore .= '</div>';
+
+        if ($user['vip'] == 1) {
+            $htmlVip = '<div class="vip-icon"><img src="'.$user['vip_icon'].'" /></div>';
+        }
+
         if ($row['user_id'] == $user['id']) {
             $CmtSetting = '<div class="flex flex-hozi-center relative"><a href="javascript:void(0)" onclick="clickEventDropDown(this,\'expand_more\')" class="toggle-dropdown fs-21 inline-flex" bind="drop-down-oc-' . $row['id'] . '"><span class="material-icons-round">expand_more</span></a>
                       <div id="drop-down-oc-' . $row['id'] . '" class="dropdown-option bg-black">
@@ -35,34 +51,40 @@ function ShowReplyComment($CommentID)
                               </span>Ẩn</div>
                       </div>
                   </div>';
-        } else $CmtSetting = "";
+        }
+        else $CmtSetting = "";
+
         $Comment .= '<div id="reply_' . $row['id'] . '" class="user-comment relative">
-    <div class="flex bg-comment">
-        <div class="left" onclick="initViewProfile(' . $User_Arr['id'] . ')">
-            <div class="avatar">
-                <img class="avatar-img" src="' . $User_Arr['avatar'] . '">
-                <img class="avatar-frame" src="'.getIconStoreActive($User_Arr['id'], 'khung-vien').'">
-            </div>
-        </div>
-        <div class="right">
-            <div class="flex flex-column">
-                <div class="flex flex-space-auto">
-                    <div class="flex flex-hozi-center">
-                        <div class="nickname"> ' . $User_Arr['nickname'] . LevelIcon($User_Arr['level'], 18, 18) . UserIcon($User_Arr['id'], 18, 18) . '</div>
-                        <div class="color-red fw-700 fs-12" style="color:' . LevelColor($User_Arr['level']) . '"> Lv.' . $User_Arr['level'] . ' </div>
+            <div class="flex bg-comment">
+                <div class="left" onclick="initViewProfile(' . $User_Arr['id'] . ')">
+                    <div class="avatar">
+                        <img class="avatar-img" src="' . $User_Arr['avatar'] . '">
+                        <img class="avatar-frame" src="'.getIconStoreActive($User_Arr['id'], 'khung-vien').'">
+                        <span class="rank-level">Lv ' . $User_Arr['level'] . '</span>
                     </div>
-                    ' . $CmtSetting . '
+                    <div class="item-store">
+                        '.$htmlItemStore.'
+                    </div>
                 </div>
-                <div class="content">' . $row['content'] . ' </div>
-                <div class="flex fs-12"> <a href="javascript:void(0)" onclick="showFrameReplyComment(' . $CommentID . ',\'' . $User_Arr['nickname'] . '\',' . $User_Arr['id'] . ',\'65223e7a2be93294129d74f9f934c973\')" class="margin-r-5">Trả lời</a>
-                    <div> ' . RemainTime($row['timestap']) . ' </div>
+                <div class="right">
+                    <div class="flex flex-column">
+                        <div class="flex flex-space-auto">
+                            <div class="flex flex-hozi-center">
+                                <div class="nickname"> ' . $User_Arr['nickname'] . LevelIcon($User_Arr['level'], 18, 18) . UserIcon($User_Arr['id'], 18, 18) . '</div>
+                                '.$htmlVip.'
+                            </div>
+                            ' . $CmtSetting . '
+                        </div>
+                        <div class="content">' . $row['content'] . ' </div>
+                        <div class="flex fs-12"> <a href="javascript:void(0)" onclick="showFrameReplyComment(' . $CommentID . ',\'' . $User_Arr['nickname'] . '\',' . $User_Arr['id'] . ',\'65223e7a2be93294129d74f9f934c973\')" class="margin-r-5">Trả lời</a>
+                            <div> ' . RemainTime($row['timestap']) . ' </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
-<div id="feedback_' . $row['id'] . '" class="frame-reply-comments"></div>
-<div id="toggle_frame_comment_' . $row['id'] . '"></div>';
+        <div id="feedback_' . $row['id'] . '" class="frame-reply-comments"></div>
+        <div id="toggle_frame_comment_' . $row['id'] . '"></div>';
     }
     return $Comment;
 }
