@@ -22,6 +22,7 @@ if (isset($_POST['action_login'])) {
             setcookie('author', $AccessToken, time() + (86400 * 30), '/', URL_None_HTTP(), false);
             setcookie('_accesstoken', $AccessToken, time() + (86400 * 30), '/', URL_None_HTTP(), false);
             $mysql->update("user", "_accesstoken = '$AccessToken', online = 1", "email = '$email'");
+            plusCoinFirstTime($user['id'], 'first_login');
             die(header("location:/"));
             break;
     }

@@ -45,7 +45,22 @@ if (isset($_COOKIE['author'])) {
         $useremail = $user['email'];
         UpdateLevel($user);
         resetVipUser($user['vip_date_end'], $user['id'], $user['vip']);
+        $mysql->update("user", "online = 0", "1");
+        $mysql->update("user", "online = 1", "email = '$useremail'");
         $user['khung-vien'] = getIconStoreActive($user['id'], 'khung-vien');
+        $user['icon-user'] = '';
+        $listUserIconActive = listUserIconActive($user['id']);
+
+        if (!empty($listUserIconActive)) {
+            $user['icon-user'] .= "<div class='icon-user'>";
+
+            foreach ($listUserIconActive as $k => $v) {
+                $user['icon-user'] .= "<img src='".$v."' />";
+            }
+
+            $user['icon-user'] .= "</div>";
+        }
+
         if ($_author_cookie != $user['_accesstoken']) {
             RemoveCookie();
         } else if (!$_author_cookie) {

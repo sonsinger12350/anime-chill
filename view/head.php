@@ -49,7 +49,7 @@ FireWall();
         "nickname": "<?= $user['nickname'] ?>",
         "email": "<?= $user['email'] ?>",
         "level": "<?= $user['level'] ?>",
-        "icon": `<?= LevelIcon($user['level'], 20, 20) . UserIcon($user['id'], 20, 20) ?>`,
+        "icon": `<?= LevelIcon($user['level'], 20, 20) ?>`,
         "color": "<?= LevelColor($user['level']) ?>",
         "joined_time": "<?= $user['time'] ?>",
         "coins": "<?= $user['coins'] ?>",
@@ -59,7 +59,8 @@ FireWall();
         "quote": "<?= $user['quote'] ?>",
         "vip_expired": "<?= $user['vip'] ?>",
         "is_vip": "<?= $user['vip'] ?>",
-        "khung-vien": "<?= $user['khung-vien'] ?>"
+        "frame": "<?= $user['khung-vien'] ?>",
+        "icon-user": "<?= $user['icon-user'] ?>"
     };
     const $elem = new Object();
     const $_GET = new Object();

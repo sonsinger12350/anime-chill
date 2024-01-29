@@ -25,16 +25,28 @@ function ShowReplyComment($CommentID)
     while ($row = $arr->fetch(PDO::FETCH_ASSOC)) {
         $User_Arr = GetDataArr("user", "id = '{$row['user_id']}'");
         $listItemStore = listUserItemActive($user['id']);
+        $listUserIconActive = listUserIconActive($user['id']);
         $htmlItemStore = '<div class="user-figure">';
         $htmlVip = '';
+        $htmlIconUser = '';
 
         foreach ($listItemStore as $k => $v) {
-            if ($k != 'khung-vien') {
+            if (isItemStore($k)) {
                 $htmlItemStore .= '<img src="'.$v.'" alt="'.$k.'" class="'.$k.'-default">';
             }
         }
 
         $htmlItemStore .= '</div>';
+
+        if (!empty($listUserIconActive)) {
+            $htmlIconUser .= '<div class="icon-user">';
+
+            foreach ($listUserIconActive as $k => $v) {
+                $htmlIconUser .= '<img src="'.$v.'" />';
+            }
+
+            $htmlIconUser .= '</div>';
+        }
 
         if ($user['vip'] == 1) {
             $htmlVip = '<div class="vip-icon"><img src="'.$user['vip_icon'].'" /></div>';
@@ -70,7 +82,8 @@ function ShowReplyComment($CommentID)
                     <div class="flex flex-column">
                         <div class="flex flex-space-auto">
                             <div class="flex flex-hozi-center">
-                                <div class="nickname"> ' . $User_Arr['nickname'] . LevelIcon($User_Arr['level'], 18, 18) . UserIcon($User_Arr['id'], 18, 18) . '</div>
+                                <div class="nickname"> ' . $User_Arr['nickname'] . LevelIcon($User_Arr['level'], 18, 18) . '</div>
+                                '.$htmlIconUser.'
                                 '.$htmlVip.'
                             </div>
                             ' . $CmtSetting . '

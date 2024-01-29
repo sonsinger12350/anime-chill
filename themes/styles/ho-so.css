@@ -372,12 +372,16 @@ a {
 	width: 70px;
 	height: auto;
 	padding: 8px;
-	background-color: #fff;
-	border: 1px solid red;
+	background-color: #666565;
 	border-radius: 6px;
 	cursor: pointer;
 	position: relative;
 	opacity: 1;
+}
+
+#tab-profile .list-owned-icon .icon-owned.active {
+	background-color: #fff;
+	border: 1px solid red;
 }
 
 #tab-profile .list-owned-icon .icon-owned:has(.loading) {

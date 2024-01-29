@@ -168,7 +168,7 @@ var CommentHome = async () => {
                             <img class="avatar-frame" src="${$user.frame}">
                         </div>
                             <div class="p-comment-home">
-                                <div class="box-chat-nickname" style="color: ${$user.color};">${$user.nickname} (Lv.${$user.level}) ${$user.icon} <span class="Time-cmt-home">Vừa Xong</span></div>
+                                <div class="box-chat-nickname" style="color: ${$user.color};">${$user.nickname} (Lv.${$user.level}) ${$user.icon} ${$user['icon-user']} <span class="Time-cmt-home">Vừa Xong</span></div>
                             </div>
                             <div class="boxchat-content">${CommentText}</div>
                     </li>`);

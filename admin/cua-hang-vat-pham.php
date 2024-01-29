@@ -6,20 +6,7 @@
 	$NumPage = GetParam("p") ? GetParam("p") : 1;
 	$LinkPage = URL . "/admin_movie/cua_hang_vat_pham";
 	$type = !empty($_GET['type']) ? $_GET['type'] : 'non';
-	$listItem = [
-		'non'			=>	'Nón',
-		'toc'			=>	'Tóc',
-		'kinh'			=>	'Kính',
-		'mat'			=>	'Mắt',
-		'khuon-mat'		=>	'Khuôn mặt',
-		'mat-na'		=>	'Mặt nạ',
-		'ao'			=>	'Áo',
-		'quan'			=>	'Quần',
-		'canh'			=>	'Cánh',
-		'hao-quang'		=>	'Hào quang',
-		'do-cam-tay'	=>	'Đồ cầm tay',
-		'thu-cung'		=>	'Thú cưng',
-	];
+	$listItem = categoryStore();
 ?>
 
 <!DOCTYPE html>

@@ -181,7 +181,7 @@ function imagesaver($image_data, $folder = '')
         $data = substr($data, strpos($data, ',') + 1);
         $type = strtolower($type[1]); // jpg, png, gif
 
-        if (!in_array($type, ['jpg', 'jpeg', 'gif', 'png', 'webp'])) {
+        if (!in_array($type, ['jpg', 'jpeg', 'gif', 'png', 'webp', 'gif'])) {
             return false;
         }
 
@@ -190,16 +190,21 @@ function imagesaver($image_data, $folder = '')
         if ($data === false) {
             return false;
         }
-    } else {
+    }
+    else {
         return false;
     }
+
     $FileName = tokenString(15) . time();
     $FileNew = !empty($folder) ? UPLOAD_DIR ."/". $folder . "/$FileName.$type"  : UPLOAD_DIR . "/$FileName.$type";
+
     if (file_put_contents($FileNew, $data)) {
         $Images = !empty($folder) ? "/assets/upload/$folder/$FileName.$type" : URL . "/assets/upload/$FileName.$type";
-    } else {
-        return false;;
     }
+    else {
+        return false;
+    }
+
     /* it will return image name if image is saved successfully 
     or it will return error on failing to save image. */
     return $Images;
@@ -1008,11 +1013,35 @@ function getLastInsertId($table) {
     return $last['id'];
 }
 
-function activeIconStore($user, $id, $type) {
+function activeIconStore($user, $id, $type, $active) {
     global $mysql;
 
-    $mysql->update("user_icon_store", "active = 0", "active = 1 AND type = '$type'");
-    return $mysql->update("user_icon_store", "active = 1", "user_id = $user AND icon_id = $id");
+    $rs = $mysql->query("SELECT `user_id`, `active` FROM `table_user_icon_store` WHERE `user_id` = $user AND `icon_id` = $id");
+    $userIcon = $rs->fetch(PDO::FETCH_ASSOC);
+
+    if ($type == 'icon-user') {
+        if (!empty($userIcon)) {
+            $statusActive = $active == 1 ? 0 : 1;
+            return $mysql->update("user_icon_store", "active = $statusActive", "user_id = $user AND icon_id = $id");
+        }
+
+        $paramsInsert = [
+            'user_id'    =>  $user,
+            'icon_id'    =>  $id,
+            'type'      =>  $type,
+            'active'    =>  1,
+        ];
+
+        return $mysql->insert("user_icon_store", implode(',', array_keys($paramsInsert)), "'".implode("','", array_values($paramsInsert))."'");
+    }
+    else {
+        if ($userIcon['active'] == 1) {
+            return $mysql->update("user_icon_store", "active = 0", "user_id = $user AND icon_id = $id");
+        }
+
+        $mysql->update("user_icon_store", "active = 0", "active = 1 AND type = '$type'");
+        return $mysql->update("user_icon_store", "active = 1", "user_id = $user AND icon_id = $id");
+    }
 }
 
 function getUserCoin($user_id) {

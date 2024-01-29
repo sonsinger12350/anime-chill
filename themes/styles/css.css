@@ -2179,6 +2179,7 @@ div#user-profile .right {
     display: flex;
     align-items: center;
     justify-content: center;
+    min-height: 80px;
 }
 
 .user-comment .left .avatar {
@@ -2188,7 +2189,7 @@ div#user-profile .right {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-right: 7px;
+    margin-right: 15px;
     margin-bottom: 5px;
 }
 
@@ -2210,7 +2211,6 @@ div#user-profile .right {
     display: flex;
     justify-content: center;
     padding: 2px 8px;
-    right: 0px;
     bottom: -20px;
 }
 
@@ -2222,6 +2222,19 @@ div#user-profile .right {
 .user-comment .left .item-store .user-figure img {
     top: -8px;
     min-width: 60px;
+}
+
+.user-comment .right .icon-user {
+    margin-right: 5px;
+    display: flex;
+    align-items: center;
+    column-gap: 3px;
+}
+
+.user-comment .right .icon-user img {
+    width: 25px;
+    height: 25px;
+    object-fit: cover;
 }
 
 .user-comment .right .vip-icon {
@@ -2924,6 +2937,31 @@ input:checked+.slider:before {
     left: 0px;
 }
 
+.home-rank .top-avatar {
+    position: relative;
+    width: 70px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 7px;
+    margin-bottom: 5px;
+    float: left;
+}
+
+.home-rank .top-avatar .avatar {
+    height: auto;
+    width: 60px;
+    border-radius: 50%;
+    width: 45px;
+}
+
+.home-rank .top-avatar .avatar-frame {
+    position: absolute;
+    width: 70px;
+    height: auto;
+}
+
 .box_chat {
     border-radius: 3px;
     padding: 10px;
@@ -3163,12 +3201,14 @@ input:checked+.slider:before {
     font-weight: 600;
     font-size: 12px;
     padding: 3px 10px;
-    width: 30px;
     border: 1px solid #ffffff;
     border-radius: 20px;
     position: absolute;
     bottom: -15px;
-    right: 15px;
+    left: -6px;
+    width: 100%;
+    max-width: 50px;
+    white-space: nowrap;
 }
 
 .image-container-rank {
@@ -3205,6 +3245,17 @@ input:checked+.slider:before {
     width: 200px;
 }
 
+.icon-user {
+    display: inline-flex;
+    column-gap: 5px;
+}
+
+.icon-user img {
+    width: 25px;
+    height: 25px;
+    object-fit: cover;
+}
+
 .rank-text {
     font-weight: 500;
     font-size: 13px;
@@ -3215,6 +3266,9 @@ input:checked+.slider:before {
 .rank-text.name {
     font-weight: 700;
     color: #62d4e4;
+    display: flex;
+    align-items: center;
+    column-gap: 5px;
 }
 
 .rank-text.name .level-icon-rank {
@@ -3237,8 +3291,8 @@ input:checked+.slider:before {
     font-weight: 700;
     font-size: 12px;
     position: absolute;
-    bottom: 0px;
-    left: 2px;
+    bottom: -8px;
+    left: 12px;
     color: #fff;
 }
 

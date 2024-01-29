@@ -292,7 +292,6 @@ FireWall();
                                                     <span class="rank-text" style="color: ' . LevelColor($row['level']) . ';">' . $row['nickname'] . '</span>
                                                     <span class="rank-text" style="color: ' . LevelColor($row['level']) . ';">Exp : ' . number_format(LevelExp($row['level'], $row['exp'])) . '</span>
                                                     <span class="rank-text" style="color: ' . LevelColor($row['level']) . ';">Cảnh Giới : ' . Danh_Hieu($row['level']) . '</span>
-                                                    <span class="rank-text" style="color: ' . LevelColor($row['level']) . ';">Icon : ' . UserIcon($row['id'], 18, 18) . '</span>
                                                 </div>
                                             </div>';
                                 break;

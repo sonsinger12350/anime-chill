@@ -49,6 +49,8 @@
 	$listItemStore = listItemStore();
 	$listItemOwned = listUserItemOwner($user['id']);
 	$listItemActive = listUserItemActive($user['id']);
+	$listItemIdActive = listUserItemActive($user['id'], 'get-id');
+	$listIconUserActive = listUserIconActive($user['id']);
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -189,7 +191,15 @@
 												<div class="list-owned-icon">
 													<?php foreach ($v as $k1 => $v1):?>
 														<?php if (in_array($v1['id'], $listItemOwned[$k])) : ?>
-															<div class="icon-owned" data-id="<?= $v1['id'] ?>" data-type="<?= $v1['type'] ?>" data-icon="<?= $v1['image'] ?>">
+															<?php
+																if ($k == 'icon-user') {
+																	$active = in_array($v1['id'], array_keys($listIconUserActive)) ? 'active' : '';
+																}
+																else {
+																	$active = $listItemIdActive[$k] == $v1['id'] ? 'active' : '';
+																}
+															?>
+															<div class="icon-owned <?=$active?>" data-id="<?= $v1['id'] ?>" data-type="<?= $v1['type'] ?>" data-icon="<?= $v1['image'] ?>">
 																<img src="<?= $v1['image'] ?>" alt="">
 															</div>
 														<?php endif ?>
@@ -201,7 +211,7 @@
 									<div class="user-icon-store">
 										<div class="user-figure">
 											<?php foreach ($listItemActive as $k => $v):?>
-												<?php if ($k != 'khung-vien'):?>
+												<?php if (isItemStore($k)):?>
 													<img src="<?=$v?>" alt="<?=$k?>" class="<?=$k?>-default">
 												<?php endif?>
 											<?php endforeach?>
@@ -404,7 +414,7 @@
 										<div class="user-figure">
 											
 											<?php foreach ($listItem as $k => $v):?>
-												<?php if ($k != 'khung-vien'):?>
+												<?php if (isItemStore($k)):?>
 													<?php if (!empty($listItemActive[$k])):?>
 														<img src="<?=$listItemActive[$k]?>" alt="<?=$v?>" class="<?=$k?>-default">
 													<?php else:?>
@@ -985,6 +995,9 @@
 
 		if (type == 'khung-vien') {
 			$('.avatar-frame').attr('src', icon);
+		} else if (type == 'icon-user') {
+
+			// $(`.user-figure .${type}-default`).attr('src', icon);
 		} else {
 			$(`.user-figure .${type}-default`).attr('src', icon);
 		}
@@ -1023,6 +1036,8 @@
 
 				if (rs.success) {
 					$('.current-coin span').html(rs.data.coin);
+					
+					alert('Mua vật phẩm thành công');
 				} else {
 					errorDiv.html(rs.message);
 					errorDiv.removeClass('d-none');
@@ -1039,6 +1054,7 @@
 		let id = element.attr('data-id');
 		let icon = element.attr('data-icon');
 		let type = element.attr('data-type');
+		let active = element.hasClass('active') ? 1 : 0;
 
 		if (!id) {
 			return false;
@@ -1051,20 +1067,40 @@
 				"action": 'active_icon_store',
 				"token": $dt.token,
 				"data": {
-					id, type
+					id, type, active
 				}
 			})
-		])
-		.then(function(responses) {
+		]).then(function(responses) {
 			let rs = responses[0].data;
 
 			if (rs.success) {
 				if (type == 'khung-vien') {
 					$('.avatar-frame').attr('src', icon);
-				} else {
+				}
+				else {
 					$(`.user-figure .${type}-default`).attr('src', icon);
 				}
-			} else {
+
+				if (type != 'icon-user') {
+					$(`.icon-owned[data-type="${type}"]`).removeClass('active');
+					$(`.icon-owned[data-id="${id}"]`).addClass('active');
+				}
+
+				if (active) {
+					$(`.icon-owned[data-id="${id}"]`).removeClass('active');
+
+					if (type == 'khung-vien') {
+						$('.avatar-frame').attr('src', '/assets/upload/icon-default/khung-vien.webp');
+					}
+					else if (type != 'icon-user') {
+						$(`.user-figure .${type}-default`).attr('src', '/assets/upload/icon-default/'+type+'.webp');
+					}
+				}
+				else {
+					$(`.icon-owned[data-id="${id}"]`).addClass('active');
+				}
+			}
+			else {
 				alert(ms.message);
 			}
 			element.find('.loading').remove();

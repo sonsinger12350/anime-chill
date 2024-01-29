@@ -144,7 +144,20 @@ function categoryStore() {
 		'hao-quang'		=>	'Hào quang',
 		'do-cam-tay'	=>	'Đồ cầm tay',
 		'thu-cung'		=>	'Thú cưng',
+		'icon-user'		=>	'Icon',
 	];
+}
+
+function isItemStore($item) {
+	if (empty($item)) {
+		return false;
+	}
+
+	if (!in_array($item, ['khung-vien', 'icon-user'])) {
+		return true;
+	}
+
+	return false;
 }
 
 function listItemStore() {
@@ -162,27 +175,35 @@ function listItemStore() {
 	return $data;
 }
 
-function listUserItemActive($userId) {
+function listUserItemActive($userId, $option = 'get-image') {
 	global $mysql;
 
 	$categoryStore = categoryStore();
 	$flipCategoryStore = array_flip($categoryStore);
-	
 	$data = array_map(
 		function ($value) use ($flipCategoryStore) {
-			return '/assets/upload/icon-default/'.$flipCategoryStore[$value].'.webp';
+			if ($flipCategoryStore[$value] != 'icon-user') {
+				return '/assets/upload/icon-default/'.$flipCategoryStore[$value].'.webp';
+			}
 		}, $categoryStore);
 
 	if (!empty($userId)) {
-		$sql = "SELECT `vp`.`type`,`vp`.`image`
+		$sql = "SELECT `vp`.`id`,`vp`.`type`,`vp`.`image`
 			FROM `table_user_icon_store` `uis`
 			JOIN `table_vat_pham` `vp` ON `uis`.`icon_id` = `vp`.`id`
 			WHERE `user_id` = $userId AND `active` = 1";
 
 		$query = $mysql->query($sql);
 
-		while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-			$data[$row['type']] = $row['image'];
+		if ($option == 'get-image') {
+			while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+				$data[$row['type']] = $row['image'];
+			}
+		}
+		else {
+			while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+				$data[$row['type']] = $row['id'];
+			}
 		}
 	}
 
@@ -207,4 +228,47 @@ function listUserItemOwner($userId) {
 	}
 
 	return $data;
+}
+
+function listUserIconActive($userId) {
+	global $mysql;
+	$data = [];
+	
+	if (!empty($userId)) {
+		$sql = "SELECT `vp`.`id`,`vp`.`image`
+			FROM `table_user_icon_store` `uis`
+			JOIN `table_vat_pham` `vp` ON `uis`.`icon_id` = `vp`.`id`
+			WHERE `user_id` = $userId AND `active` = 1 AND `vp`.`type` = 'icon-user'";
+
+		$query = $mysql->query($sql);
+
+		while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+			$data[$row['id']] = $row['image'];
+		}
+	}
+
+	return $data;
+}
+
+function plusCoinFirstTime($userId, $type) {
+	return false;
+	if (!empty($userId) && !empty($type)) {
+		global $mysql;
+
+		if ($type == 'first_login') {
+			$sqlCheck = "";
+			$result = $mysql->query($sqlCheck);
+
+			while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+				$data[$row['type']][] = $row['icon_id'];
+			}
+		}
+
+		$paramsPlusCoin = [
+			'user_id'	=>	$userId,
+			'type'	=>	$type,
+			// 'amount'	=>	$amount,
+		];
+		$sqlPlusCoin = "INSERT INTO `table_history_add_coin`";
+	}
 }
