@@ -1036,10 +1036,10 @@ function activeIconStore($user, $id, $type, $active) {
     }
     else {
         if ($userIcon['active'] == 1) {
-            return $mysql->update("user_icon_store", "active = 0", "user_id = $user AND icon_id = $id");
+            return $mysql->update("user_icon_store", "active = 0", "user_id = '$user' AND icon_id = '$id'");
         }
 
-        $mysql->update("user_icon_store", "active = 0", "active = 1 AND type = '$type'");
+        $mysql->update("user_icon_store", "active = 0", "active = 1 AND type = '$type' AND user_id = $user");
         return $mysql->update("user_icon_store", "active = 1", "user_id = $user AND icon_id = $id");
     }
 }

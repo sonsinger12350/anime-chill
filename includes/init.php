@@ -10,6 +10,7 @@ include('CurlClass/vendor/autoload.php');
 $ConnectSQL = new ConectSQL;
 $mysqldb = $ConnectSQL->connect($config['db_host'], $config['db_user'], $config['db_pass'], $config['db_name']);
 $mysql = new mysql;
+$vipIcon = 'https://hhtqtv.vip/assets/upload/aupvGDHrGf3jcUD1699022571.png';
 
 use Curl\Curl;
 

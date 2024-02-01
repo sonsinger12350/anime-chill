@@ -268,7 +268,7 @@ if ($Json['action'] == 'live_search') {
         
         while ($row = $arr->fetch(PDO::FETCH_ASSOC)) {
             $User_Arr = GetDataArr("user", "id = '{$row['user_id']}'");
-            $listItemStore = listUserItemActive($user['id']);
+            $listItemStore = listUserItemActive($User_Arr['id']);
             $listUserIconActive = listUserIconActive($User_Arr['id']);
             $htmlItemStore = '<div class="user-figure">';
             $htmlVip = '';
@@ -292,8 +292,8 @@ if ($Json['action'] == 'live_search') {
                 $htmlIconUser .= '</div>';
             }
 
-            if ($user['vip'] == 1) {
-                $htmlVip = '<div class="vip-icon"><img src="'.$user['vip_icon'].'" /></div>';
+            if ($User_Arr['vip'] == 1) {
+                $htmlVip = '<div class="vip-icon"><img src="'.$vipIcon.'" /></div>';
             }
 
             if (get_total('user', "WHERE id = '{$row['user_id']}'") < 1) {
@@ -391,7 +391,7 @@ if ($Json['action'] == 'live_search') {
     } else $mysql->insert('comment', 'user_id,movie_id,content,timestap,time', "'{$user['id']}','$movie_id','$content','" . time() . "','" . DATEFULL . "'");
     if (!$_SESSION['add_comments']) setcookie("add_comments", $user['nickname'], time() + 20);
     $User_Arr = GetDataArr("user", "id = '{$user['id']}'");
-    $listItemStore = listUserItemActive($user['id']);
+    $listItemStore = listUserItemActive($User_Arr['id']);
     $listUserIconActive = listUserIconActive($User_Arr['id']);
     $htmlItemStore = '<div class="user-figure">';
     $htmlVip = '';
@@ -415,8 +415,8 @@ if ($Json['action'] == 'live_search') {
         $htmlIconUser .= '</div>';
     }
 
-    if ($user['vip'] == 1) {
-        $htmlVip = '<div class="vip-icon"><img src="'.$user['vip_icon'].'" /></div>';
+    if ($User_Arr['vip'] == 1) {
+        $htmlVip = '<div class="vip-icon"><img src="'.$vipIcon.'" /></div>';
     }
 
     die(json_encode(["comment" => '<div id="comment_' . $User_Arr['id'] . '" class="user-comment relative">

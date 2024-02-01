@@ -4,8 +4,9 @@
 	$table = "vat_pham";
 	$stt = 0;
 	$NumPage = GetParam("p") ? GetParam("p") : 1;
-	$LinkPage = URL . "/admin_movie/cua_hang_vat_pham";
 	$type = !empty($_GET['type']) ? $_GET['type'] : 'non';
+	$LinkPage = URL . "/admin_movie/cua_hang_vat_pham/$type.html?p=";
+	$LinkPageNoItem = URL . "/admin_movie/cua_hang_vat_pham";
 	$listItem = categoryStore();
 ?>
 
@@ -163,7 +164,7 @@
 		let currentItem = '<?=$type?>';
 		
 		if (item != currentItem) {
-			window.location.href=`<?=$LinkPage?>/${item}.html`;
+			window.location.href=`<?=$LinkPageNoItem?>/${item}.html`;
 		}
 	});
 </script>									

@@ -97,7 +97,7 @@
 					<?php if ($user['vip'] == 1) {
 					?>
 						<div class="vip-info" data-vip_date_end=<?= date("Y-m-d H:i:s", $user['vip_date_end'])?>>
-							<img style="width: 70px;" src="<?= $user['vip_icon'] ?>" />
+							<img style="width: 70px;" src="<?= $vipIcon ?>" />
 							<p class="days mb-0"></p>
 						</div>
 					<?php
@@ -1002,13 +1002,13 @@
 			$(`.user-figure .${type}-default`).attr('src', icon);
 		}
 
-		$('#tab-user-frame .alert-danger').addClass('d-none');
+		$('#tab-store .alert-danger').addClass('d-none');
 	});
 
 	// Buy avatar frame
 	$('body').on('click', '.buy-icon', function() {
 		let icon = $('[name="icon-id"]').val();
-		let errorDiv = $('#tab-user-frame .alert-danger');
+		let errorDiv = $('#tab-store .alert-danger');
 
 		errorDiv.addClass('d-none');
 

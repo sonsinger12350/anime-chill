@@ -366,13 +366,14 @@ a {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 8px;
+	min-height: 85px;
 }
 
 #tab-profile .list-owned-icon .icon-owned {
 	width: 70px;
 	height: auto;
 	padding: 8px;
-	background-color: #666565;
+	background-color: #959595;
 	border-radius: 6px;
 	cursor: pointer;
 	position: relative;
@@ -597,6 +598,7 @@ ul.list-film {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 8px;
+	min-height: 75px;
 }
 
 .list-store-item .store-item {

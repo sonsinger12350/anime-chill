@@ -471,52 +471,29 @@ if ($FormEdit == "server") {
             </div>
         </div>
     </form>
-<?php } else if ($FormEdit == "khung_vien") {
-    $data = GetDataArr("khung_vien", "id = $id");
+<?php } else if ($FormEdit == "vat_pham") {
+    $data = GetDataArr("vat_pham", "id = $id");
     ?>
     <form submit-ajax="ngockush" form-action="UpdateDatabase" action="<?= URL ?>/admin/server/api" method="POST" form-check="true">
-        <input type="text" class="form-control" name="table" value="khung_vien" style="display: none;">
+        <input type="text" class="form-control" name="table" value="vat_pham" style="display: none;">
         <input type="text" name="id" value="<?= $id ?>" style="display: none;">
         <div class="form-group row">
+            <div class="col-12 mb-3">
+                <label>Tên</label>
+                <input type="text" class="form-control" name="data[name]" value="<?=$data['name']?>">
+            </div>
             <div class="col-lg-12 col-md-12 mb-3">
-                <label>Khung viền</label>
+                <label>Hình ảnh</label>
                 <div class="input-group">
-                    <input class="form-control" type="text" name="data[icon]" value="<?=$data['icon']?>">
-                    <button type="button" class="btn btn-primary" onclick="$('#icon').click();">Chọn File</button>
-                    <input id="icon" type="file" style="display: none;" onchange="UploadImagesBase64(this, 'khung_vien');" accept="image/*" />
+                    <input class="form-control" type="text" name="data[image]" value="<?=$data['image']?>">
+                    <button type="button" class="btn btn-primary" onclick="$('#image').click();">Chọn File</button>
+                    <input id="image" type="file" style="display: none;" onchange="UploadImagesBase64(this, 'khung_vien');" accept="image/*" />
                 </div>
             </div>
             <div class="col-12 mb-3">
                 <label>Giá tiền</label>
                 <input type="number" class="form-control" name="data[price]" value="<?=$data['price']?>">
             </div>
-            <!-- <div class="col-12 mb-3">
-                <label>Loại Quảng Cáo</label>
-                <input type="text" class="form-control" value="<?= ADS_Name($data['position_name']) ?>" readonly>
-            </div>
-            <div class="col-12 mb-3">
-                <label>Link Đích</label>
-                <input type="text" class="form-control" name="data[href]" value="<?= $data['href'] ?>">
-            </div>
-            <div class="col-lg-6 col-md-12 mb-3">
-                <label>Hình Ảnh</label>
-                <div class="input-group">
-                    <input class="form-control" type="text" name="data[image]" value="<?= $data['image'] ?>">
-                    <button type="button" class="btn btn-primary" onclick="$('#image').click();">Chọn File</button>
-                    <input id="image" type="file" style="display: none;" onchange="UploadImages(this, 250, 350);" accept="image/*" />
-                </div>
-            </div>
-            <div class="col-6 mb-3">
-                <label>Bật Tắt Quảng Cáo</label>
-                <select class="form-control" name="data[type]">
-                    <option value="true" <?= Selected($data['type'], 'true') ?>>Bật</option>
-                    <option value="false" <?= Selected($data['type'], 'false') ?>>Tắt</option>
-                </select>
-            </div>
-            <div class="col-12 mb-3">
-                <label>Lượt Click</label>
-                <input type="number" class="form-control" name="data[click]" value="<?= $data['click'] ?>">
-            </div> -->
             <div class="col-12 text-center mb-3">
                 <button class="btn btn-outline-info mt-" type="submit">Cập Nhật</button>
             </div>

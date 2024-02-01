@@ -19,13 +19,14 @@ function UserIcon($user_id, $width, $height)
 }
 function ShowReplyComment($CommentID)
 {
-    global $mysql, $user;
+    global $mysql, $user, $vipIcon;
+
     $arr = $mysql->query("SELECT * FROM " . DATABASE_FX . "comment WHERE reply_comment = '$CommentID' AND show_cmt = 'true' AND reply_comment IS NOT NULL ORDER BY id ASC LIMIT 5");
     $Comment = '';
     while ($row = $arr->fetch(PDO::FETCH_ASSOC)) {
         $User_Arr = GetDataArr("user", "id = '{$row['user_id']}'");
-        $listItemStore = listUserItemActive($user['id']);
-        $listUserIconActive = listUserIconActive($user['id']);
+        $listItemStore = listUserItemActive($User_Arr['id']);
+        $listUserIconActive = listUserIconActive($User_Arr['id']);
         $htmlItemStore = '<div class="user-figure">';
         $htmlVip = '';
         $htmlIconUser = '';
@@ -48,8 +49,8 @@ function ShowReplyComment($CommentID)
             $htmlIconUser .= '</div>';
         }
 
-        if ($user['vip'] == 1) {
-            $htmlVip = '<div class="vip-icon"><img src="'.$user['vip_icon'].'" /></div>';
+        if ($User_Arr['vip'] == 1) {
+            $htmlVip = '<div class="vip-icon"><img src="'.$vipIcon.'" /></div>';
         }
 
         if ($row['user_id'] == $user['id']) {

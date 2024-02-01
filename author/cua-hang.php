@@ -107,7 +107,7 @@ while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
 					<?php if ($user['vip'] == 1) {
 					?>
 						<div class="vip-info" data-vip_date_end=<?= date("Y-m-d H:i:s", $user['vip_date_end'])?>>
-							<img style="width: 70px;" src="<?= $user['vip_icon'] ?>" />
+							<img style="width: 70px;" src="<?= $vipIcon ?>" />
 							<p class="days">Còn </p>
 						</div>
 					<?php
