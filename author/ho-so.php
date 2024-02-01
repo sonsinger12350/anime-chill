@@ -295,9 +295,19 @@
 								</div>
 							</div>
 						</div>
-						<div class="tab-pane fade " id="tab-deposit">
+						<div class="tab-pane fade" id="tab-deposit">
 							<h4 class="tab-title">Nạp Xu</h4>
 							<div class="tab-body">
+							    <div class="deposit-method">
+									<i class="fas fa-coins"></i> Thẻ Cào
+								</div>
+								<div class="alert-deposit mb-3">
+									<i class="fa-solid fa-circle-info"></i> Nạp xu bằng thẻ cào thủ công qua fanpge! (1.000đ = 1.000 xu)
+								</div>
+								<div class="flex flex-wrap flex-1">
+                                <a href="https://www.messenger.com/t/hhchina/" class="padding-1-1 fs-1 button-default fw-1 fs-1 flex flex-hozi-center bg-lochinvar" style="background: #337ab7;" title="Xem Ngay"><span style="font-size: 14px;">Nạp bằng thẻ cào tại đây!</span></a>
+                                </div>
+								<br>
 								<div class="deposit-method">
 									<i class="fa-brands fa-paypal"></i> Paypal/Visa
 								</div>
@@ -325,19 +335,95 @@
 									</div>
 									<div id="deposit-checkout"></div>
 								</form>
+								<!-- #-->
+								
 							</div>
 						</div>
 						<div class="tab-pane fade" id="tab-update-profile">
 							<h4 class="tab-title">Chỉnh sửa thông tin</h4>
-							<div class="tab-body">
+							<div class="flex-1">
+                        <script type="text/javascript" src="/themes/js_ob/croppie.js?v=1.7.4"></script>
+                        <link href="/themes/styles/croppie.css?v=1.4.0" rel="stylesheet" />
+                        <div id="user-profile">
+                            <div id="modal" class="modal">
+                                <div>
+                                    <div>Tải lên ảnh đại diện</div>
+                                    <a href="javascript:$modal.toggleModal()"><span class="material-icons-round margin-0-5">
+                                            close
+                                        </span></a>
+                                </div>
+                                <div class="upload-area">
+                                    <form action="/file-upload">
+                                        <div class="fallback">
+                                            <div id="show-image-upload">
+                                            </div>
+                                            <input name="file" type="file" id="upload-avatar" class="display-none" accept="image/*" />
+                                            <div class="option-avatar">
+                                            </div>
+                                            <div class="button-default padding-10-20 bg-red color-white" id="select-avatar" onclick="showSelectAvatar()"><span class="material-icons-round margin-0-5">
+                                                    cloud_upload
+                                                </span> Tải ảnh lên</div>
+                                            <div class="fw-500 margin-t-10">Upload ảnh 18+ sẽ bị khoá nick ngay lập tức</div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <form action="" method="post" id="form-user-profile" class="ah-frame-bg border-radius-0">
+                                <div class="flex flex-column">
+
+                                    <div class="right margin-l-5 flex-1">
+                                        <div id="message-line"> <?= $Notice ?></div>
+                                        <div class="input-zero">
+                                            <div class="label">Biệt danh</div>
+                                            <div><input name="nickname" value="<?= $user['nickname'] ?>" type="text" placeholder="Nhập biệt danh của bạn"></div>
+                                        </div>
+                                        <div class="input-zero">
+                                            <div class="label">Châm ngôn của bạn là gì?</div>
+                                            <div><input name="quote" value="<?= $user['quote'] ?>" type="text"></div>
+                                        </div>
+                                        <!-- - 
+                                        <div class="input-zero">
+                                            <div class="label">Icon</div>
+                                            <div class="NewInput" style="padding-top: 5px;"><?= LevelIcon($user['level'], 18, 18) ?><?= UserIcon($user['id'], 18, 18) ?></div>
+                                        </div>
+                                        -->
+                                        <div class="input-zero">
+                                            <div class="label">Cảnh Giới</div>
+                                            <div class="NewInput" style="padding-top: 5px;"><b style="color:<?= LevelColor($user['level']) ?>"><?= Danh_Hieu($user['level']) ?></b></div>
+                                        </div>
+                                        <div class="input-zero">
+                                            <div class="label">Email</div>
+                                            <div><input value="<?= $user['email'] ?>" type="email" placeholder="Nhập email của bạn" disabled></div>
+                                        </div>
+                                        <div class="input-zero">
+                                            <div class="label">Ngày tham gia</div>
+                                            <div><input value="<?= $user['time'] ?>" type="text" placeholder="Ngày Tham Gia" disabled></div>
+                                        </div>
+                                        <div class="input-zero">
+                                            <div class="label">Exp Kinh nghiệm/Số exp Level tiếp theo</div>
+                                            <div><input value="<?= $user['exp'] ?>/<?= ($user['level'] * 30) ?>" type="text" disabled></div>
+                                        </div>
+                                        <div class="input-zero">
+                                            <div class="label">Số xu sở hữu</div>
+                                            <div><input name="coins" value="<?= number_format($user['coins']) ?>" type="text" disabled></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex flex-ver-center">
+                                    <button type="submit" name="change_profile" value="submit" class="button-default bg-red color-white"><span class="material-icons-round margin-0-5">
+                                            save
+                                        </span>Lưu</button>
+                                </div>
+                            </form>
+                            <div id="message-line"></div>
+                            <div class="tab-body">
 								<div class="account-info clearfix">
-									<h2 class="posttitle">Chỉnh sửa / Cập nhật tài khoản</h2>
-									<div class="info-detail">
+									<div class="info">
 										<div class="grid-body no-border">
 											<div class="row">
 												<div class="col-md-12 col-sm-12 col-xs-12">
 													<div class="form-group">
-														<label class="form-label">Tham gia nhóm telegram nhận thông báo quan trọng bằng cách</label><br><br>
+														<label class="form-label">+ Tham gia nhóm telegram nhận thông báo quan trọng bằng cách</label><br><br>
 														Cách 1: Click vào đường link này: <a style="color: #009dff;" href="https://t.me/+P91IG7VRyvc1NGY9">https://t.me/+P91IG7VRyvc1NGY9</a><span style="color: #009dff;"></span> <br><br>
 														Cách 2: Truy cập telegram trên điện thoại hoặc máy tính </br>
 														Tìm kiếm người dùng với từ khóa: <span style="color: #00FF00;"> My-anime </span>
@@ -364,6 +450,22 @@
 									</div>
 								</div>
 							</div>
+                        </div>
+                        <script type="text/javascript" src="/themes/js_ob/user.profile.js?v=1.7.4"></script>
+                        <style>
+                            .upload-area {
+                                border: 2px dashed #fff;
+                                height: 300px;
+                                /* width: 400px; */
+                                border-radius: 5px;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                flex-direction: column;
+                            }
+                        </style>
+                    </div>
+							
 						</div>
 						<div class="tab-pane fade" id="tab-movie-follow">
 							<h4 class="tab-title">Phim theo dõi</h4>

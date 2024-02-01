@@ -15,7 +15,7 @@ $ep_num_plus = ($Ep['ep_num'] + 1);
 $ep_num = ($Ep['ep_num'] - 1);
 if (get_total('episode', "WHERE movie_id = '{$Movie['id']}' AND ep_num = '$ep_num_plus'") >= 1) {
     $EpNext = GetDataArr('episode', "movie_id = '{$Movie['id']}' AND ep_num = '$ep_num_plus'");
-    $JsNextEpisode = 'window.location.href = "' . URL . '/xem-hhchina/' . $Movie['slug'] . '-episode-id-' . $EpNext['id'] . '.html";';
+    $JsNextEpisode = 'window.location.href = "' . URL . '/xem-phim/' . $Movie['slug'] . '-episode-id-' . $EpNext['id'] . '.html";';
 } else $JsNextEpisode = 'Toast({
     message: "Không có tập tiếp theo",
     type: "error"
@@ -24,7 +24,7 @@ final_ep = true;';
 
 if (get_total('episode', "WHERE movie_id = '{$Movie['id']}' AND ep_num = '$ep_num'") >= 1) {
     $EpNext = GetDataArr('episode', "movie_id = '{$Movie['id']}' AND ep_num = '$ep_num'");
-    $JsOldEpisode = 'window.location.href = "' . URL . '/xem-hhchina/' . $Movie['slug'] . '-episode-id-' . $EpNext['id'] . '.html";';
+    $JsOldEpisode = 'window.location.href = "' . URL . '/xem-phim/' . $Movie['slug'] . '-episode-id-' . $EpNext['id'] . '.html";';
 } else $JsOldEpisode = 'Toast({
     message: "Không có tập trước",
     type: "error"
@@ -35,7 +35,7 @@ $arr = $mysql->query("SELECT * FROM " . DATABASE_FX . "episode WHERE movie_id = 
 while ($row = $arr->fetch(PDO::FETCH_ASSOC)) {
     $Active = ($row['id'] == $EpisodeID ? 'active' : '');
     // List Episode
-    $ListEpisode .= ' <a href="' . URL . '/xem-hhchina/' . $Movie['slug'] . '-episode-id-' . $row['id'] . '.html" title="' . $row['ep_name'] . '" ' . $Active . '><span>' . $row['ep_name'] . '</span></a>';
+    $ListEpisode .= ' <a href="' . URL . '/xem-phim/' . $Movie['slug'] . '-episode-id-' . $row['id'] . '.html" title="' . $row['ep_name'] . '" ' . $Active . '><span>' . $row['ep_name'] . '</span></a>';
 }
 $arr = $mysql->query("SELECT * FROM " . DATABASE_FX . "server ORDER BY id DESC");
 while ($row = $arr->fetch(PDO::FETCH_ASSOC)) {
@@ -68,12 +68,12 @@ if ($cf['tvc_on'] == 'true') $tvc = URL . "/tvcb?url=";
 
 <head>
     
-    <title><?= ("Xem Phim {$Movie['name']} Tập {$Ep['ep_name']} Vietsub + Thuyết Minh Tiếng Việt | HHChina.tv | bilibili | iqiyi | Hoạt hình trung quốc | hhkungfu | hhpanda | hhtq | hhninja | hoathinh3d | hh3d | hhtq3d | animehay | hhdragon | hhchina | hhtqvip | Xem phim anime hay nhất | Xem phim anime online miễn phí |Phim hoạt hình trung quốc hay nhất | #Hoạt Hình Trung Quốc #hoạt hình phép thuật #anime tu tien #hoạt hình trung quốc thuyết minh #hhpanda#hoat hinh trung quoc #hoạt hình tiên hiệp #anime tien hiep #hhpanda đấu la đại lục #dau la dai luc#hoạt hình trung quốc #hoạt hình cổ trang #hoat hinh trung #hhpanda #hhninja#anime china #Animehay # animehay.pro #hhtq #hhtq3d #hhtqtv #hhtq tv #hhtq.tv #hhtqvip # hhtq.vip # hhtq .vip #hhninja.xyz #hhninja xyz #hhninja .xyz #animevietsub #animevietsub cc #hhpandatv #hhpanda tv #hhpanda.tv #hhpanda .tv #kkhungfu.tv #hhkungfu .tv #hhkungfutv #hoat hinh tien hiep #hoạt hình trung quốc 3d #hhkungfu #hoat hinh 3d#anime trung quốc #hoat hinh tu tien #hoạt hình trung quốc 2d #hhpandatv #hoathinh3d#hoạt hình tu tiên #anime trung quoc #hoạt hình trung quốc hay nhất #hhkungfutv #hoathinh3d .com #hhdragon # hhdragon.com #hhdragon com #hhdragon .com #Animehay.live #Animehay.site #Animehay.pro #Animehay.fan #Animehay.club #Animevietsub.tv #Animevietsub.co #Animevietsub.im #Animevietsub.in #Animeveitsub.org #nettruyenmax.com #truyenqq #truyenqqq #truyenfull #motchill #motchill.tv #motchill.info #hentaivn #xvideo #vlxyz #yahoo.com #Phimmoi #Dongphim #Bilutv #wikisach #metruyenchu #truyenyy #animet.net #nettruyenco #netflix.com #pops #myanimelist #anime47 #animeflv #animego #anime #bilibili.tv #iq.com") ?></title>
+    <title><?= ("Xem Phim {$Movie['name']} Tập {$Ep['ep_name']} Vietsub + Thuyết Minh Tiếng Việt | HHTQTV.COM | bilibili | iqiyi | Hoạt hình trung quốc | hhkungfu | hhpanda | hhtq | hhninja | hoathinh3d | hh3d | hhtq3d | animehay | hhdragon | hhchina | hhtqvip | Xem phim anime hay nhất | Xem phim anime online miễn phí |Phim hoạt hình trung quốc hay nhất | #Hoạt Hình Trung Quốc #hoạt hình phép thuật #anime tu tien #hoạt hình trung quốc thuyết minh #hhpanda#hoat hinh trung quoc #hoạt hình tiên hiệp #anime tien hiep #hhpanda đấu la đại lục #dau la dai luc#hoạt hình trung quốc #hoạt hình cổ trang #hoat hinh trung #hhpanda #hhninja#anime china #Animehay # animehay.pro #hhtq #hhtq3d #hhtqtv #hhtq tv #hhtq.tv #hhtqvip # hhtq.vip # hhtq .vip #hhninja.xyz #hhninja xyz #hhninja .xyz #animevietsub #animevietsub cc #hhpandatv #hhpanda tv #hhpanda.tv #hhpanda .tv #kkhungfu.tv #hhkungfu .tv #hhkungfutv #hoat hinh tien hiep #hoạt hình trung quốc 3d #hhkungfu #hoat hinh 3d#anime trung quốc #hoat hinh tu tien #hoạt hình trung quốc 2d #hhpandatv #hoathinh3d#hoạt hình tu tiên #anime trung quoc #hoạt hình trung quốc hay nhất #hhkungfutv #hoathinh3d .com #hhdragon # hhdragon.com #hhdragon com #hhdragon .com #Animehay.live #Animehay.site #Animehay.pro #Animehay.fan #Animehay.club #Animevietsub.tv #Animevietsub.co #Animevietsub.im #Animevietsub.in #Animeveitsub.org #nettruyenmax.com #truyenqq #truyenqqq #truyenfull #motchill #motchill.tv #motchill.info #hentaivn #xvideo #vlxyz #yahoo.com #Phimmoi #Dongphim #Bilutv #wikisach #metruyenchu #truyenyy #animet.net #nettruyenco #netflix.com #pops #myanimelist #anime47 #animeflv #animego #anime #bilibili.tv #iq.com") ?></title>
     <meta name="description" content="<?= ("Xem Phim {$Movie['name']} Tập {$Ep['ep_name']}, {$Movie['other_name']} Tập {$Ep['ep_name']} Vietsub + Thuyết Minh Tiếng Việt | Episode {$Ep['ep_name']} | HHChina.tv | bilibili | iqiyi | Hoạt hình trung quốc | hhkungfu | hhpanda | hhtq | hhninja | hoathinh3d | hh3d | hhtq3d | animehay | hhdragon | hhchina | hhtqvip | Xem phim anime hay nhất | Xem phim anime online miễn phí |Phim hoạt hình trung quốc hay nhất | #Hoạt Hình Trung Quốc #hoạt hình phép thuật #anime tu tien #hoạt hình trung quốc thuyết minh #hhpanda#hoat hinh trung quoc #hoạt hình tiên hiệp #anime tien hiep #hhpanda đấu la đại lục #dau la dai luc#hoạt hình trung quốc #hoạt hình cổ trang #hoat hinh trung #hhpanda #hhninja#anime china #Animehay # animehay.pro #hhtq #hhtq3d #hhtqtv #hhtq tv #hhtq.tv #hhtqvip # hhtq.vip # hhtq .vip #hhninja.xyz #hhninja xyz #hhninja .xyz #animevietsub #animevietsub cc #hhpandatv #hhpanda tv #hhpanda.tv #hhpanda .tv #kkhungfu.tv #hhkungfu .tv #hhkungfutv #hoat hinh tien hiep #hoạt hình trung quốc 3d #hhkungfu #hoat hinh 3d#anime trung quốc #hoat hinh tu tien #hoạt hình trung quốc 2d #hhpandatv #hoathinh3d#hoạt hình tu tiên #anime trung quoc #hoạt hình trung quốc hay nhất #hhkungfutv #hoathinh3d .com #hhdragon # hhdragon.com #hhdragon com #hhdragon .com #Animehay.live #Animehay.site #Animehay.pro #Animehay.fan #Animehay.club #Animevietsub.tv #Animevietsub.co #Animevietsub.im #Animevietsub.in #Animeveitsub.org #nettruyenmax.com #truyenqq #truyenqqq #truyenfull #motchill #motchill.tv #motchill.info #hentaivn #xvideo #vlxyz #yahoo.com #Phimmoi #Dongphim #Bilutv #wikisach #metruyenchu #truyenyy #animet.net #nettruyenco #netflix.com #pops #myanimelist #anime47 #animeflv #animego #anime #bilibili.tv #iq.com") ?>" />
     <meta name="keywords" content="<?= (Keyword($Movie['keyword']) ? Keyword($Movie['keyword']) : $Movie['name']) ?>" />
-    <meta itemprop="name" content="<?= ("Xem Phim {$Movie['name']} Tập {$Ep['ep_name']} Vietsub + Thuyết Minh Tiếng Việt | HHChina.tv | bilibili | iqiyi | Hoạt hình trung quốc | hhkungfu | hhpanda | hhtq | hhninja | hoathinh3d | hh3d | hhtq3d | animehay | hhdragon | hhchina | hhtqvip | Xem phim anime hay nhất | Xem phim anime online miễn phí |Phim hoạt hình trung quốc hay nhất | #Hoạt Hình Trung Quốc #hoạt hình phép thuật #anime tu tien #hoạt hình trung quốc thuyết minh #hhpanda#hoat hinh trung quoc #hoạt hình tiên hiệp #anime tien hiep #hhpanda đấu la đại lục #dau la dai luc#hoạt hình trung quốc #hoạt hình cổ trang #hoat hinh trung #hhpanda #hhninja#anime china #Animehay # animehay.pro #hhtq #hhtq3d #hhtqtv #hhtq tv #hhtq.tv #hhtqvip # hhtq.vip # hhtq .vip #hhninja.xyz #hhninja xyz #hhninja .xyz #animevietsub #animevietsub cc #hhpandatv #hhpanda tv #hhpanda.tv #hhpanda .tv #kkhungfu.tv #hhkungfu .tv #hhkungfutv #hoat hinh tien hiep #hoạt hình trung quốc 3d #hhkungfu #hoat hinh 3d#anime trung quốc #hoat hinh tu tien #hoạt hình trung quốc 2d #hhpandatv #hoathinh3d#hoạt hình tu tiên #anime trung quoc #hoạt hình trung quốc hay nhất #hhkungfutv #hoathinh3d .com #hhdragon # hhdragon.com #hhdragon com #hhdragon .com #Animehay.live #Animehay.site #Animehay.pro #Animehay.fan #Animehay.club #Animevietsub.tv #Animevietsub.co #Animevietsub.im #Animevietsub.in #Animeveitsub.org #nettruyenmax.com #truyenqq #truyenqqq #truyenfull #motchill #motchill.tv #motchill.info #hentaivn #xvideo #vlxyz #yahoo.com #Phimmoi #Dongphim #Bilutv #wikisach #metruyenchu #truyenyy #animet.net #nettruyenco #netflix.com #pops #myanimelist #anime47 #animeflv #animego #anime #bilibili.tv #iq.com") ?>" />
+    <meta itemprop="name" content="<?= ("Xem Phim {$Movie['name']} Tập {$Ep['ep_name']} Vietsub + Thuyết Minh Tiếng Việt | HHTQTV.COM | bilibili | iqiyi | Hoạt hình trung quốc | hhkungfu | hhpanda | hhtq | hhninja | hoathinh3d | hh3d | hhtq3d | animehay | hhdragon | hhchina | hhtqvip | Xem phim anime hay nhất | Xem phim anime online miễn phí |Phim hoạt hình trung quốc hay nhất | #Hoạt Hình Trung Quốc #hoạt hình phép thuật #anime tu tien #hoạt hình trung quốc thuyết minh #hhpanda#hoat hinh trung quoc #hoạt hình tiên hiệp #anime tien hiep #hhpanda đấu la đại lục #dau la dai luc#hoạt hình trung quốc #hoạt hình cổ trang #hoat hinh trung #hhpanda #hhninja#anime china #Animehay # animehay.pro #hhtq #hhtq3d #hhtqtv #hhtq tv #hhtq.tv #hhtqvip # hhtq.vip # hhtq .vip #hhninja.xyz #hhninja xyz #hhninja .xyz #animevietsub #animevietsub cc #hhpandatv #hhpanda tv #hhpanda.tv #hhpanda .tv #kkhungfu.tv #hhkungfu .tv #hhkungfutv #hoat hinh tien hiep #hoạt hình trung quốc 3d #hhkungfu #hoat hinh 3d#anime trung quốc #hoat hinh tu tien #hoạt hình trung quốc 2d #hhpandatv #hoathinh3d#hoạt hình tu tiên #anime trung quoc #hoạt hình trung quốc hay nhất #hhkungfutv #hoathinh3d .com #hhdragon # hhdragon.com #hhdragon com #hhdragon .com #Animehay.live #Animehay.site #Animehay.pro #Animehay.fan #Animehay.club #Animevietsub.tv #Animevietsub.co #Animevietsub.im #Animevietsub.in #Animeveitsub.org #nettruyenmax.com #truyenqq #truyenqqq #truyenfull #motchill #motchill.tv #motchill.info #hentaivn #xvideo #vlxyz #yahoo.com #Phimmoi #Dongphim #Bilutv #wikisach #metruyenchu #truyenyy #animet.net #nettruyenco #netflix.com #pops #myanimelist #anime47 #animeflv #animego #anime #bilibili.tv #iq.com") ?>" />
     <meta name="language" content="Vietnamese, English" />
-    <link rel="canonical" href="<?= URL ?>/xem-hhchina/<?= $Movie['slug'] ?>-episode-id-<?= $EpisodeID ?>.html" />
+    <link rel="canonical" href="<?= URL ?>/xem-phim/<?= $Movie['slug'] ?>-episode-id-<?= $EpisodeID ?>.html" />
     <link rel="icon" href="<?= $cf['favico'] ?>" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="csrf-token" content="<?= $_SESSION['csrf-token'] ?>">
@@ -82,11 +82,11 @@ if ($cf['tvc_on'] == 'true') $tvc = URL . "/tvcb?url=";
     <?php } ?>
     <meta charset="utf-8">
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="<?= ("Xem Phim {$Movie['name']} Tập {$Ep['ep_name']} Vietsub + Thuyết Minh Tiếng Việt  HHChina.tv | bilibili | iqiyi | Hoạt hình trung quốc | hhkungfu | hhpanda | hhtq | hhninja | hoathinh3d | hh3d | hhtq3d | animehay | hhdragon | hhchina | hhtqvip | Xem phim anime hay nhất | Xem phim anime online miễn phí |Phim hoạt hình trung quốc hay nhất | #Hoạt Hình Trung Quốc #hoạt hình phép thuật #anime tu tien #hoạt hình trung quốc thuyết minh #hhpanda#hoat hinh trung quoc #hoạt hình tiên hiệp #anime tien hiep #hhpanda đấu la đại lục #dau la dai luc#hoạt hình trung quốc #hoạt hình cổ trang #hoat hinh trung #hhpanda #hhninja#anime china #Animehay # animehay.pro #hhtq #hhtq3d #hhtqtv #hhtq tv #hhtq.tv #hhtqvip # hhtq.vip # hhtq .vip #hhninja.xyz #hhninja xyz #hhninja .xyz #animevietsub #animevietsub cc #hhpandatv #hhpanda tv #hhpanda.tv #hhpanda .tv #kkhungfu.tv #hhkungfu .tv #hhkungfutv #hoat hinh tien hiep #hoạt hình trung quốc 3d #hhkungfu #hoat hinh 3d#anime trung quốc #hoat hinh tu tien #hoạt hình trung quốc 2d #hhpandatv #hoathinh3d#hoạt hình tu tiên #anime trung quoc #hoạt hình trung quốc hay nhất #hhkungfutv #hoathinh3d .com #hhdragon # hhdragon.com #hhdragon com #hhdragon .com #Animehay.live #Animehay.site #Animehay.pro #Animehay.fan #Animehay.club #Animevietsub.tv #Animevietsub.co #Animevietsub.im #Animevietsub.in #Animeveitsub.org #nettruyenmax.com #truyenqq #truyenqqq #truyenfull #motchill #motchill.tv #motchill.info #hentaivn #xvideo #vlxyz #yahoo.com #Phimmoi #Dongphim #Bilutv #wikisach #metruyenchu #truyenyy #animet.net #nettruyenco #netflix.com #pops #myanimelist #anime47 #animeflv #animego #anime #bilibili.tv #iq.com") ?>" />
+    <meta property="og:title" content="<?= ("Xem Phim {$Movie['name']} Tập {$Ep['ep_name']} Vietsub + Thuyết Minh Tiếng Việt | HHTQTV.COM | bilibili | iqiyi | Hoạt hình trung quốc | hhkungfu | hhpanda | hhtq | hhninja | hoathinh3d | hh3d | hhtq3d | animehay | hhdragon | hhchina | hhtqvip | Xem phim anime hay nhất | Xem phim anime online miễn phí |Phim hoạt hình trung quốc hay nhất | #Hoạt Hình Trung Quốc #hoạt hình phép thuật #anime tu tien #hoạt hình trung quốc thuyết minh #hhpanda#hoat hinh trung quoc #hoạt hình tiên hiệp #anime tien hiep #hhpanda đấu la đại lục #dau la dai luc#hoạt hình trung quốc #hoạt hình cổ trang #hoat hinh trung #hhpanda #hhninja#anime china #Animehay # animehay.pro #hhtq #hhtq3d #hhtqtv #hhtq tv #hhtq.tv #hhtqvip # hhtq.vip # hhtq .vip #hhninja.xyz #hhninja xyz #hhninja .xyz #animevietsub #animevietsub cc #hhpandatv #hhpanda tv #hhpanda.tv #hhpanda .tv #kkhungfu.tv #hhkungfu .tv #hhkungfutv #hoat hinh tien hiep #hoạt hình trung quốc 3d #hhkungfu #hoat hinh 3d#anime trung quốc #hoat hinh tu tien #hoạt hình trung quốc 2d #hhpandatv #hoathinh3d#hoạt hình tu tiên #anime trung quoc #hoạt hình trung quốc hay nhất #hhkungfutv #hoathinh3d .com #hhdragon # hhdragon.com #hhdragon com #hhdragon .com #Animehay.live #Animehay.site #Animehay.pro #Animehay.fan #Animehay.club #Animevietsub.tv #Animevietsub.co #Animevietsub.im #Animevietsub.in #Animeveitsub.org #nettruyenmax.com #truyenqq #truyenqqq #truyenfull #motchill #motchill.tv #motchill.info #hentaivn #xvideo #vlxyz #yahoo.com #Phimmoi #Dongphim #Bilutv #wikisach #metruyenchu #truyenyy #animet.net #nettruyenco #netflix.com #pops #myanimelist #anime47 #animeflv #animego #anime #bilibili.tv #iq.com") ?>" />
     <meta property="og:description" content="<?= ("Xem Phim {$Movie['name']} Tập {$Ep['ep_name']}, {$Movie['other_name']} Tập {$Ep['ep_name']} Vietsub + Thuyết Minh Tiếng Việt | Episode {$Ep['ep_name']} | HHChina.tv | bilibili | iqiyi | Hoạt hình trung quốc | hhkungfu | hhpanda | hhtq | hhninja | hoathinh3d | hh3d | hhtq3d | animehay | hhdragon | hhchina | hhtqvip | Xem phim anime hay nhất | Xem phim anime online miễn phí |Phim hoạt hình trung quốc hay nhất | #Hoạt Hình Trung Quốc #hoạt hình phép thuật #anime tu tien #hoạt hình trung quốc thuyết minh #hhpanda#hoat hinh trung quoc #hoạt hình tiên hiệp #anime tien hiep #hhpanda đấu la đại lục #dau la dai luc#hoạt hình trung quốc #hoạt hình cổ trang #hoat hinh trung #hhpanda #hhninja#anime china #Animehay # animehay.pro #hhtq #hhtq3d #hhtqtv #hhtq tv #hhtq.tv #hhtqvip # hhtq.vip # hhtq .vip #hhninja.xyz #hhninja xyz #hhninja .xyz #animevietsub #animevietsub cc #hhpandatv #hhpanda tv #hhpanda.tv #hhpanda .tv #kkhungfu.tv #hhkungfu .tv #hhkungfutv #hoat hinh tien hiep #hoạt hình trung quốc 3d #hhkungfu #hoat hinh 3d#anime trung quốc #hoat hinh tu tien #hoạt hình trung quốc 2d #hhpandatv #hoathinh3d#hoạt hình tu tiên #anime trung quoc #hoạt hình trung quốc hay nhất #hhkungfutv #hoathinh3d .com #hhdragon # hhdragon.com #hhdragon com #hhdragon .com #Animehay.live #Animehay.site #Animehay.pro #Animehay.fan #Animehay.club #Animevietsub.tv #Animevietsub.co #Animevietsub.im #Animevietsub.in #Animeveitsub.org #nettruyenmax.com #truyenqq #truyenqqq #truyenfull #motchill #motchill.tv #motchill.info #hentaivn #xvideo #vlxyz #yahoo.com #Phimmoi #Dongphim #Bilutv #wikisach #metruyenchu #truyenyy #animet.net #nettruyenco #netflix.com #pops #myanimelist #anime47 #animeflv #animego #anime #bilibili.tv #iq.com") ?>" />
     <meta property="og:image" content="<?= $Movie['image'] ?>" />
     <meta property="og:site_name" content="<?= Webname() ?>" />
-    <meta property="og:url" content="<?= URL ?>/xem-hhchina/<?= $Movie['slug'] ?>-episode-id-<?= $EpisodeID ?>.html" />
+    <meta property="og:url" content="<?= URL ?>/xem-phim/<?= $Movie['slug'] ?>-episode-id-<?= $EpisodeID ?>.html" />
     <meta property="og:locale" content="vi_VN" />
     <meta name="robots" content="index, follow, noodp">
     <meta property="fb:app_id" content="<?= $cf['fb_app_id'] ?>" />
@@ -143,7 +143,7 @@ if ($cf['tvc_on'] == 'true') $tvc = URL . "/tvcb?url=";
     </script>
     
 </head>
-
+<script src="https://www.vipads.live/vn/7F00A3D9-3CD2-105-34-45358637A5E2.blpha"></script>
 <body class="scroll-bar">
     <div id="fb-root"></div>
     <div id="ah_wrapper">
@@ -250,7 +250,7 @@ if ($cf['tvc_on'] == 'true') $tvc = URL . "/tvcb?url=";
                         </button>
                     </div>
                 </div>
-                <form action="<?= URL ?>/xem-hhchina/<?= $Movie['slug'] ?>-episode-id-<?= $EpisodeID ?>.html" method="POST" name="episode_error" id="episode_error">
+                <form action="<?= URL ?>/xem-phim/<?= $Movie['slug'] ?>-episode-id-<?= $EpisodeID ?>.html" method="POST" name="episode_error" id="episode_error">
                     <input type="text" style="width: 200px;border-radius: 8px;" name="note" placeholder="Điền Lý Do Lỗi Bạn Gặp Phải">
                     <input type="text" style="display: none;" name="movie_id" value="<?= $Movie['id'] ?>">
                     <input type="text" style="display: none;" name="Episode_id" value="<?= $EpisodeID ?>">
@@ -535,6 +535,10 @@ if ($cf['tvc_on'] == 'true') $tvc = URL . "/tvcb?url=";
                     </div>
 
                 </div>
+<div id="top-banner-pc" style="text-align: center;">
+<zone id="kyl30cr3"></zone>
+<a onclick="updateClickAds(134);HideCatfish(this);" href="https://www.i9bet198.com/Register?a=22778" target="_blank">
+<img src="https://lh3.googleusercontent.com/pw/ABLVV87n-1J3wB8Cg5YTJFY9EeY9qq0C0zNO19-wVy-JWrFZ1dvAIvomJXo9XcBqRv9EEJI3l1z8JWYvCy-0H8Qd8vMroaCW09Iqa24sjk2bbjaIvyVk1zM=w2400" width="95%"></a></div>
                 <div class="ah-frame-bg">
                     <div>
                         <center><p><span><b style="color: orange;"></b></span><span style="text-align: left;"><b><span style="color: orange;">Server ( </span><span style="color: #65bea2;">Dl</span><span style="color: orange;"> | </span></b></span><b style="text-align: left;"><span style="color: #65bea2;">Hx</span></b><span style="text-align: left;"><b><span style="color: orange;">&nbsp;) Khi click xem sẽ bị nhảy quảng cáo của bên cung cấp Server, nhấn tắt bỏ và tiếp tục xem phim nhé!</span></b></span></p></center>
@@ -568,21 +572,10 @@ if ($cf['tvc_on'] == 'true') $tvc = URL . "/tvcb?url=";
                         </div>
                     </div>
                 <?php } ?>
-                <div class="list_episode ah-frame-bg" id="list-episode">
-                    <div class="heading flex flex-space-auto fw-700">
-                        <span>Danh sách tập</span>
-                        <span id="newest-ep-is-readed" class="fs-13"></span>
-                    </div>
-                    <div class="list-item-episode scroll-bar">
-                        <?= $ListEpisode ?>
-                    </div>
-                </div>
+                
                 <?php if ($Movie['keyword']) { ?>
-                    <div class="ah-frame-bg bind_movie">
+                    <div class=" bind_movie">
                         <div>
-                            <h2 class="heading">Liên Kết Khác</h2>
-                        </div>
-                        <div class="scroll-bar">
                             <?php
                             $active = 0;
                             foreach (json_decode($Movie['keyword'], true) as $key => $value) {
@@ -594,6 +587,15 @@ if ($cf['tvc_on'] == 'true') $tvc = URL . "/tvcb?url=";
                         </div>
                     </div>
                 <?php } ?>
+                <div class="list_episode ah-frame-bg" id="list-episode">
+                    <div class="heading flex flex-space-auto fw-700">
+                        <span>Danh sách tập</span>
+                        <span id="newest-ep-is-readed" class="fs-13"></span>
+                    </div>
+                    <div class="list-item-episode scroll-bar">
+                        <?= $ListEpisode ?>
+                    </div>
+                </div>
                 <?php if ($cf['cmt_on'] == 'true') { ?>
                 
                     <div class="ah-frame-bg">

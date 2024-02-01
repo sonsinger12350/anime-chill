@@ -186,6 +186,12 @@ FireWall();
                     <a href="/tai-khoan/ho-so" class="flex flex-hozi-center"><span class="material-icons-round margin-0-5">
                             account_box
                         </span> Thông tin</a>
+                    <a href="/tai-khoan/cua-hang" class="flex flex-hozi-center"><span class="material-icons-round margin-0-5">
+                            shopping_cart
+                        </span> Cửa Hàng</a>
+                    <a href="/tai-khoan/nap-xu" class="flex flex-hozi-center"><span class="material-icons-round margin-0-5">
+                            monetization_on
+                        </span> Nạp Xu</a>
                     <a href="/thay-doi-mat-khau" class="flex flex-hozi-center"><span class="material-icons-round margin-0-5">
                             password
                         </span>Thay đổi mật khẩu</a>

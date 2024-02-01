@@ -69,8 +69,13 @@ if (isset($_POST['action_login'])) {
                                     <a href="/dang-ky" class="button-default bg-green margin-5-0 padding-10-20">Đăng ký</a>
                                 <?php } ?>
                             </div>
-
                         </div>
+                        <div class="alert-deposit mb-3">
+									<i class="fa-solid fa-circle-info"></i> Nếu bạn quên mật khẩu và muốn lấy lại, vui lòng liên hệ với admin qua Fanpage!
+								</div>
+                        <div class="flex flex-wrap flex-1">
+                                <a href="https://www.messenger.com/t/hhchina/" class="padding-1-1 fs-1 button-default fw-1 fs-1 flex flex-hozi-center bg-lochinvar" style="background: #337ab7;" title="quên mật khẩu"><span style="font-size: 14px;">Quên mật khẩu!</span></a>
+                                </div>
                     </form>
                 </div>
             </div>

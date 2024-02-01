@@ -192,12 +192,12 @@ if ($FormEdit == "server") {
                 </select>
             </div>
 
-            <!-- <div class="col-lg-6 col-md-12 mb-3">
+            <div class="col-lg-6 col-md-12 mb-3">
                 <label>Từ Khóa Tìm Kiếm Phim</label>
                 <textarea name="data[keyword]" rows="5" class="form-control"><?php foreach (json_decode($data['keyword'], true) as $key => $value) {
                                                                                     echo $value['name'] . '|' . $value['url'] . "\n";
                                                                                 } ?></textarea>
-            </div> -->
+            </div>
             <div class="col-lg-12 col-md-12 mb-3">
                 <label>Nội Dung Phim</label>
                 <textarea name="data[content]" class="summernote form-control"><?= $data['content'] ?></textarea>

@@ -1,66 +1,56 @@
 <?php
-if (!defined('MovieAnime')) die("You are illegally infiltrating our website");
-if (!$_author_cookie) die(header("location:/login"));
-if (isset($_POST['change_profile'])) {
-	$nickname = sql_escape($_POST['nickname']);
-	$quote = sql_escape($_POST['quote']);
-	$Success = 0;
-	if (!$nickname) {
-		$Success++;
-		$Notice .= '<div class="noti-error flex flex-hozi-center"><span class="material-icons-round margin-0-5">error</span>Vui Lòng Nhập Biệt Danh Của Bạn</div>';
+	if (!defined('MovieAnime')) die("You are illegally infiltrating our website");
+	if (!$_author_cookie) die(header("location:/login"));
+	if (isset($_POST['change_profile'])) {
+		$nickname = sql_escape($_POST['nickname']);
+		$quote = sql_escape($_POST['quote']);
+		$Success = 0;
+		if (!$nickname) {
+			$Success++;
+			$Notice .= '<div class="noti-error flex flex-hozi-center"><span class="material-icons-round margin-0-5">error</span>Vui Lòng Nhập Biệt Danh Của Bạn</div>';
+		}
+		if (strlen($nickname) < 6) {
+			$Success++;
+			$Notice .= '<div class="noti-error flex flex-hozi-center"><span class="material-icons-round margin-0-5">error</span>Biệt Danh phải nhiều hơn 6 kí tự</div>';
+		}
+		if (strlen($quote) > 50) {
+			$Success++;
+			$Notice .= '<div class="noti-error flex flex-hozi-center"><span class="material-icons-round margin-0-5">error</span>Châm Ngôn Sống Không Được Quá 50 Ký Tự</div>';
+		}
+		if ($Success == 0) {
+			$mysql->update("user", "nickname = '$nickname',quote = '$quote'", "email = '$useremail'");
+			header("Refresh:0");
+			$Notice .= '<div class="noti-success flex flex-hozi-center"><span class="material-icons-round margin-0-5">success</span>Cập Nhật Hồ Sơ Thành Công</div>';
+		}
 	}
-	if (strlen($nickname) < 6) {
-		$Success++;
-		$Notice .= '<div class="noti-error flex flex-hozi-center"><span class="material-icons-round margin-0-5">error</span>Biệt Danh phải nhiều hơn 6 kí tự</div>';
-	}
-	if (strlen($quote) > 50) {
-		$Success++;
-		$Notice .= '<div class="noti-error flex flex-hozi-center"><span class="material-icons-round margin-0-5">error</span>Châm Ngôn Sống Không Được Quá 50 Ký Tự</div>';
-	}
-	if ($Success == 0) {
-		$mysql->update("user", "nickname = '$nickname',quote = '$quote'", "email = '$useremail'");
-		header("Refresh:0");
-		$Notice .= '<div class="noti-success flex flex-hozi-center"><span class="material-icons-round margin-0-5">success</span>Cập Nhật Hồ Sơ Thành Công</div>';
-	}
-}
-$configs = getConfigGeneralUserInfo([
-	'vip_package',
-	'join_telegram',
-	'first_login',
-	'online_reward',
-	'farm_tree',
-	'comment',
-	'first_upload_avatar',
-	'vip_icon',
-	'deposit_min',
-	'deposit_rate',
-	'deposit_exp',
-	'vip_fee',
-]);
+	$configs = getConfigGeneralUserInfo([
+		'vip_package',
+		'join_telegram',
+		'first_login',
+		'online_reward',
+		'farm_tree',
+		'comment',
+		'first_upload_avatar',
+		'vip_icon',
+		'deposit_min',
+		'deposit_rate',
+		'deposit_exp',
+		'vip_fee',
+	]);
 
-$paypalConfig = [
-	'client_id'	=>	'AYldjoFRqHN-fq47TxTzcg9pQc6f-Z8jYqqbTaVniT4bCdoD4fZwp37Zjv--L2ffBnmkS7M99P8medCf',
-];
-
-global $mysql;
-$sql = "SELECT `id`, `icon`, `price` FROM `table_khung_vien` ORDER BY `price` DESC LIMIT 100";
-$query = $mysql->query($sql);
-$listAvatarFrame = [];
-
-while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-	$listAvatarFrame[$row['id']] = [
-		'price'	=>	$row['price'],
-		'icon'	=>	$row['icon'],
+	$paypalConfig = [
+		'client_id'	=>	'AYldjoFRqHN-fq47TxTzcg9pQc6f-Z8jYqqbTaVniT4bCdoD4fZwp37Zjv--L2ffBnmkS7M99P8medCf',
 	];
-}
 
-$sql = "SELECT `frame_id` FROM table_user_avatar_frame WHERE `user_id` = " . $user['id'] . " LIMIT 100";
-$query = $mysql->query($sql);
-$listUserFrame = [];
+	global $mysql;
 
-while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-	$listUserFrame[] = $row['frame_id'];
-}
+	$listItem = categoryStore();
+
+	$listItemStore = listItemStore();
+	$listItemOwned = listUserItemOwner($user['id']);
+	$listItemActive = listUserItemActive($user['id']);
+	$listItemIdActive = listUserItemActive($user['id'], 'get-id');
+	$listIconUserActive = listUserIconActive($user['id']);
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -95,12 +85,12 @@ while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
 					<div class="avatar">
 						<div class="img">
 							<img src="<?= $user['avatar'] ?>" />
-							<img src="<?= $user['frame'] ?>" alt="" class="avatar-frame">
+							<img src="<?= $user['khung-vien'] ?>" alt="" class="avatar-frame">
 							<button class="upload-avatar" type="button" onclick="showModal()"><i class="fa fa-cloud-upload"></i> Up Avatar</button>
 						</div>
 						<div class="profile-info">
 							<h3><?= $user['nickname'] ?></h3>
-							<p class="coin"><img src="/themes/img/coin_15.gif" alt=""> <?= number_format($user['coins']) ?> Xu</p>
+							<p class="coin current-coin"><img src="/themes/img/coin_15.gif" alt=""> <span><?= number_format($user['coins']) ?></span> Xu</p>
 						</div>
 					</div>
 					<!-- // doing  -->
@@ -108,7 +98,7 @@ while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
 					?>
 						<div class="vip-info" data-vip_date_end=<?= date("Y-m-d H:i:s", $user['vip_date_end'])?>>
 							<img style="width: 70px;" src="<?= $vipIcon ?>" />
-							<p class="days">Còn </p>
+							<p class="days mb-0"></p>
 						</div>
 					<?php
 					} ?>
@@ -145,7 +135,7 @@ while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
 								</a>
 							</li>
 							<li class="nav-item menu-item hvr-sweep-to-right">
-								<a class="nav-link " href="#tab-cart" data-bs-toggle="tab">
+								<a class="nav-link" href="#tab-store" data-bs-toggle="tab">
 									<i class="fa-solid fa-cart-shopping"></i> Cửa hàng vật phẩm
 								</a>
 							</li>
@@ -183,28 +173,48 @@ while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
 						<!-- // doing  -->
 							<p class="text-while" id="thongbao"> </p>
 						<div class="tab-pane fade" id="tab-profile">
-						    
 							<h4 class="tab-title mb-3">Tủ đồ cá nhân</h4>
 							<div class="tab-body mb-4 tab-avatar-frame-content">
 								<ul class="nav nav-tabs mb-2" role="tablist">
-									<li class="nav-item menu-item hvr-sweep-to-right">
-										<a class="nav-link active" href="#tab-user-owned-frame" data-bs-toggle="tab">
-											KHUNG VIỀN
-										</a>
-									</li>
+									<?php foreach($listItem as $k => $v):?>
+										<li class="nav-item menu-item hvr-sweep-to-right">
+											<a class="nav-link tab-store <?=$k=='khung-vien' ? 'active' : ''?>" href="#tab-store-owner-<?=$k?>" data-bs-toggle="tab">
+												<?=$v?>
+											</a>
+										</li>
+									<?php endforeach?>
 								</ul>
 								<div class="tab-content">
-									<div class="tab-pane fade show active" id="tab-user-owned-frame">
-										<div class="tab-body">
-											<div class="list-owned-frame">
-												<?php foreach ($listAvatarFrame as $k => $v) : ?>
-													<?php if (in_array($k, $listUserFrame)) : ?>
-														<div class="frame-owned" data-id="<?= $k ?>" data-frame="<?= $v['icon'] ?>">
-															<img src="<?= $v['icon'] ?>" alt="">
-														</div>
-													<?php endif ?>
-												<?php endforeach ?>
+									<?php foreach($listItemStore as $k => $v):?>
+										<div class="tab-pane fade <?=$k=='khung-vien' ? 'show active' : ''?>" id="tab-store-owner-<?=$k?>">
+											<div class="tab-body">
+												<div class="list-owned-icon">
+													<?php foreach ($v as $k1 => $v1):?>
+														<?php if (in_array($v1['id'], $listItemOwned[$k])) : ?>
+															<?php
+																if ($k == 'icon-user') {
+																	$active = in_array($v1['id'], array_keys($listIconUserActive)) ? 'active' : '';
+																}
+																else {
+																	$active = $listItemIdActive[$k] == $v1['id'] ? 'active' : '';
+																}
+															?>
+															<div class="icon-owned <?=$active?>" data-id="<?= $v1['id'] ?>" data-type="<?= $v1['type'] ?>" data-icon="<?= $v1['image'] ?>">
+																<img src="<?= $v1['image'] ?>" alt="">
+															</div>
+														<?php endif ?>
+													<?php endforeach ?>
+												</div>
 											</div>
+										</div>
+									<?php endforeach?>
+									<div class="user-icon-store">
+										<div class="user-figure">
+											<?php foreach ($listItemActive as $k => $v):?>
+												<?php if (isItemStore($k)):?>
+													<img src="<?=$v?>" alt="<?=$k?>" class="<?=$k?>-default">
+												<?php endif?>
+											<?php endforeach?>
 										</div>
 									</div>
 								</div>
@@ -288,6 +298,16 @@ while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
 						<div class="tab-pane fade show active" id="tab-deposit">
 							<h4 class="tab-title">Nạp Xu</h4>
 							<div class="tab-body">
+							    <div class="deposit-method">
+									<i class="fas fa-coins"></i> Thẻ Cào
+								</div>
+								<div class="alert-deposit mb-3">
+									<i class="fa-solid fa-circle-info"></i> Nạp xu bằng thẻ cào thủ công qua fanpge! (1.000đ = 1.000 xu)
+								</div>
+								<div class="flex flex-wrap flex-1">
+                                <a href="https://www.messenger.com/t/hhchina/" class="padding-1-1 fs-1 button-default fw-1 fs-1 flex flex-hozi-center bg-lochinvar" style="background: #337ab7;" title="Nạp Thẻ"><span style="font-size: 14px;">Nạp bằng thẻ cào tại đây!</span></a>
+                                </div>
+								<br>
 								<div class="deposit-method">
 									<i class="fa-brands fa-paypal"></i> Paypal/Visa
 								</div>
@@ -315,19 +335,95 @@ while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
 									</div>
 									<div id="deposit-checkout"></div>
 								</form>
+								<!-- #-->
+								
 							</div>
 						</div>
 						<div class="tab-pane fade" id="tab-update-profile">
 							<h4 class="tab-title">Chỉnh sửa thông tin</h4>
-							<div class="tab-body">
+							<div class="flex-1">
+                        <script type="text/javascript" src="/themes/js_ob/croppie.js?v=1.7.4"></script>
+                        <link href="/themes/styles/croppie.css?v=1.4.0" rel="stylesheet" />
+                        <div id="user-profile">
+                            <div id="modal" class="modal">
+                                <div>
+                                    <div>Tải lên ảnh đại diện</div>
+                                    <a href="javascript:$modal.toggleModal()"><span class="material-icons-round margin-0-5">
+                                            close
+                                        </span></a>
+                                </div>
+                                <div class="upload-area">
+                                    <form action="/file-upload">
+                                        <div class="fallback">
+                                            <div id="show-image-upload">
+                                            </div>
+                                            <input name="file" type="file" id="upload-avatar" class="display-none" accept="image/*" />
+                                            <div class="option-avatar">
+                                            </div>
+                                            <div class="button-default padding-10-20 bg-red color-white" id="select-avatar" onclick="showSelectAvatar()"><span class="material-icons-round margin-0-5">
+                                                    cloud_upload
+                                                </span> Tải ảnh lên</div>
+                                            <div class="fw-500 margin-t-10">Upload ảnh 18+ sẽ bị khoá nick ngay lập tức</div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <form action="" method="post" id="form-user-profile" class="ah-frame-bg border-radius-0">
+                                <div class="flex flex-column">
+
+                                    <div class="right margin-l-5 flex-1">
+                                        <div id="message-line"> <?= $Notice ?></div>
+                                        <div class="input-zero">
+                                            <div class="label">Biệt danh</div>
+                                            <div><input name="nickname" value="<?= $user['nickname'] ?>" type="text" placeholder="Nhập biệt danh của bạn"></div>
+                                        </div>
+                                        <div class="input-zero">
+                                            <div class="label">Châm ngôn của bạn là gì?</div>
+                                            <div><input name="quote" value="<?= $user['quote'] ?>" type="text"></div>
+                                        </div>
+                                        <!-- - 
+                                        <div class="input-zero">
+                                            <div class="label">Icon</div>
+                                            <div class="NewInput" style="padding-top: 5px;"><?= LevelIcon($user['level'], 18, 18) ?><?= UserIcon($user['id'], 18, 18) ?></div>
+                                        </div>
+                                        -->
+                                        <div class="input-zero">
+                                            <div class="label">Cảnh Giới</div>
+                                            <div class="NewInput" style="padding-top: 5px;"><b style="color:<?= LevelColor($user['level']) ?>"><?= Danh_Hieu($user['level']) ?></b></div>
+                                        </div>
+                                        <div class="input-zero">
+                                            <div class="label">Email</div>
+                                            <div><input value="<?= $user['email'] ?>" type="email" placeholder="Nhập email của bạn" disabled></div>
+                                        </div>
+                                        <div class="input-zero">
+                                            <div class="label">Ngày tham gia</div>
+                                            <div><input value="<?= $user['time'] ?>" type="text" placeholder="Ngày Tham Gia" disabled></div>
+                                        </div>
+                                        <div class="input-zero">
+                                            <div class="label">Exp Kinh nghiệm/Số exp Level tiếp theo</div>
+                                            <div><input value="<?= $user['exp'] ?>/<?= ($user['level'] * 30) ?>" type="text" disabled></div>
+                                        </div>
+                                        <div class="input-zero">
+                                            <div class="label">Số xu sở hữu</div>
+                                            <div><input name="coins" value="<?= number_format($user['coins']) ?>" type="text" disabled></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex flex-ver-center">
+                                    <button type="submit" name="change_profile" value="submit" class="button-default bg-red color-white"><span class="material-icons-round margin-0-5">
+                                            save
+                                        </span>Lưu</button>
+                                </div>
+                            </form>
+                            <div id="message-line"></div>
+                            <div class="tab-body">
 								<div class="account-info clearfix">
-									<h2 class="posttitle">Chỉnh sửa / Cập nhật tài khoản</h2>
-									<div class="info-detail">
+									<div class="info">
 										<div class="grid-body no-border">
 											<div class="row">
 												<div class="col-md-12 col-sm-12 col-xs-12">
 													<div class="form-group">
-														<label class="form-label">Tham gia nhóm telegram nhận thông báo quan trọng bằng cách</label><br><br>
+														<label class="form-label">+ Tham gia nhóm telegram nhận thông báo quan trọng bằng cách</label><br><br>
 														Cách 1: Click vào đường link này: <a style="color: #009dff;" href="https://t.me/+P91IG7VRyvc1NGY9">https://t.me/+P91IG7VRyvc1NGY9</a><span style="color: #009dff;"></span> <br><br>
 														Cách 2: Truy cập telegram trên điện thoại hoặc máy tính </br>
 														Tìm kiếm người dùng với từ khóa: <span style="color: #00FF00;"> My-anime </span>
@@ -354,47 +450,90 @@ while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
 									</div>
 								</div>
 							</div>
+                        </div>
+                        <script type="text/javascript" src="/themes/js_ob/user.profile.js?v=1.7.4"></script>
+                        <style>
+                            .upload-area {
+                                border: 2px dashed #fff;
+                                height: 300px;
+                                /* width: 400px; */
+                                border-radius: 5px;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                flex-direction: column;
+                            }
+                        </style>
+                    </div>
+							
 						</div>
 						<div class="tab-pane fade" id="tab-movie-follow">
 							<h4 class="tab-title">Phim theo dõi</h4>
 							<div class="movie-follow"></div>
 						</div>
-						<div class="tab-pane fade" id="tab-cart">
-							<h4 class="tab-title">Cửa hàng vật phẩm</h4>
+						<div class="tab-pane fade" id="tab-store">
+							<div class="tab-header">
+								<h4 class="tab-title">Cửa hàng vật phẩm</h4>
+								<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#VipModal">
+									Mua VIP ADS tắt quảng cáo tại đây
+								</button>
+							</div>
 							<div class="">
 								<ul class="nav nav-tabs" role="tablist">
-									<li class="nav-item menu-item hvr-sweep-to-right">
-										<a class="nav-link active" href="#tab-user-frame" data-bs-toggle="tab">
-											KHUNG VIỀN
-										</a>
-									</li>
+									<?php foreach($listItem as $k => $v):?>
+										<li class="nav-item menu-item hvr-sweep-to-right">
+											<a class="nav-link tab-store <?=$k=='khung-vien' ? 'active' : ''?>" href="#tab-store-<?=$k?>" data-bs-toggle="tab">
+												<?=$v?>
+											</a>
+										</li>
+									<?php endforeach?>
 								</ul>
 								<div class="tab-content">
-									<div class="tab-pane fade show active" id="tab-user-frame">
-										<div class="tab-body">
-											<div class="list-avatar-frame mt-4">
-												<?php if (!empty($listAvatarFrame)) : ?>
-													<?php foreach ($listAvatarFrame as $key => $frame) : ?>
-														<div class="frame <?= in_array($key, $listUserFrame) ? 'owned' : '' ?>" data-id="<?= $key ?>" data-price="<?= numberFormat($frame['price']) ?>" data-frame="<?= $frame['icon'] ?>">
-															<img src="<?= $frame['icon'] ?>" alt="">
-														</div>
-													<?php endforeach ?>
-												<?php else : ?>
-													<p class="text-center">Nội dung đang cập nhật</p>
-												<?php endif ?>
+									<?php foreach($listItemStore as $k => $v):?>
+										<div class="tab-pane fade <?=$k=='khung-vien' ? 'show active' : ''?>" id="tab-store-<?=$k?>">
+											<div class="tab-body">
+												<div class="list-store-item mt-4">
+													<?php if (!empty($v)):?>
+														<?php foreach ($v as $k1 => $v1):?>
+															<div class="store-item <?= in_array($v1['id'], $listItemOwned[$k]) ? 'owned' : '' ?>" data-id="<?= $v1['id'] ?>" data-type="<?= $v1['type'] ?>" data-price="<?= numberFormat($v1['price']) ?>" data-icon="<?= $v1['image'] ?>"
+															data-name="<?=$v1['name']?>">
+																<img src="<?= $v1['image'] ?>" alt="">
+															</div>
+														<?php endforeach ?>
+													<?php else : ?>
+														<p class="text-center">Nội dung đang cập nhật</p>
+													<?php endif ?>
+												</div>
 											</div>
-											<div class="current-coin mt-2">
-												<p class="coin fw-bold"><img src="/themes/img/coin_15.gif" alt=""> Tài sản: <?= number_format($user['coins']) ?> Xu</p>
-											</div>
-											<div class="avatar-frame-price d-none">
-												<p>Giá: <span class="frame-price"></span> Xu</p>
-												<input name="frame-id" type="text" hidden>
-												<button type="button" class="btn btn-primary" id="buy-frame"><i class="fa-solid fa-cart-plus"></i> Mua</button>
-											</div>
-											<div class="alert alert-danger mt-3 d-none"></div>
+										</div>
+									<?php endforeach?>
+								</div>
+								<div class="current-coin mt-2">
+									<p class="coin fw-bold"><img src="/themes/img/coin_15.gif" alt=""> Tài sản: <?= number_format($user['coins']) ?> Xu</p>
+								</div>
+								<div class="store-overview">
+									<div class="user-icon-store">
+										<div class="user-figure">
+											
+											<?php foreach ($listItem as $k => $v):?>
+												<?php if (isItemStore($k)):?>
+													<?php if (!empty($listItemActive[$k])):?>
+														<img src="<?=$listItemActive[$k]?>" alt="<?=$v?>" class="<?=$k?>-default">
+													<?php else:?>
+														<img src="/assets/upload/icon-default/<?=$k?>.webp" alt="<?=$v?>" class="<?=$k?>-default">
+													<?php endif?>
+												<?php endif?>
+											<?php endforeach?>
 										</div>
 									</div>
+									<div class="store-icon-price d-none">
+										<p class="icon-name d-none"></p>
+										<p>Giá: <span class="icon-price"></span> Xu</p>
+										<input name="icon-id" type="text" hidden>
+										<button type="button" class="btn btn-primary buy-icon"><i class="fa-solid fa-cart-plus"></i> Mua</button>
+									</div>
 								</div>
+								<div class="alert alert-danger mt-3 d-none"></div>
 							</div>
 						</div>
 						<div class="tab-pane fade" id="tab-movie-history">
@@ -531,7 +670,7 @@ while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
 
 <script>
 	// show Tab Notificaiton 
-	function showTab(tabId) {
+	// function showTab(tabId) {
 		// #1. lấy all element tab content 
 		// var tabContents = document.querySelectorAll('.tab_content_notification');
 		// #2. ân tất cả
@@ -540,11 +679,11 @@ while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
 		// });
 		// #3. show tab id được click
 		// document.getElementById(tabId).style.display = 'block';
-	}
+	// }
 	// doing
-	function AddActive() {
+	// function AddActive() {
 
-	}
+	// }
 </script>
 
 <script type="text/javascript">
@@ -935,35 +1074,51 @@ while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
 	//End deposit
 
 	// Avatar Frame Store
-	$('body').on('click', '.frame', function() {
+	$('body').on('click', '.store-item', function() {
 		let id = $(this).attr('data-id');
 		let price = $(this).attr('data-price');
-		let frame = $(this).attr('data-frame');
+		let icon = $(this).attr('data-icon');
+		let type = $(this).attr('data-type');
+		let name = $(this).attr('data-name');
 
-		$('.frame').removeClass('active');
+		$('.store-item').removeClass('active');
 		$(this).addClass('active');
 
-		$('.avatar-frame-price .frame-price').html(price);
-		$('.avatar-frame-price [name="frame-id"]').val(id);
-		$('.avatar-frame-price').removeClass('d-none');
+		if (name != '') {
+			$('.store-icon-price .icon-name').html(name);
+			$('.store-icon-price .icon-name').removeClass('d-none');
+		} else {
+			$('.store-icon-price .icon-name').addClass('d-none');
+		}
 
-		$('.avatar-frame').attr('src', frame);
+		$('.store-icon-price .icon-price').html(price);
+		$('.store-icon-price [name="icon-id"]').val(id);
+		$('.store-icon-price').removeClass('d-none');
 
-		$('#tab-user-frame .alert-danger').addClass('d-none');
+		if (type == 'khung-vien') {
+			$('.avatar-frame').attr('src', icon);
+		} else if (type == 'icon-user') {
+
+			// $(`.user-figure .${type}-default`).attr('src', icon);
+		} else {
+			$(`.user-figure .${type}-default`).attr('src', icon);
+		}
+
+		$('#tab-store .alert-danger').addClass('d-none');
 	});
 
 	// Buy avatar frame
-	$('body').on('click', '#buy-frame', function() {
-		let frame = $('[name="frame-id"]').val();
-		let errorDiv = $('#tab-user-frame .alert-danger');
+	$('body').on('click', '.buy-icon', function() {
+		let icon = $('[name="icon-id"]').val();
+		let errorDiv = $('#tab-store .alert-danger');
 
 		errorDiv.addClass('d-none');
 
-		if (!frame) {
+		if (!icon) {
 			return false;
 		}
 
-		if ($(`[data-id="${frame}"]`).hasClass('owned')) {
+		if ($(`[data-id="${icon}"]`).hasClass('owned')) {
 			errorDiv.html('Đã sở hữu');
 			errorDiv.removeClass('d-none');
 			return false;
@@ -971,10 +1126,10 @@ while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
 
 		Promise.all([
 				axios.post('/server/api', {
-					"action": 'buy_avatar_frame',
+					"action": 'buy_icon_store',
 					"token": $dt.token,
 					"data": {
-						'frame': frame
+						'id': icon
 					}
 				})
 			])
@@ -982,7 +1137,9 @@ while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
 				let rs = responses[0].data;
 
 				if (rs.success) {
-					location.reload();
+					$('.current-coin span').html(rs.data.coin);
+					
+					alert('Mua vật phẩm thành công');
 				} else {
 					errorDiv.html(rs.message);
 					errorDiv.removeClass('d-none');
@@ -994,10 +1151,12 @@ while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
 	});
 
 	// User active avatar frame
-	$('body').on('click', '.frame-owned', function() {
+	$('body').on('click', '.icon-owned', function() {
 		let element = $(this);
 		let id = element.attr('data-id');
-		let frame = element.attr('data-frame');
+		let icon = element.attr('data-icon');
+		let type = element.attr('data-type');
+		let active = element.hasClass('active') ? 1 : 0;
 
 		if (!id) {
 			return false;
@@ -1007,19 +1166,43 @@ while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
 
 		Promise.all([
 			axios.post('/server/api', {
-				"action": 'active_avatar_frame',
+				"action": 'active_icon_store',
 				"token": $dt.token,
 				"data": {
-					'frame': id
+					id, type, active
 				}
 			})
-		])
-		.then(function(responses) {
+		]).then(function(responses) {
 			let rs = responses[0].data;
 
 			if (rs.success) {
-				$('.avatar-frame').attr('src', frame);
-			} else {
+				if (type == 'khung-vien') {
+					$('.avatar-frame').attr('src', icon);
+				}
+				else {
+					$(`.user-figure .${type}-default`).attr('src', icon);
+				}
+
+				if (type != 'icon-user') {
+					$(`.icon-owned[data-type="${type}"]`).removeClass('active');
+					$(`.icon-owned[data-id="${id}"]`).addClass('active');
+				}
+
+				if (active) {
+					$(`.icon-owned[data-id="${id}"]`).removeClass('active');
+
+					if (type == 'khung-vien') {
+						$('.avatar-frame').attr('src', '/assets/upload/icon-default/khung-vien.webp');
+					}
+					else if (type != 'icon-user') {
+						$(`.user-figure .${type}-default`).attr('src', '/assets/upload/icon-default/'+type+'.webp');
+					}
+				}
+				else {
+					$(`.icon-owned[data-id="${id}"]`).addClass('active');
+				}
+			}
+			else {
 				alert(ms.message);
 			}
 			element.find('.loading').remove();
