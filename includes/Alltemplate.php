@@ -26,7 +26,7 @@ function ShowReplyComment($CommentID)
     while ($row = $arr->fetch(PDO::FETCH_ASSOC)) {
         $User_Arr = GetDataArr("user", "id = '{$row['user_id']}'");
         $listItemStore = listUserItemActive($User_Arr['id']);
-        $listUserIconActive = listUserIconActive($User_Arr['id']);
+        $listUserIconActive = listUserIconActive($User_Arr['id'], 'all');
         $htmlItemStore = '<div class="user-figure">';
         $htmlVip = '';
         $htmlIconUser = '';
@@ -43,7 +43,7 @@ function ShowReplyComment($CommentID)
             $htmlIconUser .= '<div class="icon-user">';
 
             foreach ($listUserIconActive as $k => $v) {
-                $htmlIconUser .= '<img src="'.$v.'" />';
+                $htmlIconUser .= '<span data-tooltip="'.$v['name'].'"><img src="'.$v['image'].'" /></span>';
             }
 
             $htmlIconUser .= '</div>';
@@ -82,14 +82,13 @@ function ShowReplyComment($CommentID)
                 <div class="right">
                     <div class="flex flex-column">
                         <div class="flex flex-space-auto">
-                            <div class="flex flex-hozi-center">
+                            <div class="flex flex-hozi-center" style="width: 100%">
                                 <div class="nickname"> ' . $User_Arr['nickname'] . LevelIcon($User_Arr['level'], 18, 18) . '</div>
-                                '.$htmlIconUser.'
                                 '.$htmlVip.'
                             </div>
                             ' . $CmtSetting . '
                         </div>
-                        <div class="content">' . $row['content'] . ' </div>
+                        <div class="content">'.$htmlIconUser.' ' . $row['content'] . ' </div>
                         <div class="flex fs-12"> <a href="javascript:void(0)" onclick="showFrameReplyComment(' . $CommentID . ',\'' . $User_Arr['nickname'] . '\',' . $User_Arr['id'] . ',\'65223e7a2be93294129d74f9f934c973\')" class="margin-r-5">Trả lời</a>
                             <div> ' . RemainTime($row['timestap']) . ' </div>
                         </div>

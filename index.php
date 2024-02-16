@@ -47,6 +47,7 @@ if (isset($_COOKIE['author'])) {
         resetVipUser($user['vip_date_end'], $user['id'], $user['vip']);
         $mysql->update("user", "online = 0", "1");
         $mysql->update("user", "online = 1", "email = '$useremail'");
+        addCoin($user['id'], 'first_login');
         $user['khung-vien'] = getIconStoreActive($user['id'], 'khung-vien');
         $user['icon-user'] = '';
         $listUserIconActive = listUserIconActive($user['id']);

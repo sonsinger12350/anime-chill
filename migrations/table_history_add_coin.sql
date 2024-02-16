@@ -2,8 +2,10 @@ CREATE TABLE `table_history_add_coin` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `type` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `movie_id` int(10) DEFAULT NULL,
+  `ads_type` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `amount` int(50) NOT NULL,
-  `created_at` int(11) NOT NULL
+  `created_at` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 ALTER TABLE `table_history_add_coin`

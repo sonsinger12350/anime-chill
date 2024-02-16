@@ -838,7 +838,7 @@ if ($Json['action'] == 'live_search') {
     ];
     
     $insert = $mysql->insert('transaction', '`'.implode('`,`', array_keys($insertTransaction)).'`', '"'.implode('", "', $insertTransaction).'"');
-    $transactionId = getLastInsertId('table_transaction');
+    $transactionId = getLastInsertId('transaction');
 
     // insert to table_user_icon_store
     $insertUserFrame = [

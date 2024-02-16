@@ -245,24 +245,30 @@
 											</div>
 										</div>
 										<div class="group">
-											<div class="label">Đăng nhập mỗi ngày:</div>
-											<div class="detail">+<?= $configs['first_login'] ?> Xu</div>
+											<div class="label">Tạo tài khoản:</div>
+											<div class="detail">+ 500 xu</div>
 										</div>
 										<div class="group">
+											<div class="label">Truy cập lần đầu trong ngày:</div>
+											<div class="detail">+ 100 Xu</div>
+										</div>
+										<!-- <div class="group">
 											<div class="label">OnLine:</div>
 											<div class="detail">
 												<?= nl2br($configs['online_reward']) ?>
 											</div>
-										</div>
-										<div class="group">
+										</div> -->
+										<!-- <div class="group">
 											<div class="label">Cây khế nông trại:</div>
 											<div class="detail"><?= $configs['farm_tree'] ?></div>
-										</div>
+										</div> -->
 										<div class="group">
 											<div class="label">Bình luận:</div>
-											<div class="detail">
-												Mỗi bình luận trong bộ phim trong 1 ngày + <?= $configs['comment'] ?> xu (chỉ tính bình luận đầu tiên trong ngày của bộ phim đó ).
-											</div>
+											<div class="detail">Bình luận lần đầu dưới mỗi bộ phim trong ngày +2 xu ( tối đa 5 bộ trong ngày )</div>
+										</div>
+										<div class="group">
+											<div class="label">Click quảng cáo:</div>
+											<div class="detail">+ 2 xu ( mỗi loại quảng cáo chỉ tính 1 lần trong ngày )</div>
 										</div>
 										<div class="group">
 											<div class="label">Up Avatar:</div>
@@ -342,32 +348,7 @@
 						<div class="tab-pane fade" id="tab-update-profile">
 							<h4 class="tab-title">Chỉnh sửa thông tin</h4>
 							<div class="flex-1">
-                        <script type="text/javascript" src="/themes/js_ob/croppie.js?v=1.7.4"></script>
-                        <link href="/themes/styles/croppie.css?v=1.4.0" rel="stylesheet" />
                         <div id="user-profile">
-                            <div id="modal" class="modal">
-                                <div>
-                                    <div>Tải lên ảnh đại diện</div>
-                                    <a href="javascript:$modal.toggleModal()"><span class="material-icons-round margin-0-5">
-                                            close
-                                        </span></a>
-                                </div>
-                                <div class="upload-area">
-                                    <form action="/file-upload">
-                                        <div class="fallback">
-                                            <div id="show-image-upload">
-                                            </div>
-                                            <input name="file" type="file" id="upload-avatar" class="display-none" accept="image/*" />
-                                            <div class="option-avatar">
-                                            </div>
-                                            <div class="button-default padding-10-20 bg-red color-white" id="select-avatar" onclick="showSelectAvatar()"><span class="material-icons-round margin-0-5">
-                                                    cloud_upload
-                                                </span> Tải ảnh lên</div>
-                                            <div class="fw-500 margin-t-10">Upload ảnh 18+ sẽ bị khoá nick ngay lập tức</div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
                             <form action="" method="post" id="form-user-profile" class="ah-frame-bg border-radius-0">
                                 <div class="flex flex-column">
 
@@ -451,7 +432,6 @@
 								</div>
 							</div>
                         </div>
-                        <script type="text/javascript" src="/themes/js_ob/user.profile.js?v=1.7.4"></script>
                         <style>
                             .upload-area {
                                 border: 2px dashed #fff;
@@ -631,7 +611,6 @@
 				success: function(response) {
 					// Xử lý dữ liệu nhận được từ server
 					var responseObject = JSON.parse(response);
-					// console.log(responseObject.message);
 					$('.modal-footer .btn.btn-secondary').click();
 					$("#thongbao").html(responseObject.message)
 					$("#thongbao").addClass('alert alert-info');
@@ -646,9 +625,7 @@
 		// hàm cập nhật time
 		function updateTime() {
 			var vip_date_end = $(".vip-info").data('vip_date_end');
-			// console.log(vip_date_end);
 			var currentDate = moment();
-			// console.log(currentDate);
 			// Chuyển vip_date_end monent 
 			var vip_date_end = moment(vip_date_end, "YYYY-MM-DD");
 			// Tính chênh lệnh time
@@ -658,7 +635,6 @@
 			var days = Math.floor(duration.asDays());
 			var hours = Math.floor(duration.asHours() % 24);
 			var minutes = Math.floor(duration.asMinutes() % 60);
-			// console.log('Days remaining:', days , hours, minutes);
 			$(".vip-info .days").text(days + ' Ngày' + ' ' + hours + ' ' + 'Giờ' + ' ' + minutes + ' Phút');
 		}
 		updateTime();
@@ -921,7 +897,6 @@
 			if (loaded_noti) {
 				let id_load_more = document.getElementById("list-item").lastElementChild;
 				id_load_more = id_load_more ? parseInt(id_load_more.attributes[1].value) || 0 : 0;
-				console.log(id_load_more);
 				loaded_noti = await loadNotification("list-item", id_load_more, loaded_noti);
 				//if (loaded_noti.status == "failed") 
 				loaded_noti = false;

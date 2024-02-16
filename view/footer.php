@@ -80,22 +80,22 @@ FireWall();
 
 <!-- Proccess For Show Ads -->
 <script>
+    async function updateClickAds(adv_id) {
+        await securityCode();
+        await axios
+            .post("/server/api", {
+                action: "update_click_ads",
+                adv_id,
+                token: $dt.token,
+            })
+            .then((rps) => {
+                let data = rps.data;
+                console.log(data);
+            });
+    }
     $(document).ready(function() {
         var vip = $(".vip_user[data-vip]");
         if (vip.data('vip') != 1) {
-            async function updateClickAds(adv_id) {
-                await securityCode();
-                await axios
-                    .post("/server/api", {
-                        action: "update_click_ads",
-                        adv_id,
-                        token: $dt.token,
-                    })
-                    .then((rps) => {
-                        let data = rps.data;
-                        console.log(data);
-                    });
-            }
             const ad_floating_left = document.getElementById("ad-floating-left");
             const ad_floating_right = document.getElementById("ad-floating-right");
             const top_banner_pc = document.getElementById("top-banner-pc");
@@ -238,7 +238,7 @@ FireWall();
                     })
                     .then((rps) => {
                         let result = rps.data.data;
-                        console.log(result);
+
                         if (Array.isArray(result)) {
                             result.forEach(item => {
                                 loadAds(item)

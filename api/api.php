@@ -243,6 +243,7 @@ if ($Json['action'] == 'live_search') {
     $Uploader = imagesaver($Json['base64']);
     if (!$Uploader) die(json_encode(["result" => "Upload Ảnh Không Thành Công , Thử Lại Sau", "status" => "failed"]));
     $mysql->update("user", "avatar = '$Uploader'", "email = '$useremail'");
+    addCoin($user['id'], 'first_avatar');
     setcookie("success_avt", "success", time() + (2 * 3600));
     die(json_encode(["result" => "Tải Ảnh Lên Thành Công", "status" => "success"]));
 } else if ($Json['action'] == 'load_comments') {
@@ -269,7 +270,7 @@ if ($Json['action'] == 'live_search') {
         while ($row = $arr->fetch(PDO::FETCH_ASSOC)) {
             $User_Arr = GetDataArr("user", "id = '{$row['user_id']}'");
             $listItemStore = listUserItemActive($User_Arr['id']);
-            $listUserIconActive = listUserIconActive($User_Arr['id']);
+            $listUserIconActive = listUserIconActive($User_Arr['id'], 'all');
             $htmlItemStore = '<div class="user-figure">';
             $htmlVip = '';
             $htmlIconUser = '';
@@ -286,7 +287,7 @@ if ($Json['action'] == 'live_search') {
                 $htmlIconUser .= '<div class="icon-user">';
 
                 foreach ($listUserIconActive as $k => $v) {
-                    $htmlIconUser .= '<img src="'.$v.'" />';
+                    $htmlIconUser .= '<span data-tooltip="'.$v['name'].'"><img src="'.$v['image'].'" /></span>';
                 }
 
                 $htmlIconUser .= '</div>';
@@ -332,14 +333,13 @@ if ($Json['action'] == 'live_search') {
                                 <div class="right">
                                     <div class="flex flex-column">
                                         <div class="flex flex-space-auto">
-                                            <div class="flex flex-hozi-center">
+                                            <div class="flex flex-hozi-center" style="width: 100%">
                                                 <div class="nickname">' . $User_Arr['nickname'] . LevelIcon($User_Arr['level'], 18, 18) . '</div>
-                                                '.$htmlIconUser.'
                                                 '.$htmlVip.'
                                             </div>
                                             ' . $CmtSetting . '
                                         </div>
-                                        <div class="content">' . $row['content'] . '</div>
+                                        <div class="content">'.$htmlIconUser.'' . $row['content'] . '</div>
                                         <div class="flex fs-12"> 
                                             ' . $ShowReply . '
                                             <div> ' . RemainTime($row['timestap']) . ' </div>
@@ -389,10 +389,13 @@ if ($Json['action'] == 'live_search') {
     if ($reply_comment_id >= 1 && $reply_user_id >= 1) {
         $mysql->insert('comment', 'user_id,movie_id,content,reply_comment,reply_user_id,timestap,time', "'{$user['id']}','$movie_id','$content','$reply_comment_id','$reply_user_id','" . time() . "','" . DATEFULL . "'");
     } else $mysql->insert('comment', 'user_id,movie_id,content,timestap,time', "'{$user['id']}','$movie_id','$content','" . time() . "','" . DATEFULL . "'");
+    
     if (!$_SESSION['add_comments']) setcookie("add_comments", $user['nickname'], time() + 20);
+
     $User_Arr = GetDataArr("user", "id = '{$user['id']}'");
+    addCoin($User_Arr['id'], 'first_comment', ['movie_id' => $movie_id]);
     $listItemStore = listUserItemActive($User_Arr['id']);
-    $listUserIconActive = listUserIconActive($User_Arr['id']);
+    $listUserIconActive = listUserIconActive($User_Arr['id'], 'all');
     $htmlItemStore = '<div class="user-figure">';
     $htmlVip = '';
     $htmlIconUser = '';
@@ -409,7 +412,7 @@ if ($Json['action'] == 'live_search') {
         $htmlIconUser .= '<div class="icon-user">';
 
         foreach ($listUserIconActive as $k => $v) {
-            $htmlIconUser .= '<img src="'.$v.'" />';
+            $htmlIconUser .= '<span data-tooltip="'.$v['name'].'"><img src="'.$v['image'].'" /></span>';
         }
 
         $htmlIconUser .= '</div>';
@@ -432,9 +435,8 @@ if ($Json['action'] == 'live_search') {
                 <div class="right">
                     <div class="flex flex-column">
                         <div class="flex flex-space-auto">
-                            <div class="flex flex-hozi-center">
+                            <div class="flex flex-hozi-center" style="width: 100%">
                                 <div class="nickname">' . $User_Arr['nickname'] . LevelIcon($User_Arr['level'], 18, 18) . '</div>
-                                '.$htmlIconUser.'
                                 '.$htmlVip.'
                             </div>
                             <div class="flex flex-hozi-center relative"><a href="javascript:void(0)" onclick="clickEventDropDown(this,\'expand_more\')" class="toggle-dropdown fs-21 inline-flex" bind="drop-down-oc-' . $User_Arr['id'] . '"><span class="material-icons-round">expand_more</span></a>
@@ -448,7 +450,7 @@ if ($Json['action'] == 'live_search') {
                                 </div>
                             </div>
                         </div>
-                        <div class="content">' . $content . '</div>
+                        <div class="content">'.$htmlIconUser.' ' . $content . '</div>
                         <div class="flex fs-12"> <a href="javascript:void(0)" onclick="showFrameReplyComment(' . $User_Arr['id'] . ',\'' . $User_Arr['nickname'] . '\',' . $User_Arr['id'] . ',\'0068c15cfb8ec6a0060b94d9def64ea0\')" class="margin-r-5">Trả lời</a>
                             <div> 0 Phút Trước </div>
                         </div>
@@ -621,6 +623,13 @@ if ($Json['action'] == 'live_search') {
     if (!json_decode($_COOKIE["TokenTime"], true)[$token]) die(json_encode(["result" => 'Token Hết Thời Hạn', "status" => "success"]));
     $adv_id = sql_escape($Json['adv_id']);
     $mysql->update('ads', "click = click + 1", "id = '$adv_id'");
+
+    if (!empty($user)) {
+        $resultAds =  $mysql->query("SELECT `position_name` FROM `table_ads` WHERE `id` = '$adv_id'");
+        $adsData = $resultAds->fetch(PDO::FETCH_ASSOC);
+        addCoin($user['id'], 'first_ads_by_type', ['ads_type' => $adsData['position_name']]);
+    }
+
     die(json_encode(["result" => 'Click To ADS', "status" => "success"]));
 } else if ($Json['action'] == 'view_all_notice') {
     if (!$_author_cookie) die(json_encode(["result" => "Bạn Chưa Đăng Nhập", "status" => "failed"]));
@@ -638,14 +647,14 @@ if ($Json['action'] == 'live_search') {
         sort($Comment_data);
         foreach ($Comment_data as $key => $row) {
             $User_Arr = GetDataArr("user", "id = '{$row['user_id']}'");
-            $listUserIconActive = listUserIconActive($User_Arr['id']);
+            $listUserIconActive = listUserIconActive($User_Arr['id'], 'all');
             $htmlIconUser = '';
 
             if (!empty($listUserIconActive)) {
                 $htmlIconUser .= '<div class="icon-user">';
 
                 foreach ($listUserIconActive as $k => $v) {
-                    $htmlIconUser .= '<img src="'.$v.'" />';
+                    $htmlIconUser .= '<span data-tooltip="'.$v['name'].'"><img src="'.$v['image'].'" /></span>';
                 }
 
                 $htmlIconUser .= '</div>';
@@ -671,19 +680,19 @@ if ($Json['action'] == 'live_search') {
     } else die(json_encode(["result" => '<div class="home-status">Không Có Comment Nào</div>', "status" => "failed"]));
 } else if ($Json['action'] == 'top_bxh') {
     $cache_key = "cache.BangXepHang";
-    // if ($InstanceCache->has($cache_key)) die($InstanceCache->get($cache_key));
+    if ($InstanceCache->has($cache_key)) die($InstanceCache->get($cache_key));
     $Top = 0;
     $arr = $mysql->query("SELECT * FROM " . DATABASE_FX . "user ORDER BY level DESC LIMIT {$cf['num_bxh']}");
     while ($row = $arr->fetch(PDO::FETCH_ASSOC)) {
         $listItem = listUserItemActive($row['id']);
-        $listUserIconActive = listUserIconActive($row['id']);
+        $listUserIconActive = listUserIconActive($row['id'], 'all');
         $htmlIconUser = '';
 
         if (!empty($listUserIconActive)) {
             $htmlIconUser .= '<div class="icon-user">';
 
             foreach ($listUserIconActive as $k => $v) {
-                $htmlIconUser .= '<img src="'.$v.'" />';
+                $htmlIconUser .= '<span data-tooltip="'.$v['name'].'"><img src="'.$v['image'].'" /></span>';
             }
 
             $htmlIconUser .= '</div>';
@@ -937,7 +946,7 @@ if ($Json['action'] == 'live_search') {
     ];
     
     $insert = $mysql->insert('transaction', '`'.implode('`,`', array_keys($insertTransaction)).'`', '"'.implode('", "', $insertTransaction).'"');
-    $transactionId = getLastInsertId('table_transaction');
+    $transactionId = getLastInsertId('transaction');
 
     // insert to table_user_icon_store
     $insertUserFrame = [

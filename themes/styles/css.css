@@ -2229,6 +2229,8 @@ div#user-profile .right {
     display: flex;
     align-items: center;
     column-gap: 3px;
+    flex-wrap: wrap;
+    width: 100%;
 }
 
 .user-comment .right .icon-user img {
@@ -3248,6 +3250,8 @@ input:checked+.slider:before {
 .icon-user {
     display: inline-flex;
     column-gap: 5px;
+    width: 58%;
+    flex-wrap: wrap; 
 }
 
 .icon-user img {

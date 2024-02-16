@@ -166,7 +166,7 @@ function listItemStore() {
 
 	$data = array_map(function ($value) {return [];}, categoryStore());
 
-	$sql = "SELECT `id`, `name`, `price`, `image`, `type` FROM `table_vat_pham`";
+	$sql = "SELECT `id`, `name`, `price`, `image`, `type` FROM `table_vat_pham` ORDER BY `price` DESC";
 	$query = $mysql->query($sql);
 
 	while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
@@ -231,45 +231,112 @@ function listUserItemOwner($userId) {
 	return $data;
 }
 
-function listUserIconActive($userId) {
+function listUserIconActive($userId, $option = "key-value") {
 	global $mysql;
 	$data = [];
 	
 	if (!empty($userId)) {
-		$sql = "SELECT `vp`.`id`,`vp`.`image`
+		$sql = "SELECT `vp`.`id`,`vp`.`image`, `vp`.`name`
 			FROM `table_user_icon_store` `uis`
 			JOIN `table_vat_pham` `vp` ON `uis`.`icon_id` = `vp`.`id`
 			WHERE `user_id` = $userId AND `active` = 1 AND `vp`.`type` = 'icon-user'";
 
 		$query = $mysql->query($sql);
 
-		while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-			$data[$row['id']] = $row['image'];
+		if ($option == 'all') {
+			while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+				$data[$row['id']] = $row;
+			}
+		}
+		else {
+			while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+				$data[$row['id']] = $row['image'];
+			}
 		}
 	}
 
 	return $data;
 }
 
-function plusCoinFirstTime($userId, $type) {
-	return false;
+function addCoin($userId, $type, $params = []) {
 	if (!empty($userId) && !empty($type)) {
+		if ($type == 'first_comment' && empty($params['movie_id'])) {
+			return false;
+		}
+
+		if ($type == 'first_ads_by_type' && empty($params['ads_type'])) {
+			return false;
+		}
+
 		global $mysql;
 
-		if ($type == 'first_login') {
-			$sqlCheck = "";
-			$result = $mysql->query($sqlCheck);
+		$data = [];
+		$amountType = [
+			'first_login'			=>	100,
+			'first_comment'			=>	2,
+			'first_avatar'			=>	100,
+			'register'				=>	500,
+			'first_ads_by_type'		=>	2,
+		];
 
-			while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-				$data[$row['type']][] = $row['icon_id'];
+		$where = "";
+
+		if (in_array($type, ['first_login', 'first_comment', 'first_ads_by_type'])) {
+			$where .= " AND `created_at` = '".date('Y-m-d')."'";
+		}
+
+		$sqlCheck = "SELECT `id`, `type`, `movie_id`, `ads_type`
+			FROM `table_history_add_coin` 
+			WHERE `user_id` = $userId AND `type` = '".$type."' $where";
+		$result = $mysql->query($sqlCheck);
+
+		while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+			$data[] = $row;
+		}
+
+		if (!in_array($type, ['first_ads_by_type', 'first_comment'])) {
+			if (count($data) >= 1) {
+				return false;
+			}
+		}
+		else {
+			if ($type == 'first_comment') {
+				if (count($data) >= 5) {
+					return false;
+				}
+	
+				foreach ($data as $checkComment) {
+					if ($checkComment['movie_id'] == $params['movie_id']) {
+						return false;
+					}
+				}
+			}
+			elseif ($type == 'first_ads_by_type') {
+				foreach ($data as $checkAds) {
+					if ($checkAds['ads_type'] == $params['ads_type']) {
+						return false;
+					}
+				}
 			}
 		}
 
-		$paramsPlusCoin = [
+		$paramsInsert = [
 			'user_id'	=>	$userId,
-			'type'	=>	$type,
-			// 'amount'	=>	$amount,
+			'type'		=>	$type,
+			'amount'	=>	$amountType[$type],
+			'created_at'	=>	date('Y-m-d')
 		];
-		$sqlPlusCoin = "INSERT INTO `table_history_add_coin`";
+
+		if ($type == 'first_comment') {
+			$paramsInsert['movie_id'] = $params['movie_id'];
+		}
+
+		if ($type == 'first_ads_by_type') {
+			$paramsInsert['ads_type'] = $params['ads_type'];
+		}
+
+		$mysql->insert('history_add_coin', '`'.implode('`,`', array_keys($paramsInsert)).'`', '"'.implode('", "', $paramsInsert).'"');
+
+		$mysql->update('user', "coins = coins + ".$amountType[$type], 'id = '.$userId);
 	}
 }

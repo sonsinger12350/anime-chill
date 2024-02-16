@@ -1001,9 +1001,14 @@ function getIconStoreActive($id, $type) {
 }
 
 function getLastInsertId($table) {
-    global $mysql;
+    global $mysql, $tb_prefix;
 
-    $rs = $mysql->query('SELECT MAX(id) id FROM table_transaction');
+    if (empty($table)) {
+        return null;
+    }
+
+    $tbl = $tb_prefix.$table;
+    $rs = $mysql->query("SELECT MAX(`id`) `id` FROM `$tbl`");
     $last = $rs->fetch(PDO::FETCH_ASSOC);
 
     if (empty($last['id'])) {
