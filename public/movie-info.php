@@ -296,7 +296,7 @@ $statut = ($Movie['loai_phim'] == 'Phim Lẻ' ? "{$Movie['movie_duration']} Phú
                         <script type="text/javascript" src="/themes/js_ob/fgEmojiPicker.js?v=1.7.4"></script>
                         <div id="frame-comment">
                         </div>
-                        <div id="comments" class="margin-t-10">
+                        <div id="comments" class="margin-t-10" style="width: 100%;overflow: hidden;">
                         </div>
                     </div>
                 <?php } ?>

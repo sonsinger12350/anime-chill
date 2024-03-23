@@ -66,8 +66,13 @@ if ($action == 'loginadmin') {
     $id = sql_escape($_POST['id']);
     $Feils = $_POST['data'];
 
+    if (empty($Feils['public']) && $table == 'news') {
+        $Feils['public'] = "false";
+    }
+
     $Check = count($Feils);
     $ArrNum = 0;
+
     foreach ($Feils as $key => $value) {
         $ArrNum++;
         $ColumsKey = $key;

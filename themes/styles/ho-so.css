@@ -728,6 +728,16 @@ ul.list-film {
 	}
 }
 
+@media (max-width: 500px) {
+	.account-info .info-detail .group .label {
+		float: none;
+	}
+
+	.account-info .info-detail .group .detail {
+		padding-left: 24px;
+	}
+}
+
 @media (max-width: 480px) {
 	.profile .info .tab-content #tab-movie-follow .movie-follow .movies-list .movie-item .episode-latest {
 		left: 10px;
@@ -762,11 +772,8 @@ ul.list-film {
 		font-size: 10px;
 	}
 }
+
 .modal {
-	left: 30% !important;
-}
-@media(max-width: 400px){
-	.modal {
-		left: 0 !important;
-	}
+	left: 50%;
+    transform: translate(-50%, 0);
 }

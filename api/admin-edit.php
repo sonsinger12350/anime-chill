@@ -232,7 +232,7 @@ if ($FormEdit == "server") {
         }
         ?>
     </div>
-    <form submit-ajax="ngockush" form-action="UpdateNewServer" action="<?= URL ?>/admin/server/api" method="POST" form-check="true">
+    <form submit-ajax="ngockush" form-action="UpdateNewServer" action="<?= URL ?>/admin/server/api" method="POST" form-check="false">
         <input type="text" class="form-control" name="episode_id" value="<?= $id ?>" style="display: none;">
         <div class="form-group mb-4">
             <label> Tên Tập</label>
@@ -493,6 +493,64 @@ if ($FormEdit == "server") {
             <div class="col-12 mb-3">
                 <label>Giá tiền</label>
                 <input type="number" class="form-control" name="data[price]" value="<?=$data['price']?>">
+            </div>
+            <div class="col-12 text-center mb-3">
+                <button class="btn btn-outline-info mt-" type="submit">Cập Nhật</button>
+            </div>
+        </div>
+    </form>
+<?php } else if ($FormEdit == "news") {
+    $data = GetDataArr("news", "id = $id");
+    ?>
+    <form submit-ajax="ngockush" form-action="UpdateDatabase" action="<?= URL ?>/admin/server/api" method="POST" form-check="false">
+        <input type="text" class="form-control" name="table" value="news" style="display: none;">
+        <input type="text" name="id" value="<?= $id ?>" style="display: none;">
+        <div class="form-group row">
+            <div class="col-12 mb-3">
+                <label>Tên</label>
+                <input type="text" class="form-control" name="data[name]" value="<?=$data['name']?>">
+            </div>
+            <div class="col-12 mb-3">
+                <label>Slug</label>
+                <input type="text" class="form-control" name="data[slug]" value="<?=$data['slug']?>">
+            </div>
+            <div class="col-12 mb-3">
+                <label>Tên khác</label>
+                <input type="text" class="form-control" name="data[other_name]" value="<?=$data['other_name']?>">
+            </div>
+            <div class="col-lg-12 col-md-12 mb-3">
+                <label>Hình ảnh</label>
+                <div class="input-group">
+                    <input class="form-control" type="text" name="data[image]" value="<?=$data['image']?>">
+                    <button type="button" class="btn btn-primary" onclick="$('#image').click();">Chọn File</button>
+                    <input id="image" type="file" style="display: none;" onchange="UploadImagesBase64(this, 'khung_vien');" accept="image/*" />
+                </div>
+            </div>
+            <!-- <div class="col-12 mb-3">
+                <label>Keyword</label>
+                <?php 
+                    $keyword = !empty($data['keyword']) ? json_decode($data['keyword'], true) : [];
+                ?>
+                <?php if(!empty($keyword)):?>
+                    <?php foreach($keyword as $k => $v):?>
+                        <div class="input-group mb-2">
+                            <input type="text" class="form-control" name="data[keyword][<?=$k?>][name]" value="<?=$v['name']?>">
+                            <input type="text" class="form-control" name="data[keyword][<?=$k?>][url]" value="<?=$v['url']?>">
+                        </div>
+                    <?php endforeach?>
+                <?php endif?>
+            </div> -->
+            <div class="col-12 mb-3">
+                <label>Lượt đọc</label>
+                <input type="number" class="form-control" name="data[view]" value="<?=$data['view']?>">
+            </div>
+            <div class="col-12 mb-3">
+                <label>Hiển thị</label>
+                <input type="checkbox" <?= $data['public'] == 'true' ? 'checked' : ''?> name="data[public]" value="true">
+            </div>
+            <div class="col-12 mb-3">
+                <label>Nội dung</label>
+                <textarea name="data[content]" class="summernote" cols="30" rows="10"><?=$data['content']?></textarea>
             </div>
             <div class="col-12 text-center mb-3">
                 <button class="btn btn-outline-info mt-" type="submit">Cập Nhật</button>

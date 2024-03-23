@@ -16,11 +16,21 @@ if (GetParam("kw")) {
 
 <head>
     <?php
-    $title_admin = "Danh Sách News";
-    require_once("defult/head.php");
+        $title_admin = "Danh Sách News";
+        require_once("defult/head.php");
     ?>
     <link rel="stylesheet" type="text/css" href="<?= URL ?>/admin/assets/css/vendors/select2.css">
     <link rel="stylesheet" type="text/css" href="<?= URL ?>/admin/assets/css/vendors/summernote.css">
+
+    <style>
+        .btn-edit {
+            width: 35px;
+        }
+
+        .btn-view {
+            width: 70px;
+        }
+    </style>
 </head>
 
 <body>
@@ -82,7 +92,8 @@ if (GetParam("kw")) {
                                                 <th scope="col"><input class="form-check-input" id="chontatca" type="checkbox"></th>
                                                 <th scope="col">#</th>
                                                 <th scope="col">Tên Phim</th>
-                                                <th scope="col">Công Khai</th>
+                                                <th scope="col" style="width: 85px;">Lượt đọc</th>
+                                                <th scope="col" style="width: 95px;">Công Khai</th>
                                                 <th scope="col">Thời Gian</th>
                                                 <th scope="col">Thao Tác</th>
                                             </tr>
@@ -98,22 +109,23 @@ if (GetParam("kw")) {
                                                         $Public = '<span class="badge bg-success fs-7">Công Khai</span>';
                                                     } else $Public = '<span class="badge bg-warning fs-7">Riêng Tư</span>';
                                             ?>
-                                                    <tr id="<?= $table ?>_<?= $row['id'] ?>">
-                                                        <td>
-                                                            <input class="form-check-input" name="multi_del" type="checkbox" value="<?= $row['id'] ?>">
-                                                        </td>
-                                                        <th scope="row"><?= $stt ?></th>
-                                                        <td><?= $row['name'] ?></td>
-                                                        <td><?= $Public ?></td>
-                                                        <td><span class="badge bg-primary fs-7"><?= $row['time'] ?></span></td>
-                                                        <td>
-                                                            <div class="btn-group" role="group">
-                                                                <button class="btn btn-primary btn-xs" type="button" onclick="LoadFormEdit('<?= $table ?>',<?= $row['id'] ?>);">Sửa</button>
-                                                                <button class="btn btn-danger btn-xs" type="button" onclick="TableXoa('<?= $table ?>',<?= $row['id'] ?>);">Xóa</button>
-                                                                <a class="btn btn-info btn-xs" href="<?= URL ?>/news/<?= $row['slug'] ?>.html" target="_blank">Xem Thử</a>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
+                                                <tr id="<?= $table ?>_<?= $row['id'] ?>">
+                                                    <td>
+                                                        <input class="form-check-input" name="multi_del" type="checkbox" value="<?= $row['id'] ?>">
+                                                    </td>
+                                                    <th scope="row"><?= $stt ?></th>
+                                                    <td><?= $row['name'] ?></td>
+                                                    <td><?= $row['view'] ?></td>
+                                                    <td><?= $Public ?></td>
+                                                    <td><span class="badge bg-primary fs-7"><?= $row['time'] ?></span></td>
+                                                    <td>
+                                                        <div class="btn-group" role="group">
+                                                            <button class="btn btn-primary btn-xs btn-edit" type="button" onclick="LoadFormEdit('<?= $table ?>',<?= $row['id'] ?>);">Sửa</button>
+                                                            <button class="btn btn-danger btn-xs" type="button" onclick="TableXoa('<?= $table ?>',<?= $row['id'] ?>);">Xóa</button>
+                                                            <a class="btn btn-info btn-xs btn-view" href="<?= URL ?>/news/<?= $row['slug'] ?>.html" target="_blank">Xem Thử</a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
                                             <?php }
                                             } ?>
                                         </tbody>

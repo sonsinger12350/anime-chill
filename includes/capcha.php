@@ -8,6 +8,9 @@ function captcha_create_image()
     $_SESSION["captcha"] = $secret;
     $width = 80;
     $height = 33;
+    if (!function_exists('imagecreatetruecolor')) {
+        return null;
+    }
     $image = imagecreatetruecolor($width, $height);
     $color_text = imagecolorallocate($image, 239, 202, 71);
     $color_background = imagecolorallocate($image, 0, 0, 0);

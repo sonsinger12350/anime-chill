@@ -160,6 +160,10 @@ var CommentHome = async () => {
             }
 
         } else {
+            Toast({
+                message: "Gửi thành công",
+                type: "success"
+            });
             $('textarea[name="HomeComment"]').val('');
             $('textarea[name="HomeComment"]').prop("disabled", true);
             $('.chat_div').append(`<li style="margin-bottom: 10px;">

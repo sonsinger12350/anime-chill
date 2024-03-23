@@ -648,17 +648,17 @@ if ($Json['action'] == 'live_search') {
         foreach ($Comment_data as $key => $row) {
             $User_Arr = GetDataArr("user", "id = '{$row['user_id']}'");
             $listUserIconActive = listUserIconActive($User_Arr['id'], 'all');
-            $htmlIconUser = '';
+            $htmlIconUser = '<div class="icon-user"><span data-tooltip="Vịt Vui Nhộn"><img src="/assets/upload/store/icon-user/XCcIi6OG0ohbsyy1706625810.gif"></span><span data-tooltip="Cốt Linh Lãnh Hỏa"><img src="/assets/upload/store/icon-user/i47ALCYbyequ87T1706824848.gif"></span><span data-tooltip="Huyền Hoàng Viêm"><img src="/assets/upload/store/icon-user/IXGCY5okJiBJj471706824906.gif"></span><span data-tooltip="Vạn Thú Linh Hỏa"><img src="/assets/upload/store/icon-user/ah9M9kYal5LE1tT1706824931.gif"></span><span data-tooltip="Lưu Ly Liên Tâm Hỏa"><img src="/assets/upload/store/icon-user/9JMVfhCaFrlXnTN1706824980.gif"></span><span data-tooltip="Tử Hỏa"><img src="/assets/upload/store/icon-user/jDVCBf4wu83EHKW1706825002.gif"></span><span data-tooltip="Tịnh Liên Yêu Hỏa"><img src="/assets/upload/store/icon-user/k5MV6iqCvEz4rFk1706825063.gif"></span><span data-tooltip="Ếch Đột Biến"><img src="/assets/upload/store/icon-user/6yzLuBdAmmvaIHi1706825162.webp"></span><span data-tooltip="Cáu!!!"><img src="/assets/upload/store/icon-user/qxmgvtzPl8xwpVG1706826736.webp"></span><span data-tooltip="!!!"><img src="/assets/upload/store/icon-user/9ZXr8ktQ2oYy6rO1706826834.webp"></span><span data-tooltip="Tam Thiên Diễm Viêm Hoả"><img src="https://hhtqtv.co/assets/upload/store/icon-user/eaue9ZkOjSAASM61707287805.gif"></span><span data-tooltip="Nghiệp Hoả Hồng Liên"><img src="https://hhtqtv.co/assets/upload/store/icon-user/o4QidoVefL8fFCA1707287918.webp"></span></div>';
 
-            if (!empty($listUserIconActive)) {
-                $htmlIconUser .= '<div class="icon-user">';
+            // if (!empty($listUserIconActive)) {
+            //     $htmlIconUser .= '<div class="icon-user">';
 
-                foreach ($listUserIconActive as $k => $v) {
-                    $htmlIconUser .= '<span data-tooltip="'.$v['name'].'"><img src="'.$v['image'].'" /></span>';
-                }
+            //     foreach ($listUserIconActive as $k => $v) {
+            //         $htmlIconUser .= '<span data-tooltip="'.$v['name'].'"><img src="'.$v['image'].'" /></span>';
+            //     }
 
-                $htmlIconUser .= '</div>';
-            }
+            //     $htmlIconUser .= '</div>';
+            // }
 
             if (get_total('user', "WHERE id = '{$row['user_id']}'") < 1) {
                 $mysql->delete('comment', "user_id = '{$row['user_id']}'");

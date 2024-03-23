@@ -229,7 +229,7 @@
 											<div class="detail">
 												<?= nl2br($configs['vip_package']) ?><br>
 												<i class="fa fa-long-arrow-right" aria-hidden="true"></i>
-												<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#VipModal">
+												<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#VipModal">
 													Mua VIP ADS tắt quảng cáo tại đây
 												</button>
 												<!-- <a href="/store#vip">Mua VIP ADS tắt quảng cáo tại đây</a> -->

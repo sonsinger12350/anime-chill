@@ -39,7 +39,8 @@
 	]);
 
 	$paypalConfig = [
-		'client_id'	=>	'AYldjoFRqHN-fq47TxTzcg9pQc6f-Z8jYqqbTaVniT4bCdoD4fZwp37Zjv--L2ffBnmkS7M99P8medCf',
+		// 'client_id'	=>	'AYldjoFRqHN-fq47TxTzcg9pQc6f-Z8jYqqbTaVniT4bCdoD4fZwp37Zjv--L2ffBnmkS7M99P8medCf',
+		'client_id'	=>	'AQTHeKDFf2168oMiGuo_cj5GW-a3YSTM6gmaGFlYrAI6fiH2ZDv-UKLDNKm2Sgzgn7Ose0_lqOwgkDGH',
 	];
 
 	global $mysql;

@@ -47,7 +47,18 @@ if (isset($_COOKIE['author'])) {
         resetVipUser($user['vip_date_end'], $user['id'], $user['vip']);
         $mysql->update("user", "online = 0", "1");
         $mysql->update("user", "online = 1", "email = '$useremail'");
-        addCoin($user['id'], 'first_login');
+        
+        // Check is first login
+        $sqlCheck = "SELECT `id`, `type`, `movie_id`, `ads_type`
+			FROM `table_history_add_coin` 
+			WHERE `user_id` = ".$user['id']." AND `type` = 'first_login' AND `created_at` = '".date('Y-m-d')."'";
+        $resultCheck = $mysql->query($sqlCheck);
+        $dataCheck = $resultCheck->fetch(PDO::FETCH_ASSOC);
+
+        if (empty($dataCheck)) {
+            addCoin($user['id'], 'first_login');
+        }
+        
         $user['khung-vien'] = getIconStoreActive($user['id'], 'khung-vien');
         $user['icon-user'] = '';
         $listUserIconActive = listUserIconActive($user['id']);
