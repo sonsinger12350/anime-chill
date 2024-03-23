@@ -273,10 +273,10 @@ function addCoin($userId, $type, $params = []) {
 		$data = [];
 		$amountType = [
 			'first_login'			=>	100,
-			'first_comment'			=>	2,
+			'first_comment'			=>	5,
 			'first_avatar'			=>	100,
 			'register'				=>	500,
-			'first_ads_by_type'		=>	2,
+			'first_ads_by_type'		=>	10,
 		];
 
 		$where = "";
@@ -328,6 +328,10 @@ function addCoin($userId, $type, $params = []) {
 		];
 
 		if ($type == 'first_comment') {
+		    if ($params['movie_id'] == 'all') {
+		        return true;
+		    }
+
 			$paramsInsert['movie_id'] = $params['movie_id'];
 		}
 

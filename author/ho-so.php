@@ -111,7 +111,7 @@
 						</div>
 						<div class="progress">
 							<?php
-							$exp = number_format(($user['exp'] * 100) / getExpLevel($user['level']), 0, ',', '.');
+							$exp = number_format(($user['exp'] * 100) / ($user['level'] * 30));
 							?>
 							<span class="progress-bar" style="width: <?= $exp ?>%"><?= $exp . '%' ?></span>
 						</div>
@@ -264,11 +264,11 @@
 										</div> -->
 										<div class="group">
 											<div class="label">Bình luận:</div>
-											<div class="detail">Bình luận lần đầu dưới mỗi bộ phim trong ngày +2 xu ( tối đa 5 bộ trong ngày )</div>
+											<div class="detail">Bình luận lần đầu dưới mỗi bộ phim trong ngày +5 xu ( tối đa 5 bộ trong ngày )</div>
 										</div>
 										<div class="group">
 											<div class="label">Click quảng cáo:</div>
-											<div class="detail">+ 2 xu ( mỗi loại quảng cáo chỉ tính 1 lần trong ngày )</div>
+											<div class="detail">+ 10 xu ( mỗi loại quảng cáo chỉ tính 1 lần trong ngày )</div>
 										</div>
 										<div class="group">
 											<div class="label">Up Avatar:</div>
@@ -341,8 +341,6 @@
 									</div>
 									<div id="deposit-checkout"></div>
 								</form>
-								<!-- #-->
-								
 							</div>
 						</div>
 						<div class="tab-pane fade" id="tab-update-profile">

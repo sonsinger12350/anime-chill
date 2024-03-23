@@ -12,13 +12,13 @@ $statut = ($Movie['loai_phim'] == 'Phim Lẻ' ? "{$Movie['movie_duration']} Phú
 <html lang="vi">
 
 <head>
-    <script data-cfasync="false" type="text/javascript" src="//hmxg5mhyx.com/t/9/fret/meow4/1987148/7237fee4.js"></script>
+    
     <title><?= ("{$Movie['name']} {$Movie['seo_title']} VietSub + Thuyết Minh Tiếng Việt") ?></title>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/>
     <meta name="title" content="<?= ("{$Movie['name']} {$Movie['seo_title']} Vietsub + Thuyết Minh Tiếng Việt") ?>" />
     <meta name="revisit-after" content="1 days" />
-    <meta name="description" content="<?= ("Xem Phim {$Movie['name']}, {$Movie['other_name']} {$Movie['seo_title']} Vietsub + Thuyết Minh Tiếng Việt | HHChina.tv | bilibili | iqiyi | Hoạt hình trung quốc | {$Movie['seo_tap']} | hhkungfu | hhpanda | hhtq | hhninja | hoathinh3d | hh3d | hhtq3d | animehay | hhdragon | hhchina | hhtqvip | Xem phim anime hay nhất | Xem phim anime online miễn phí |Phim hoạt hình trung quốc hay nhất | #Hoạt Hình Trung Quốc #hoạt hình phép thuật #anime tu tien #hoạt hình trung quốc thuyết minh #hhpanda#hoat hinh trung quoc #hoạt hình tiên hiệp #anime tien hiep #hhpanda đấu la đại lục #dau la dai luc#hoạt hình trung quốc #hoạt hình cổ trang #hoat hinh trung #hhpanda #hhninja#anime china #Animehay # animehay.pro #hhtq #hhtq3d #hhtqtv #hhtq tv #hhtq.tv #hhtqvip # hhtq.vip # hhtq .vip #hhninja.xyz #hhninja xyz #hhninja .xyz #animevietsub #animevietsub cc #hhpandatv #hhpanda tv #hhpanda.tv #hhpanda .tv #kkhungfu.tv #hhkungfu .tv #hhkungfutv #hoat hinh tien hiep #hoạt hình trung quốc 3d #hhkungfu #hoat hinh 3d#anime trung quốc #hoat hinh tu tien #hoạt hình trung quốc 2d #hhpandatv #hoathinh3d#hoạt hình tu tiên #anime trung quoc #hoạt hình trung quốc hay nhất #hhkungfutv #hoathinh3d .com #hhdragon # hhdragon.com #hhdragon com #hhdragon .com #Animehay.live #Animehay.site #Animehay.pro #Animehay.fan #Animehay.club #Animevietsub.tv #Animevietsub.co #Animevietsub.im #Animevietsub.in #Animeveitsub.org #nettruyenmax.com #truyenqq #truyenqqq #truyenfull #motchill #motchill.tv #motchill.info #hentaivn #xvideo #vlxyz #yahoo.com #Phimmoi #Dongphim #Bilutv #wikisach #metruyenchu #truyenyy #animet.net #nettruyenco #netflix.com #pops #myanimelist #anime47 #animeflv #animego #anime #bilibili.tv #iq.com") ?>" />
+    <meta name="description" content="<?= ("Xem Phim {$Movie['name']}, {$Movie['other_name']} {$Movie['seo_title']} Vietsub + Thuyết Minh Tiếng Việt | HHTQTV.COM | bilibili | iqiyi | Hoạt hình trung quốc | {$Movie['seo_tap']} | hhkungfu | hhpanda") ?>" />
     <meta name="keywords" content="<?= (Keyword($Movie['keyword']) ? Keyword($Movie['keyword']) : $Movie['name'] ) ?>" />
     <meta itemprop="name" content="<?= ("Xem Phim {$Movie['name']} {$Movie['seo_title']} Vietsub + Thuyết Minh Tiếng Việt | HHTQTV | bilibili.tv | iq.com | Hoạt hình trung quốc | Animehay") ?>" />
     <meta name="language" content="Vietnamese, English" />
@@ -33,7 +33,7 @@ $statut = ($Movie['loai_phim'] == 'Phim Lẻ' ? "{$Movie['movie_duration']} Phú
     <?php } ?>
 
     <meta property="og:title" content="<?= ("{$Movie['name']} {$Movie['seo_title']} Vietsub + Thuyết Minh Tiếng Việt") ?>" />
-    <meta property="og:description" content="<?= ("Xem Phim {$Movie['name']}, {$Movie['other_name']} {$Movie['seo_title']} Vietsub + Thuyết Minh Tiếng Việt | HHChina.tv | bilibili | iqiyi | Hoạt hình trung quốc | {$Movie['seo_tap']} | hhkungfu | hhpanda | hhtq | hhninja | hoathinh3d | hh3d | hhtq3d | animehay | hhdragon | hhchina | hhtqvip | Xem phim anime hay nhất | Xem phim anime online miễn phí |Phim hoạt hình trung quốc hay nhất | #Hoạt Hình Trung Quốc #hoạt hình phép thuật #anime tu tien #hoạt hình trung quốc thuyết minh #hhpanda#hoat hinh trung quoc #hoạt hình tiên hiệp #anime tien hiep #hhpanda đấu la đại lục #dau la dai luc#hoạt hình trung quốc #hoạt hình cổ trang #hoat hinh trung #hhpanda #hhninja#anime china #Animehay # animehay.pro #hhtq #hhtq3d #hhtqtv #hhtq tv #hhtq.tv #hhtqvip # hhtq.vip # hhtq .vip #hhninja.xyz #hhninja xyz #hhninja .xyz #animevietsub #animevietsub cc #hhpandatv #hhpanda tv #hhpanda.tv #hhpanda .tv #kkhungfu.tv #hhkungfu .tv #hhkungfutv #hoat hinh tien hiep #hoạt hình trung quốc 3d #hhkungfu #hoat hinh 3d#anime trung quốc #hoat hinh tu tien #hoạt hình trung quốc 2d #hhpandatv #hoathinh3d#hoạt hình tu tiên #anime trung quoc #hoạt hình trung quốc hay nhất #hhkungfutv #hoathinh3d .com #hhdragon # hhdragon.com #hhdragon com #hhdragon .com #Animehay.live #Animehay.site #Animehay.pro #Animehay.fan #Animehay.club #Animevietsub.tv #Animevietsub.co #Animevietsub.im #Animevietsub.in #Animeveitsub.org #nettruyenmax.com #truyenqq #truyenqqq #truyenfull #motchill #motchill.tv #motchill.info #hentaivn #xvideo #vlxyz #yahoo.com #Phimmoi #Dongphim #Bilutv #wikisach #metruyenchu #truyenyy #animet.net #nettruyenco #netflix.com #pops #myanimelist #anime47 #animeflv #animego #anime #bilibili.tv #iq.com") ?>" />
+    <meta property="og:description" content="<?= ("Xem Phim {$Movie['name']}, {$Movie['other_name']} {$Movie['seo_title']} Vietsub + Thuyết Minh Tiếng Việt | HHTQTV.COM | {$Movie['seo_tap']} | hhkungfu | hhpanda") ?>" />
     <meta property="og:image" content="<?= $Movie['image'] ?>" />
     <meta property="og:site_name" content="<?= Webname() ?> | Web Xem Phim Anime - Hoạt Hình Trung Quốc Hay Nhất" />
     <meta property="og:url" content="<?= URL ?>/thong-tin-phim/<?= $Movie['slug'] ?>.html" />
@@ -183,7 +183,7 @@ $statut = ($Movie['loai_phim'] == 'Phim Lẻ' ? "{$Movie['movie_duration']} Phú
                 <div class="flex ah-frame-bg flex-wrap">
                     <div class="flex flex-wrap flex-1">
                         <a href="<?= URL ?>/xem-phim/<?= $Movie['slug'] ?>-episode-id-<?= get_data_multi('id', 'episode', "movie_id = '{$Movie['id']}' ORDER BY id DESC") ?>.html" class="padding-5-15 fs-1 button-default fw-1 fs-1 flex flex-hozi-center bg-lochinvar" style="background: #d13a34;" title="Xem Ngay"><span style="font-size: 14px;">Xem Ngay</span></a>
-                        <a href="https://ktruyen.xyz" class="padding-1-1 fs-1 button-default fw-1 fs-1 flex flex-hozi-center bg-lochinvar" style="background: #337ab7;" title="Xem Ngay"><span style="font-size: 14px;">Truyện Tranh</span></a>
+                        <a href="https://ktruyen.online" class="padding-1-1 fs-1 button-default fw-1 fs-1 flex flex-hozi-center bg-lochinvar" style="background: #337ab7;" title="Xem Ngay"><span style="font-size: 14px;">Truyện Tranh</span></a>
                     </div>
                 </div>
                 <div class="flex ah-frame-bg flex-wrap">
@@ -234,24 +234,35 @@ $statut = ($Movie['loai_phim'] == 'Phim Lẻ' ? "{$Movie['movie_duration']} Phú
                             </div>
                         </div>
                     <?php } ?>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4942643338675496"
+     crossorigin="anonymous"></script>
+<!-- ads#1 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-4942643338675496"
+     data-ad-slot="5238948808"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
                     <div class="desc ah-frame-bg list_episode">
                         <?php if ($Movie['lich_chieu']) {
                     foreach (json_decode($Movie['lich_chieu'], true) as $key => $value) {
                         if ($value['days'] == 8) {
                             $Days .= "Chủ Nhật,";
                         } else {
-                            $Days .= "Thứ {$value['days']},";
+                            $Days .= "Thứ {$value['days']}, ";
                         }
                     }
                 ?>
-                        <div class="flex flex-hozi-center fw-700 color-white-2">
-                            <p  style="font-size: 16px;"><strong>Lịch Chiếu: <span style="color:#FFA500"><?= $Days ?> Hàng Tuần</span></strong></p>
-                        
+                    <div class="heading flex flex-hozi-center fw-700 color-white-2">
+                            <p  style="font-size: 16px;"><strong>Lịch Chiếu: <span style="color:#FFA500"><?= $Movie['showtimes'] ?> <span style="color:#FFA500"><?= $Days ?>Hàng Tuần</span></strong></p>
                     </div>
                 <?php } ?>
                 <br>
                         <h2 class="heading" >Fanpage Facebook</h2>
-                    <center><div class="fb-page" data-href="https://www.facebook.com/hhchina/" data-tabs="timeline" data-width="500" data-height="70" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="false"><blockquote cite="https://www.facebook.com/hhchina/" class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/hhchina/">HHCHINA.tv</a></blockquote></div></center>
+                    <center><div class="fb-page" data-href="https://www.facebook.com/hhchina/" data-tabs="timeline" data-width="500" data-height="70" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="false"><blockquote cite="https://www.facebook.com/hhchina/" class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/hhchina/">HHTQTV.COM</a></blockquote></div></center>
                         <br>
                         <div>
                             <h2 class="heading">
@@ -318,6 +329,7 @@ $statut = ($Movie['loai_phim'] == 'Phim Lẻ' ? "{$Movie['movie_duration']} Phú
         <script type="text/javascript" src="/themes/js_ob/comments.js?v=1.7.4"></script>
         <?= PopUnder('pop_under_info') ?>
         <?php require_once(ROOT_DIR . '/view/footer.php'); ?>
+        <?php require_once(ROOT_DIR . '/view/footer-movie-info.php'); ?>
     </div>
 </body>
 

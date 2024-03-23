@@ -671,7 +671,7 @@ if ($Json['action'] == 'live_search') {
                         
 
                             <div class="p-comment-home">
-                                <div class="box-chat-nickname" style="color:' . LevelColor($User_Arr['level']) . ';">' . $User_Arr['nickname'] . ' (Lv.' . $User_Arr['level'] . ') ' . LevelIcon($User_Arr['level'], 20, 20) . '' . $htmlIconUser . ' <span class="Time-cmt-home">' . RemainTime($row['timestap']) . '</span></div>
+                                <div class="box-chat-nickname" style="color:' . LevelColor($User_Arr['level']) . ';">' . $User_Arr['nickname'] . ' (Lv.' . $User_Arr['level'] . ') ' . LevelIcon($User_Arr['level'], 20, 20) . ' ' . $htmlIconUser . '</div>
                             </div>
                             <div class="boxchat-content">' . $row['content'] . '</div>
                     </li>';
@@ -713,7 +713,7 @@ if ($Json['action'] == 'live_search') {
         
         $HTML .= '
             <li class="home-rank">
-                <div class="flex flex-hozi-center" style="padding: 14px 0px;">
+                <div class="flex flex-hozi-center" style="padding: 10px 0px; border-bottom: 1px solid;">
                     <div class="stt-rank">
                         <div class="top-avatar">
                             <img class="avatar" src="' . $row['avatar'] . '" width="100" height="100" alt="' . $row['nickname'] . '">
@@ -734,9 +734,9 @@ if ($Json['action'] == 'live_search') {
                     </div>
                     <div class="rank-info">
                         <p class="rank-text name">' . $row['nickname'] . ' ' . RankIcon($row['level']) . '</p>
-                        <span class="rank-text coin">'.number_format($row['coins']). ' Xu - Exp: '.number_format(LevelExp($row['level'], $row['exp'])).'</span>
+                        <span class="rank-text" style="color: ' . LevelColor($row['level']) . ';"> ' . Danh_Hieu($row['level']) . '</span>
+                        <span class="rank-text coin">'.number_format($row['coins']). ' Xu | Exp: '.number_format(LevelExp($row['level'], $row['exp'])).'</span>
                         <span class="rank-text">Icon: ' . $htmlIconUser . '</span>
-                        <span class="rank-text activity-status '.($row['online'] == 1 ? 'online' : 'offline').'">'.($row['online'] == 1 ? 'Online' : 'Offline').'</span>
                     </div>
 
                 </div>

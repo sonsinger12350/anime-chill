@@ -175,6 +175,18 @@ if (!$_SESSION['admin']) die(header("location:" . URL . "/admin_movie/login"));
                                             <textarea class="form-control" name="data[script_footer]"><?= un_htmlchars($cf['script_footer']) ?></textarea>
                                         </div>
                                         <div class="col-12 mb-3">
+                                            <label>Mã Quảng Cáo Trang Chủ</label>
+                                            <textarea class="form-control" name="data[script_foog]"><?= un_htmlchars($cf['script_foog']) ?></textarea>
+                                        </div>
+                                        <div class="col-12 mb-3">
+                                            <label>Mã Quảng Cáo Trang Thông Tin Phim</label>
+                                            <textarea class="form-control" name="data[script_fooh]"><?= un_htmlchars($cf['script_fooh']) ?></textarea>
+                                        </div>
+                                        <div class="col-12 mb-3">
+                                            <label>Mã Quảng Cáo Trang Xem Phim</label>
+                                            <textarea class="form-control" name="data[script_fooj]"><?= un_htmlchars($cf['script_fooj']) ?></textarea>
+                                        </div>
+                                        <div class="col-12 mb-3">
                                             <label>Ghi Chú Đầu Trang (Có Thể Dùng HTML)</label>
                                             <textarea class="form-control" name="data[top_note]"><?= un_htmlchars($cf['top_note']) ?></textarea>
                                         </div>

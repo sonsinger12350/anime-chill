@@ -199,6 +199,10 @@ $NumPage = GetParam("p");
                                             </select>
                                         </div>
                                         <div class="col-lg-6 col-md-12 mb-3">
+                                            <label>Giờ Chiếu</label>
+                                            <input type="text" class="form-control" name="New[showtimes]">
+                                        </div>
+                                        <div class="col-lg-6 col-md-12 mb-3">
                                             <label>Từ Khóa (Mỗi Từ Khóa 1 Dòng )</label>
                                             <textarea name="New[keyword]" class="form-control" rows="1" placeholder="Định Dạng : Từ Khóa | Link Từ Khóa"></textarea>
                                         </div>

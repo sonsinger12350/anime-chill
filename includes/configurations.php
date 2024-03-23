@@ -1,9 +1,9 @@
 <?php
 date_default_timezone_set('Asia/Ho_Chi_Minh');
 $config['db_host']    = 'localhost';
-$config['db_name']     = 'animechill'; // Tên Database
-$config['db_user']    = 'root'; // Tên Người Dùng Database
-$config['db_pass']    = ''; // Mật Khẩu Database
+$config['db_name']     = 'hhtqtvc2_hhtqtvc'; // Tên Database
+$config['db_user']    = 'hhtqtvc2_hhtqtvc'; // Tên Người Dùng Database
+$config['db_pass']    = 'N@mqh181121'; // Mật Khẩu Database
 $tb_prefix            = 'table_';
 define('SERVER_HOST', $config['db_host']);
 define('DATABASE_NAME', $config['db_name']);
@@ -13,8 +13,8 @@ define('DATABASE_FX',            'table_');
 define('TIME', time());
 define('DATE', date('Y-m-d'));
 define('DATEFULL', date('d/m/Y - H:i:s'));
-define('URL', 'http://localhost');
-define('ADMIN', 'http://localhost/admin_movie');
+define('URL', 'https://hhtqtv.co');
+define('ADMIN', 'https://hhtqtv.co/admin_movie');
 define('EMAIL', 'None');
 define('PASSMAIL', 'None');
 define('UPLOAD_DIR', $_SERVER["DOCUMENT_ROOT"] . '/assets/upload');

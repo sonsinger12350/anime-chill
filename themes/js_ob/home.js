@@ -161,7 +161,7 @@ var CommentHome = async () => {
 
         } else {
             Toast({
-                message: "Gửi thành công",
+                message: "Gửi bình luận thành công",
                 type: "success"
             });
             $('textarea[name="HomeComment"]').val('');

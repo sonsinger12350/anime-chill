@@ -111,7 +111,7 @@ FireWall();
                 </div>
             </div>
             <div class="bg-black w-100-percent flex-column">
-                <div class="tab-lichchieu flex-1" style="border: 1px solid #ffffff;">
+                <div class="tab-lichchieu flex-1">
                     <?php
                     for ($i = 2; $i < 9; $i++) {
                         $NameLich = ($i < 8 ? "Thứ $i" : "Chủ Nhật");
@@ -242,13 +242,13 @@ FireWall();
                 </style>
                 <div class="desc ah-frame-bg">
                     <div class="box-chat">
-                        <h3 class="padding-5-10 btn-grad">Box chat</h3>
+                        <h3 style="font-size: 14px;" class="btn-grad" onclick="btn_load_home(this,'LoadComment');">Box chat<span class="material-icons-round fs-10">refresh</span></h3>
                         <ul class="chat_div " style="display: block;list-style: none outside none;height: 200px" id="HomeChatList">
                             <div class="home-status">Không Có Comment Nào</div>
                         </ul>
                     </div>
                     <div class="block-top">
-                        <h3  class="padding-5-10 btn-grad">Top Cấp Bậc</h3>
+                        <h3  class="padding-5-10 btn-active">Top Cấp Bậc</h3>
                         <ul style="display: block;list-style: none outside none;max-height: 440px;overflow-x: hidden;" id="HomeListTop">
                         </ul>
                     </div>
@@ -320,8 +320,8 @@ FireWall();
                 if ($(btn).hasClass("btn-active")) {
                     return;
                 }
-                $('.btn-grad').removeClass('btn-active');
-                $(btn).addClass('btn-active');
+                $('.btn-grad').removeClass('btn-grad');
+                $(btn).addClass('btn-grad');
                 LoadHome(action);
             }
             BoxChatLoad();
@@ -342,6 +342,7 @@ FireWall();
         </script>
         <?= PopUnder('pop_under_home') ?>
         <?php require_once(ROOT_DIR . '/view/footer.php'); ?>
+        <?php require_once(ROOT_DIR . '/view/footer-home.php'); ?>
     </div>
     </div>
 <?php } ?>

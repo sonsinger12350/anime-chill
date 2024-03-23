@@ -68,6 +68,9 @@ $P = CheckPages($table, "WHERE movie_id = '$movie_id' $SQL", $cf['limits'], $Num
                             <div class="card col-lg-12">
                                 <div class="card-body">
                                     <div class="row mb-3">
+                                        <div class="col-12 text mb-3">
+                                        <button class="btn btn-outline-warning mt-2" id="upgrade-episode-server" data-movie="<?= $movie_id ?>" type="button">Update lại server</button>
+                                        </div>
                                         <div class="col-6">
                                             <h4 class="card-title">Danh Sách Episode <span class="badge bg-success">Tổng Số Episode : <span class="text-danger fw-bold"><?= number_format(get_total('episode', "WHERE movie_id = '$movie_id'")) ?></span> Episode</span></h4>
                                             <button class="btn btn-danger-gradien" type="button" onclick="MultiDel('<?= $table ?>');">Xóa Đã Chọn</button>
@@ -153,7 +156,6 @@ $P = CheckPages($table, "WHERE movie_id = '$movie_id' $SQL", $cf['limits'], $Num
                                         <div class="col-lg-12 mb-3" id="MainServer2"></div>
                                         <div class="col-12 text-center mb-3">
                                             <button class="btn btn-outline-info mt-2" type="submit">Thêm Mới</button>
-                                            <button class="btn btn-outline-warning mt-2" id="upgrade-episode-server" data-movie="<?= $movie_id ?>" type="button">Update lại server</button>
                                         </div>
                                     </form>
                                 </div>

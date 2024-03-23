@@ -49,7 +49,7 @@ FireWall();
     <div>
         <div id="MenuHeader" class="w-100-percent flex-column">
             <div class="tab-links flex-1" style="width: 100%;height: 100%;">
-                <a style="border: 1px solid #545454;" href="https://ktruyen.xyz"><span class="material-icons-round material-icons-menu">
+                <a style="border: 1px solid #545454;" href="https://ktruyen.online"><span class="material-icons-round material-icons-menu">
                         book
                     </span>
                     <div class="item-label">Truyện Tranh</div>

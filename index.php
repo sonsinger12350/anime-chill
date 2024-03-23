@@ -1,5 +1,6 @@
 <?php
 define('MovieAnime', true);
+header("X-Frame-Options: SAMEORIGIN");
 date_default_timezone_set('Asia/Ho_Chi_Minh');
 mb_internal_encoding("UTF-8");
 ob_start();
@@ -47,7 +48,6 @@ if (isset($_COOKIE['author'])) {
         resetVipUser($user['vip_date_end'], $user['id'], $user['vip']);
         $mysql->update("user", "online = 0", "1");
         $mysql->update("user", "online = 1", "email = '$useremail'");
-        
         // Check is first login
         $sqlCheck = "SELECT `id`, `type`, `movie_id`, `ads_type`
 			FROM `table_history_add_coin` 
@@ -58,7 +58,6 @@ if (isset($_COOKIE['author'])) {
         if (empty($dataCheck)) {
             addCoin($user['id'], 'first_login');
         }
-        
         $user['khung-vien'] = getIconStoreActive($user['id'], 'khung-vien');
         $user['icon-user'] = '';
         $listUserIconActive = listUserIconActive($user['id']);

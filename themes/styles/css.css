@@ -1458,7 +1458,7 @@ div#filtering {
     padding: 6px;
     justify-content: center;
     align-items: center;
-    border-right: 1px solid #fff;
+    border: 1px solid #545454;
     flex: 1;
     font-weight: 500
 }
@@ -3223,7 +3223,7 @@ input:checked+.slider:before {
     /* clear: right; */
     float: right;
     clear:right;
-    margin-bottom: 20px;
+    margin-bottom: 1px;
 }
 
 .stt-rank {
@@ -3249,8 +3249,8 @@ input:checked+.slider:before {
 
 .icon-user {
     display: inline-flex;
-    column-gap: 5px;
-    width: 58%;
+    column-gap: 1px;
+    width: 100%;
     flex-wrap: wrap; 
 }
 
