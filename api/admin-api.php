@@ -106,6 +106,8 @@ if ($action == 'loginadmin') {
                 }
             }
             $RowValue = json_encode($keyword, JSON_UNESCAPED_UNICODE);
+        }  else if (in_array($ColumsKey, ['script_foog', 'script_fooh', 'script_fooj'])) {
+            $RowValue = json_encode(htmlchars($value));
         } else $RowValue = $value;
         if ($ArrNum < $Check) {
             $SQL .= "$key = '$RowValue',";

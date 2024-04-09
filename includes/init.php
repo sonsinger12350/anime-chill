@@ -344,3 +344,23 @@ function addCoin($userId, $type, $params = []) {
 		$mysql->update('user', "coins = coins + ".$amountType[$type], 'id = '.$userId);
 	}
 }
+
+function canShowAds($type, $timeDistance, $numberDisplayed) {
+	if (!empty($_COOKIE[$type]) && $_COOKIE[$type] <= Date("Y-m-d H:i:s")) {
+		setcookie($type, null, -1, '/');
+	}
+
+	if ($_SESSION['ads'][$type] == $numberDisplayed-1) {
+		$date = Date("Y-m-d H:i:s", strtotime(Date('Y-m-d H:i:s').' + '.$timeDistance.' minutes'));
+		setcookie($type, $date, time() + 60*60*60, '/');
+	}
+
+	if (!empty($_COOKIE[$type]) && $_COOKIE[$type] > time()) {
+		return 0;
+	}
+	elseif (!empty($_SESSION['ads'][$type]) && $_SESSION['ads'][$type] >= $numberDisplayed) {
+		return 0;
+	}
+
+	return 1;
+}

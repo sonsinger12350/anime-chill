@@ -174,17 +174,58 @@ if (!$_SESSION['admin']) die(header("location:" . URL . "/admin_movie/login"));
                                             <label>Tùy Chỉnh Mã Cuối Footer</label>
                                             <textarea class="form-control" name="data[script_footer]"><?= un_htmlchars($cf['script_footer']) ?></textarea>
                                         </div>
+                                        <?php
+                                            $scriptFoog = json_decode($cf['script_foog'], true);
+                                            $scriptFooh = json_decode($cf['script_fooh'], true);
+                                            $scriptFooj = json_decode($cf['script_fooj'], true);
+                                        ?>
                                         <div class="col-12 mb-3">
                                             <label>Mã Quảng Cáo Trang Chủ</label>
-                                            <textarea class="form-control" name="data[script_foog]"><?= un_htmlchars($cf['script_foog']) ?></textarea>
+                                            <textarea class="form-control" name="data[script_foog][script]"><?= @$scriptFoog['script'] ?></textarea>
+                                        </div>
+                                        <div class="col-12 mb-3">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <label>Khoảng cách hiển thị giữa các phiên (phút)</label>
+                                                    <input type="number" min="0" class="form-control" name="data[script_foog][time_distance]" value="<?= @$scriptFoog['time_distance'] ?>">
+                                                </div>
+                                                <div class="col-6">
+                                                    <label>Số lần hiển thị trong phiên</label>
+                                                    <input type="number" min="0" class="form-control" name="data[script_foog][number_displayed]" value="<?= @$scriptFoog['number_displayed'] ?>">
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="col-12 mb-3">
                                             <label>Mã Quảng Cáo Trang Thông Tin Phim</label>
-                                            <textarea class="form-control" name="data[script_fooh]"><?= un_htmlchars($cf['script_fooh']) ?></textarea>
+                                            <textarea class="form-control" name="data[script_fooh][script]"><?= $scriptFooh['script'] ?></textarea>
+                                        </div>
+                                        <div class="col-12 mb-3">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <label>Khoảng cách hiển thị giữa các phiên (phút)</label>
+                                                    <input type="number" min="0" class="form-control" name="data[script_fooh][time_distance]" value="<?= @$scriptFooh['time_distance'] ?>">
+                                                </div>
+                                                <div class="col-6">
+                                                    <label>Số lần hiển thị trong phiên</label>
+                                                    <input type="number" min="0" class="form-control" name="data[script_fooh][number_displayed]" value="<?= @$scriptFooh['number_displayed'] ?>">
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="col-12 mb-3">
                                             <label>Mã Quảng Cáo Trang Xem Phim</label>
-                                            <textarea class="form-control" name="data[script_fooj]"><?= un_htmlchars($cf['script_fooj']) ?></textarea>
+                                            <textarea class="form-control" name="data[script_fooj][script]"><?= $scriptFooj['script'] ?></textarea>
+                                        </div>
+                                        <div class="col-12 mb-3">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <label>Khoảng cách hiển thị giữa các phiên (phút)</label>
+                                                    <input type="number" min="0" class="form-control" name="data[script_fooj][time_distance]" value="<?= @$scriptFooj['time_distance'] ?>">
+                                                </div>
+                                                <div class="col-6">
+                                                    <label>Số lần hiển thị trong phiên</label>
+                                                    <input type="number" min="0" class="form-control" name="data[script_fooj][number_displayed]" value="<?= @$scriptFooj['number_displayed'] ?>">
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="col-12 mb-3">
                                             <label>Ghi Chú Đầu Trang (Có Thể Dùng HTML)</label>

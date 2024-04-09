@@ -106,26 +106,29 @@ FireWall();
             const position_floating = (document.body.clientWidth - document.getElementById("ah_wrapper").clientWidth) / 2 - 170;
 
             function createAds(info_ads = {}) {
-                let elem = document.createElement("div");
-                if (info_ads.position_name == "pop_under") {
-                    elem.addEventListener("click", function() {
-                        window.open(info_ads.href, '_blank');
-                        updateClickAds(info_ads.id);
-                        this.remove();
-                    })
-                } else {
-                    let image = document.createElement("img");
-                    elem.classList.add("hello-you");
-                    image.src = info_ads.image;
-                    image.classList.add("w-100-percent");
-                    elem.appendChild(image);
-                    elem.addEventListener("click", function() {
-                        window.open(info_ads.href, '_blank');
-                        updateClickAds(info_ads.id);
-                    })
-                }
+                if (!jQuery.isEmptyObject(info_ads)) {
+                    let elem = document.createElement("div");
 
-                return elem;
+                    if (info_ads.position_name == "pop_under") {
+                        elem.addEventListener("click", function() {
+                            window.open(info_ads.href, '_blank');
+                            updateClickAds(info_ads.id);
+                            this.remove();
+                        })
+                    } else {
+                        let image = document.createElement("img");
+                        elem.classList.add("hello-you");
+                        image.src = info_ads.image;
+                        image.classList.add("w-100-percent");
+                        elem.appendChild(image);
+                        elem.addEventListener("click", function() {
+                            window.open(info_ads.href, '_blank');
+                            updateClickAds(info_ads.id);
+                        })
+                    }
+
+                    return elem;
+                }
             }
 
             function loadAds(info_ads = {}) {
