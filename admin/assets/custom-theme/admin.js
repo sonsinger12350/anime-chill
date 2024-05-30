@@ -492,3 +492,95 @@ $('.set-trang-thai').click(function() {
         AlertSuccess(message);
     });
 });
+
+$('.clean-server').on('click', function() {
+    let server = $(this).val();
+    let name = $(this).attr('data-name');
+    
+    if (server) {
+        Swal.fire({
+            title: "Bạn Có Chắc Chắn Thực Hiện Hành Động Này",
+            icon: "warning",
+            showCancelButton: true,
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Thực Hiện",
+            cancelButtonText: "Đóng",
+        }).then(async(result) => {
+            if (result.isConfirmed) {
+                $.post('/admin/server/api', {
+                    action: 'clean-server',
+                    server,
+                    name
+                }).done(function(res) {
+                    const { code, message } = res;
+                    AlertSuccess(message);
+                });
+
+                return true;
+            }
+        });
+    }
+});
+
+$('.manager-links').off('click').on('click', function() {
+    let movie = $(this).val();
+
+    if (movie) {
+        $.post('/admin/server/api', {
+            action: 'get-server-by-movie',
+            movie
+        }).done(function(res) {
+            let modal = $('#ManagerLinkModal');
+            modal.find('#select_server').html(res.message);
+            modal.find('[name="movie_selected"]').val(movie);
+            const { code, message } = res;
+            modal.modal('show');
+        });
+        return false;
+    }
+});
+
+$('[name="select_server"]').off('change').on('change', function() {
+    let modal = $(this).closest('#ManagerLinkModal');
+    let server = $(this).val();
+    let movie = modal.find('[name="movie_selected"]').val();
+
+    if (server && movie) {
+        $.post('/admin/server/api', {
+            action: 'get-link-episode-by-server',
+            server,movie
+        }).done(function(res) {
+            modal.find('[name="list_links"]').html(res.message);
+        });
+
+        return true;
+    }
+});
+
+$('#sync-server-episode').off('click').on('click', function() {
+    let movie = $(this).val();
+
+    if (!movie) {
+        return false;
+    }
+    
+    Swal.fire({
+        title: "Bạn Có Chắc Chắn Thực Hiện Hành Động Này",
+        icon: "warning",
+        showCancelButton: true,
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Thực Hiện",
+        cancelButtonText: "Đóng",
+    }).then(async(result) => {
+        if (result.isConfirmed) {
+            $.post('/admin/server/api', {
+                action: 'sync-server-episode',
+                movie
+            }).done(function(res) {
+                AlertSuccess(res.message, true);
+            });
+    
+            return true;
+        }
+    });
+});

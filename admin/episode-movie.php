@@ -70,6 +70,7 @@ $P = CheckPages($table, "WHERE movie_id = '$movie_id' $SQL", $cf['limits'], $Num
                                     <div class="row mb-3">
                                         <div class="col-12 text mb-3">
                                         <button class="btn btn-outline-warning mt-2" id="upgrade-episode-server" data-movie="<?= $movie_id ?>" type="button">Update lại server</button>
+                                        <button class="btn btn-outline-warning mt-2" id="sync-server-episode" value="<?= $movie_id ?>" type="button">Đồng bộ server</button>
                                         </div>
                                         <div class="col-6">
                                             <h4 class="card-title">Danh Sách Episode <span class="badge bg-success">Tổng Số Episode : <span class="text-danger fw-bold"><?= number_format(get_total('episode', "WHERE movie_id = '$movie_id'")) ?></span> Episode</span></h4>
@@ -100,6 +101,7 @@ $P = CheckPages($table, "WHERE movie_id = '$movie_id' $SQL", $cf['limits'], $Num
                                                     $arr = $mysql->query("SELECT * FROM " . DATABASE_FX . "$table WHERE movie_id = '$movie_id' $SQL ORDER BY id DESC LIMIT {$P['start']},{$cf['limits']}");
                                                     while ($row = $arr->fetch(PDO::FETCH_ASSOC)) {
                                                         $stt++;
+                                                        $countServer = (empty($row['server']) || $row['server'] == 'null') ? 0 : count(json_decode($row['server'], true));
                                                 ?>
                                                         <tr id="<?= $table ?>_<?= $row['id'] ?>">
                                                             <td>
@@ -108,7 +110,7 @@ $P = CheckPages($table, "WHERE movie_id = '$movie_id' $SQL", $cf['limits'], $Num
                                                             <th scope="row"><?= $row['id'] ?></th>
                                                             <td><?= $row['ep_name'] ?></td>
                                                             <td><?= $row['ep_num'] ?></td>
-                                                            <td><?= count(json_decode($row['server'], true)) ?></td>
+                                                            <td class="count-server-episode" data-episode="<?= $row['ep_num'] ?>" data-count="<?= $countServer ?>"><?= $countServer ?></td>
                                                             <td>
                                                                 <div class="btn-group" role="group">
                                                                     <button class="btn btn-primary btn-sm" type="button" onclick="LoadFormEdit('ServerAddEpisode',<?= $row['id'] ?>);">Chỉnh Sửa</button>

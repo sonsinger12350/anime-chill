@@ -8,12 +8,12 @@ session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
 ini_set('memory_limit', '512M');
-include_once('vendor/autoload.php');
-include_once('includes/configurations.php');
-include_once('includes/Alltemplate.php');
-include_once('includes/function.php');
-include_once('includes/JSPacker.php');
-include_once('includes/capcha.php');
+require_once(__DIR__ . '/includes/configurations.php');
+require_once(__DIR__ . '/includes/Alltemplate.php');
+require_once(__DIR__ . '/includes/function.php');
+include_once(__DIR__ . '/includes/JSPacker.php');
+include_once(__DIR__ . '/includes/capcha.php');
+include_once(__DIR__ . "/vendor/autoload.php");
 //Phần Head
 $header = getallheaders();
 $x_csrf_token = (isset($header['X-CSRF-TOKEN']) ? sql_escape($header['X-CSRF-TOKEN']) : sql_escape($header['X-Csrf-Token']));

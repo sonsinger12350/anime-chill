@@ -37,12 +37,17 @@ while ($row = $arr->fetch(PDO::FETCH_ASSOC)) {
     // List Episode
     $ListEpisode .= ' <a href="' . URL . '/xem-phim/' . $Movie['slug'] . '-episode-id-' . $row['id'] . '.html" title="' . $row['ep_name'] . '" ' . $Active . '><span>' . $row['ep_name'] . '</span></a>';
 }
+
+$listServer = [];
 $arr = $mysql->query("SELECT * FROM " . DATABASE_FX . "server ORDER BY id DESC");
+
 while ($row = $arr->fetch(PDO::FETCH_ASSOC)) {
+    $listServer[$row['id']] = $row['server_name'];
     if ($row['server_player'] == 'player') {
         $SupportServer .= "{$row['server_name']},";
     }
 }
+
 if (isset($_POST['send_error'])) {
     $note = sql_escape($_POST['note']);
     if ($note && $EpisodeID && $Movie['id']) {
@@ -264,18 +269,20 @@ if ($cf['tvc_on'] == 'true') $tvc = URL . "/tvcb?url=";
                 </div>
                 <div id="list_sv" class="flex flex-ver-center margin-10" style="flex-wrap: wrap;">
                     <?php
-                    $Defult = 0;
-                    foreach (json_decode($Ep['server'], true) as $key => $value) {
-                        if ($value['server_link'] && get_total('server', "WHERE server_name = '{$value['server_name']}'") >= 1) {
-                            $Defult++;
-                            if ($Defult == 1) {
-                                $ServerDF = "startStreaming('" . ServerName($value['server_name']) . "', 1)";
-                                echo '<a href="javascript:void(0)" class="button-default bg-green" id="sv_' . ServerName($value['server_name']) . '" name="' . ServerName($value['server_name']) . '">' . $value['server_name'] . '</a>';
-                            } else {
-                                echo '<a href="javascript:void(0)" class="button-default" id="sv_' . ServerName($value['server_name']) . '" name="' . ServerName($value['server_name']) . '">' . $value['server_name'] . '</a>';
+                        $Defult = 0;
+                        $movieServer = (!empty($Ep['server']) && $Ep['server'] != 'null') ? array_column(json_decode($Ep['server'], true), 'server_link', 'server_name') : [];
+
+                        foreach ($listServer as $server) {
+                            if (!empty($movieServer[$server])) {
+                                $Defult++;
+                                if ($Defult == 1) {
+                                    $ServerDF = "startStreaming('" . ServerName($server) . "', 1)";
+                                    echo '<a href="javascript:void(0)" class="button-default bg-green" id="sv_' . ServerName($server) . '" name="' . ServerName($server) . '">' . $server . '</a>';
+                                } else {
+                                    echo '<a href="javascript:void(0)" class="button-default" id="sv_' . ServerName($server) . '" name="' . ServerName($server) . '">' . $server . '</a>';
+                                }
                             }
                         }
-                    }
                     ?>
                 </div>
                 <div id="video-player">

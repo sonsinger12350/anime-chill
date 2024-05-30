@@ -12,6 +12,27 @@
         </div>
     </div>
 </div>
+<div class="modal fade bd-example-modal-xl" id="ManagerLinkModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Manager Links</h4>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="movie_selected" value="">
+                <div class="mb-2">
+                    <label for="select_server">Chọn Server</label>
+                    <select name="select_server" id="select_server" class="form-control"></select>
+                </div>
+                <div class="mb-2">
+                    <label for="select_server">List Links</label>
+                    <textarea name="list_links" cols="30" rows="10" class="form-control" readonly></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- latest jquery-->
 <script src="<?= URL ?>/admin/assets/js/jquery-3.5.1.min.js"></script>
 <!-- Bootstrap js-->

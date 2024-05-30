@@ -21,30 +21,21 @@ FireWall();
     });
 </script>
 <?php
+    if (empty($user['vip'])) {
+        $scriptAds = json_decode($cf['script_foog'], true);
 
-    $scriptAds = json_decode($cf['script_foog'], true);
+        if (!empty($scriptAds['script'])) {
+            $activeScript = 0;
+            $canShowAds = canShowAds('script_foog', $scriptAds['time_distance'], $scriptAds['number_displayed']);
 
-    if (!empty($scriptAds['script'])) {
-        $activeScript = 0;
-        $canShowAds = canShowAds('script_foog', $scriptAds['time_distance'], $scriptAds['number_displayed']);
+            if ($canShowAds) {
+                $activeScript = 1;
+                echo un_htmlchars($scriptAds['script']);
+            }
 
-        if ($canShowAds) {
-            if (!empty($scriptAds)) {
-                if (!empty($user['vip'])) {
-                    if ($user['vip'] != 1) {
-                        $activeScript = 1;
-                        echo un_htmlchars($scriptAds['script']);
-                    }
-                } else {
-                    $activeScript = 1;
-                    echo un_htmlchars($scriptAds['script']);
-                }
+            if ($activeScript && $_SESSION['ads']['script_foog'] < $scriptAds['number_displayed']) {
+                $_SESSION['ads']['script_foog'] += 1;
             }
         }
-
-        if ($activeScript && $_SESSION['ads']['script_foog'] < $scriptAds['number_displayed']) {
-            $_SESSION['ads']['script_foog'] += 1;
-        }
     }
-    echo '<pre>';print_r($_SESSION['ads']);
 ?>

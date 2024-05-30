@@ -28,6 +28,7 @@ if ($FormEdit == "server") {
         </div>
         <div class="col-12 text-center mb-3">
             <button class="btn btn-outline-info mt-3" type="submit">Cập Nhật</button>
+            <button class="btn btn-outline-danger mt-3 clean-server" value="<?=$id?>" data-name="<?=$data['server_name']?>" type="button">Clean Server</button>
         </div>
     </form>
 <?php } else if ($FormEdit == "movie") {
@@ -39,6 +40,7 @@ if ($FormEdit == "server") {
             <button class="btn btn-outline-danger mt-2" type="button" onclick="SendDataToServer({action: 'RemoveLichChieu',MovieID: '<?= $data['id'] ?>'});">Xóa Lịch Chiếu</button>
             <button onclick="location.href = '/admin_movie/episode-movie?movie_id=<?= $data['id'] ?>'" class="btn btn-warning-gradien mt-2" type="button">Manager Episode</button>
             <button onclick="location.href = '/admin_movie/movie-lien-ket?movie_id=<?= $data['id'] ?>'" class="btn btn-primary-gradien mt-2" type="button">Thêm Liên Kết Phim</button>
+            <button class="btn btn-secondary-gradien manager-links mt-2" value="<?= $data['id'] ?>" type="button">Manager Links</button>
         </div>
         <input type="text" name="table" value="movie" style="display: none;">
         <input type="text" name="id" value="<?= $id ?>" style="display: none;">
@@ -231,7 +233,10 @@ if ($FormEdit == "server") {
         <h4 class="card-title">Chỉnh Sửa Episode <?= $data['ep_name'] ?></h4>
         <?php
         $arr = $mysql->query("SELECT * FROM " . DATABASE_FX . "server ORDER BY id DESC");
+        $listServer = [];
+
         while ($row = $arr->fetch(PDO::FETCH_ASSOC)) {
+            $listServer[$row['id']] = $row['server_name'];
             echo '<button class="btn btn-success btn-sm mt-2" style="margin-right: 10px;" id="' . ServerName($row['server_name'])  . '" type="button" onclick="AddNewServer(\'' . $row['server_name'] . '\', \'' . ServerName($row['server_name']) . '\', this)">' . $row['server_name'] . ' <i class="fa fa-plus-square"></i></button>';
         }
         ?>
@@ -246,16 +251,19 @@ if ($FormEdit == "server") {
             <?php
             $Epnum = 0;
             $sername_json = array();
-            foreach (json_decode($data['server'], true) as $key => $value) {
-                $sername_json[] = ServerName($value['server_name']);
+            $serverSelected = !empty($data['server']) && $data['server'] != 'null' ? array_column(json_decode($data['server'], true), 'server_link', 'server_name') : [];
+            foreach ($listServer as $v) {
+                if (!isset($serverSelected[$v])) continue;
+
+                $sername_json[] = ServerName($v);
             ?>
-                <div class="col-lg-12 row" id="input_<?= ServerName($value['server_name']) ?>">
+                <div class="col-lg-12 row" id="input_<?= ServerName($v) ?>">
                     <div class="col mb-3">
-                        <label>Link Server <?= $value['server_name'] ?></label>
-                        <input type="text" style="display: none;" class="form-control" name="episode[0][server][<?= $Epnum ?>][server_name]" value="<?= $value['server_name'] ?>">
-                        <input type="text" onchange="GetLink(this);" class="form-control" name="episode[0][server][<?= $Epnum ?>][server_link]" value="<?= $value['server_link'] ?>">
+                        <label>Link Server <?= $v ?></label>
+                        <input type="text" style="display: none;" class="form-control" name="episode[0][server][<?= $Epnum ?>][server_name]" value="<?= $v ?>">
+                        <input type="text" onchange="GetLink(this);" class="form-control" name="episode[0][server][<?= $Epnum ?>][server_link]" value="<?= $serverSelected[$v] ?>">
                     </div>
-                    <button class="btn btn-danger btn-xs" style="width: 20px;height: 20px;margin-top: 30px;" onclick="RemoveServer('input_<?= ServerName($value['server_name']) ?>')" type="button">Xóa</button>
+                    <button class="btn btn-danger btn-xs" style="width: 20px;height: 20px;margin-top: 30px;" onclick="RemoveServer('input_<?= ServerName($v) ?>')" type="button">Xóa</button>
                 </div>
             <?php $Epnum++;
             } ?>

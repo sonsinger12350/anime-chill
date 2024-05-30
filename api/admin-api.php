@@ -418,6 +418,145 @@ if ($action == 'loginadmin') {
 
     
     die(JsonMessage(200, "Cập Nhật Thành Công"));
+} else if ($action == 'clean-server') {
+    $table = sql_escape('table-configs');
+    $server = $_POST['server'];
+    $name = $_POST['name'];
+
+    try {
+        $sql = "SELECT `id`, `server`
+            FROM `" . DATABASE_FX . "episode`
+            WHERE `server` LIKE '%$name%' ";
+        $result = $mysql->query($sql);
+       
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $data = json_decode($row['server'], true);
+
+            if (empty($data)) continue;
+
+            $update = 0;
+
+            foreach ($data as $k => $v) {
+                if ($v['server_name'] == $name && !empty($v['server_link'])) {
+                    $update = 1;
+                    $data[$k]['server_link'] = "";
+                }
+            }
+
+            if ($update) {
+                $mysql->query("UPDATE `" . DATABASE_FX . "episode` SET `server` = '".json_encode($data)."' WHERE `id` = ".$row['id']);
+            }
+        }
+    } catch (\Throwable $th) {
+        die(JsonMessage(400, "Lỗi rồi => [$th]"));
+    }
+     
+    die(JsonMessage(200, "Cập Nhật Thành Công"));
+} else if ($action == 'get-server-by-movie') {
+    $movie = $_POST['movie'];
+
+    try {
+        $sql = "SELECT `s`.`id`, `s`.`server_name`
+            FROM `" . DATABASE_FX . "movie_server` `ms` 
+            JOIN `" . DATABASE_FX . "server` `s` ON `s`.`id` = `ms`.`server_id` 
+            WHERE `ms`.`movie_id` = $movie
+            ORDER BY `s`.`id` DESC";
+        $result = $mysql->query($sql);
+        $options = '<option value="">Chọn server</option>';
+
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $options .= '<option value="'.$row['server_name'].'">'.$row['server_name'].'</option>';
+        }
+
+    } catch (\Throwable $th) {
+        die(JsonMessage(400, "Lỗi rồi => [$th]"));
+    }
+     
+    die(JsonMessage(200, $options));
+} else if ($action == 'get-link-episode-by-server') {
+    $server = $_POST['server'];
+    $movie = $_POST['movie'];
+
+    try {
+        $sql = "SELECT `server`
+            FROM `" . DATABASE_FX . "episode`
+            WHERE `movie_id` = $movie";
+        $result = $mysql->query($sql);
+        $listLinks = "";
+
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $links = (!empty($row['server']) && $row['server'] != 'null') ? array_column(json_decode($row['server'], true), 'server_link', 'server_name') : [];
+
+            if (!empty($links[$server])) {
+                $listLinks .= $links[$server]."\n";
+            }
+            else {
+                $listLinks .= "\n";
+            }
+        }
+    } catch (\Throwable $th) {
+        die(JsonMessage(400, "Lỗi rồi => [$th]"));
+    }
+
+    die(JsonMessage(200, $listLinks));
+} else if ($action == 'sync-server-episode') {
+    $movie = $_POST['movie'];
+
+    try {
+        $listServer = [];
+
+        $resultServer = $mysql->query("SELECT `server_name` FROM `" . DATABASE_FX . "server` ORDER BY `id` DESC");
+
+        while ($rowServer = $resultServer->fetch(PDO::FETCH_ASSOC)) {
+            $listServer[$rowServer['server_name']] = $rowServer['server_name'];
+        }
+
+        $sql = "SELECT `server`, `ep_num`
+            FROM `" . DATABASE_FX . "episode`
+            WHERE `movie_id` = $movie";
+        $result = $mysql->query($sql);
+        $listUpdate = [];
+
+
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $links = (!empty($row['server']) && $row['server'] != 'null') ? array_column(json_decode($row['server'], true), 'server_link', 'server_name') : [];
+            $filterKey = [];
+
+            foreach ($links as $server => $link) {
+                if (!isset($listServer[$server])) {
+                    unset($links[$server]);
+                }
+
+                if (!in_array($server, $filterKey)) {
+                    $filterKey[] = $server;
+                }
+                else {
+                    unset($links[$server]);
+                }
+            }
+
+            $listUpdate[$row['ep_num']] = $links;
+        }
+
+        foreach ($listUpdate as $k => $v) {
+            foreach ($listServer as $v1) {
+                if (!isset($v[$v1])) {
+                    $listUpdate[$k][$v1] = '';
+                }
+            }
+
+            $serverUpdate = array_map(function ($name, $link) {
+                return ["server_name" => $name, "server_link" => $link];
+            }, array_keys($listUpdate[$k]), $listUpdate[$k]);
+
+            $sqlUpdate = "UPDATE `" . DATABASE_FX . "episode` SET `server` = '".json_encode($serverUpdate)."' WHERE `movie_id` = $movie AND `ep_num` = $k";
+            $mysql->query($sqlUpdate);
+        }
+    } catch (\Throwable $th) {
+        die(JsonMessage(400, "Lỗi rồi => [$th]"));
+    }
+
+    die(JsonMessage(200, "Đồng bộ server thành công"));
 }
 // Không Có Thằng Action Nào Trùng Hợp
 else die(HTMLMethodNot(503));
