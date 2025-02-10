@@ -348,6 +348,8 @@ function addCoin($userId, $type, $params = []) {
 function canShowAds($type, $timeDistance, $numberDisplayed) {
 	if (!empty($_COOKIE[$type]) && $_COOKIE[$type] <= Date("Y-m-d H:i:s")) {
 		setcookie($type, null, -1, '/');
+		$_SESSION['ads'][$type] = 0;
+		return 1;
 	}
 
 	if ($_SESSION['ads'][$type] == $numberDisplayed-1) {

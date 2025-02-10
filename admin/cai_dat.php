@@ -235,6 +235,21 @@ if (!$_SESSION['admin']) die(header("location:" . URL . "/admin_movie/login"));
                                             <label>Hướng Dẫn (Có Thể Dùng HTML)</label>
                                             <textarea class="form-control" name="data[huong_dan]"><?= un_htmlchars($cf['huong_dan']) ?></textarea>
                                         </div>
+                                        <?php
+                                            $tvcConfig = json_decode($cf['tvc_config'], true);
+                                        ?>
+                                        <div class="col-12 mb-3">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <label>Số lần hiển thị trong phiên (TVC)</label>
+                                                    <input type="number" min="0" class="form-control" name="data[tvc_config][number_displayed]" value="<?= @$tvcConfig['number_displayed'] ?>">
+                                                </div>
+                                                <div class="col-6">
+                                                    <label>Thời gian mỗi phiên (TVC)</label>
+                                                    <input type="number" min="0" class="form-control" name="data[tvc_config][time_distance]" value="<?= @$tvcConfig['time_distance'] ?>">
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="col-12 text-center mb-3">
                                             <button class="btn btn-outline-info" type="submit">Cập Nhật Cài Đặt</button>
                                             <button class="btn btn-outline-danger" onclick="SendDataToServer({action: 'XoaCache'});" type="button">Xóa Cache Website</button>

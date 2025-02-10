@@ -992,4 +992,63 @@ if ($Json['action'] == 'live_search') {
     $response['success'] = true;
     $response['message'] = 'Kích hoạt thành công';
     die(json_encode($response));
+} 
+else if ($Json['action'] == 'online_reward') {
+    if (empty($user)) return false;
+    if ($user['banned'] == 'true') die(json_encode(["result" => "Tài Khoản Bị Khóa", "status" => "failed"]));
+
+    $reward = [
+        '5' => 3,
+        '10' => 5,
+        '15' => 15,
+        '60' => 30,
+        '120' => 60,
+    ];
+    $now = date('Y-m-d H:i:s');
+    $sql = "SELECT * FROM `table_user` WHERE `id` = ".$user['id'];
+    $rs = $mysql->query($sql);
+    $result = $rs->fetch(PDO::FETCH_ASSOC);
+
+    if (date('Y-m-d') != date('Y-m-d', strtotime($result['last_activity']))) {
+        $mysql->update('user', "online_time = 0, last_activity = '$now'", 'id = '.$user['id']);
+        $response['success'] = false;
+        die(json_encode($response));
+    }
+
+    $online_time = $result['online_time'] + 1;
+    
+
+    if (time() - strtotime($result['last_activity']) < 60) {
+        $response['success'] = false;
+        die(json_encode($response));
+    }
+
+    $mysql->update('user', "online_time = $online_time, `last_activity` = '$now'", 'id = '.$user['id']);
+
+    if (!empty($reward[$online_time])) {
+        $reward_add = $reward[$online_time];
+        $paramsInsert = [
+			'user_id'	    =>	$user['id'],
+			'type'		    =>	'online',
+			'movie_id'	    =>	$online_time,
+			'amount'	    =>	$reward_add,
+			'created_at'	=>	date('Y-m-d')
+		];
+
+        $result['exp'] += $reward_add;
+        $result['coins'] += $reward_add;
+        $message = "Bạn được cộng $reward_add xu và $reward_add exp thưởng online $online_time phút";
+
+        $mysql->insert('history_add_coin', '`'.implode('`,`', array_keys($paramsInsert)).'`', '"'.implode('", "', $paramsInsert).'"');
+        $mysql->update('user', "coins = coins + $reward_add, exp = exp + $reward_add", 'id = '.$user['id']);
+        $mysql->insert('notice', 'user_id,content,timestap,time', "'{$user['id']}', '{$message}', '" . time() . "','" . date('Y-m-d') . "'");
+        UpdateLevel($result);
+
+        $response['success'] = true;
+        $response['message'] = $message;
+        die(json_encode($response));
+    }
+
+    $response['success'] = false;
+    die(json_encode($response));
 }

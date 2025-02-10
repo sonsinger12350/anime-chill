@@ -65,7 +65,18 @@ if (isset($_author_cookie)) {
     }
 }
 $VastPlayer = (get_total('ads', "WHERE position_name = 'vast_mp4' AND type = 'true'") >= 1 ? "'" . URL . "/player-ads.xml'" : '');
-if ($cf['tvc_on'] == 'true') $tvc = URL . "/tvcb?url=";
+$tvcConfig = !empty($cf['tvc_config']) ? json_decode($cf['tvc_config'], true) : [];
+unset($_SESSION['ads']['tvc_ads']);
+setcookie('tvc_ads', null, -1, '/');
+if (!empty($tvcConfig) && empty($user['vip'])) {
+    $activeTVC = 0;
+    $adsName = 'tvc_ads';
+    $canShowAds = canShowAds($adsName, $tvcConfig['time_distance'], $tvcConfig['number_displayed']);
+    if ($canShowAds) $activeTVC = 1;
+    if ($activeTVC && $_SESSION['ads'][$adsName] < $tvcConfig['number_displayed']) $_SESSION['ads'][$adsName] += 1;
+}
+
+if ($cf['tvc_on'] == 'true' && $activeTVC) $tvc = URL . "/tvc?url=";
 ?>
 
 <!DOCTYPE html>
