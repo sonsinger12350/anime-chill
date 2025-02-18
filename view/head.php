@@ -71,6 +71,7 @@ FireWall();
     }
     Object.freeze($user);
 </script>
+<script type="text/javascript" src="<?= URL ?>/themes/js_ob/comments.js?v=<?= time() ?>"></script>
 <script>
     var arfAsync = arfAsync || [];
 </script>

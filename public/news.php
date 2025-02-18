@@ -193,7 +193,7 @@
 			<?php } ?>
 		</script>
 		<script type="text/javascript" src="/themes/js_ob/info_movie.js?v=1.7.4"></script>
-		<script type="text/javascript" src="/themes/js_ob/comments.js?v=1.7.4"></script>
+		<script type="text/javascript" src="/themes/js_ob/comments.js?v=<?= time() ?>"></script>
 		<?= PopUnder('pop_under_info') ?>
 		<?php require_once(ROOT_DIR . '/view/footer.php'); ?>
 	</div>

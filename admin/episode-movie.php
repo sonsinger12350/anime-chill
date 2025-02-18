@@ -14,6 +14,11 @@ if (GetParam("kw")) {
 $table = 'episode';
 $CheckServer = get_total('movie_server', "WHERE movie_id = '$movie_id'");
 $P = CheckPages($table, "WHERE movie_id = '$movie_id' $SQL", $cf['limits'], $NumPage);
+
+$episodeVipBadges = [
+    'on' => '<span class="badge bg-success">On</span>',
+    'off' => '<span class="badge bg-danger">Off</span>'
+];
 ?>
 
 <!DOCTYPE html>
@@ -71,6 +76,8 @@ $P = CheckPages($table, "WHERE movie_id = '$movie_id' $SQL", $cf['limits'], $Num
                                         <div class="col-12 text mb-3">
                                         <button class="btn btn-outline-warning mt-2" id="upgrade-episode-server" data-movie="<?= $movie_id ?>" type="button">Update lại server</button>
                                         <button class="btn btn-outline-warning mt-2" id="sync-server-episode" value="<?= $movie_id ?>" type="button">Đồng bộ server</button>
+                                        <button class="btn btn-outline-primary mt-2 vip-action" data-action="on" type="button">Bật Vip</button>
+                                        <button class="btn btn-outline-primary mt-2 vip-action" data-action="off" type="button">Tắt Vip</button>
                                         </div>
                                         <div class="col-6">
                                             <h4 class="card-title">Danh Sách Episode <span class="badge bg-success">Tổng Số Episode : <span class="text-danger fw-bold"><?= number_format(get_total('episode', "WHERE movie_id = '$movie_id'")) ?></span> Episode</span></h4>
@@ -89,6 +96,7 @@ $P = CheckPages($table, "WHERE movie_id = '$movie_id' $SQL", $cf['limits'], $Num
                                                 <tr>
                                                     <th scope="col"><input class="form-check-input" id="chontatca" type="checkbox"></th>
                                                     <th scope="col">Episode ID</th>
+                                                    <th scope="col">Vip</th>
                                                     <th scope="col">Tên Episode</th>
                                                     <th scope="col">Episode Num</th>
                                                     <th scope="col">Số Server</th>
@@ -108,6 +116,7 @@ $P = CheckPages($table, "WHERE movie_id = '$movie_id' $SQL", $cf['limits'], $Num
                                                                 <input class="form-check-input" name="multi_del" type="checkbox" value="<?= $row['id'] ?>">
                                                             </td>
                                                             <th scope="row"><?= $row['id'] ?></th>
+                                                            <th scope="row"><div class="episode-vip"><?= $row['vip'] == 1 ? $episodeVipBadges['on'] : $episodeVipBadges['off'] ?></div></th>
                                                             <td><?= $row['ep_name'] ?></td>
                                                             <td><?= $row['ep_num'] ?></td>
                                                             <td class="count-server-episode" data-episode="<?= $row['ep_num'] ?>" data-count="<?= $countServer ?>"><?= $countServer ?></td>
@@ -284,6 +293,44 @@ $P = CheckPages($table, "WHERE movie_id = '$movie_id' $SQL", $cf['limits'], $Num
                                     </div>`);
 
         }
+
+        $('body').on('click', '.vip-action', function() {
+            let action = $(this).attr('data-action');
+            let checked = $('[name="multi_del"]:checked');
+            let episode = [];
+            let badges = <?= json_encode($episodeVipBadges) ?>;
+
+            if (checked.length == 0) return false;
+
+            checked.each(function() {
+                episode.push($(this).val());
+            });
+
+            $.post('/admin/server/api', {
+                "action": "episode-vip",
+                "episode": episode,
+                "vip_action": action
+            }, function(data) {
+                Swal.fire({
+                    "title": `Đã lưu thay đổi`,
+                    html: data.message,
+                    icon: 'success',
+                    confirmButtonText: 'Đồng Ý',
+                    customClass: {
+                        confirmButton: "btn btn-primary",
+                        icon: 'no-border'
+                    }
+                });
+
+                checked.each(function() {
+                    let tr = $(this).closest('tr');
+
+                    tr.find('.episode-vip').html(badges[action]);
+                });
+            })
+            
+            console.log(episode);
+        });
     </script>
 </body>
 

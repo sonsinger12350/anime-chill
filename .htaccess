@@ -53,6 +53,7 @@ RewriteRule ^admin_movie/file-manager$ ./?admin=/file-manager/ [L]
 RewriteRule ^admin_movie/news$ ./?admin=/news/ [L]
 #Author
 RewriteRule ^login$ ./?author=/login/ [L]
+RewriteRule ^login-google-callback$ ./?author=/login-google-callback [L,QSA]
 RewriteRule ^dang-xuat$ ./?author=/dang-xuat/ [L]
 RewriteRule ^dang-ky$ ./?author=/dang-ky/ [L]
 RewriteRule ^thay-doi-mat-khau$ ./?author=/change-password/ [L]
@@ -61,6 +62,7 @@ RewriteRule ^tai-khoan/nap-xu$ ./?author=/nap-xu/ [L]
 RewriteRule ^tin-nhan/view/(.*)$ ./?author=/tin-nhan/$1 [L]
 RewriteRule ^thong-bao$ ./?author=/thong-bao/ [L]   
 RewriteRule ^buy-vip-user/(.*).html$ ./?author=/buy-vip-user/&vip_package=$1 [L]
+RewriteRule ^trang-ca-nhan/(.*)$ ./?author=/trang-ca-nhan/$1 [L]
 
 #Api Http Request
 RewriteRule ^server/api$ ./?api=/api/ [L]

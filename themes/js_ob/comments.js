@@ -344,6 +344,7 @@ async function addComment(_0x4ce3cb = {}) {
                     await axios[_0x3eb2c4(0x148)](_0x319b20[_0x3eb2c4(0x18c)], {
                         'action': _0x319b20[_0x3eb2c4(0x160)],
                         'movie_id': $info_data[_0x3eb2c4(0x162)],
+                        'episode': $info_data['no_ep'],
                         'content': JSON[_0x3eb2c4(0x17f)](_content),
                         'reply_comment_id': _reply_comment_id,
                         'reply_user_id': _reply_user_id,
@@ -626,6 +627,8 @@ async function loadComments(_0x367058 = {}) {
         });
     _0x632688[_0x32ba62(0x16f)](),
         $flag['b'] = !![];
+
+    collapseComment();
 }
 async function initViewProfile(_0x2f718b = -0x99b + 0x2036 + -0x169b * 0x1) {
     var _0x5c2c28 = _0x3a5b9b,
@@ -683,3 +686,46 @@ async function initViewProfile(_0x2f718b = -0x99b + 0x2036 + -0x169b * 0x1) {
         }
     }
 }
+
+function collapseComment() {
+    $('#comments .user-comment .icon-user').each(function() {
+        let icon = $(this).find('span');
+
+        if(icon.length > limitIcon) {
+            let c = '';
+            let h = '';
+
+            icon.each(function(key, value) {
+                let html = $(this).prop('outerHTML');
+                if (key < limitIcon) c += html;
+                else h += html;
+            });
+
+            let content = c + `<span class="more-content"><span>${h}</span>&nbsp;&nbsp;<a class="more-icon" href="javascript:void(0)">${moreText}</a></span>`;
+
+            $(this).html(content);
+        }
+    });
+}
+
+var limitIcon = 5;
+var moreText = 'Xem thêm';
+var lessText = "Ẩn bớt";
+
+$(document).ready(function() {
+    collapseComment();
+    
+    $("body").on('click', '.more-icon', function(){
+        if($(this).hasClass("less")) {
+            $(this).removeClass("less");
+            $(this).html(moreText);
+        }
+        else {
+            $(this).addClass("less");
+            $(this).html(lessText);
+        }
+
+        $(this).prev().toggle();
+        return false;
+    });
+});

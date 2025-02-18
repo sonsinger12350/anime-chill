@@ -1,0 +1,106 @@
+body {
+	color: #ccc;
+}
+
+a {
+	color: #cac9c9;
+	text-decoration: none;
+}
+
+.profile .navigation .avatar {
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	padding: 20px;
+	margin-bottom: 24px;
+}
+
+.profile .navigation .avatar .img {
+	position: relative;
+	width: 100%;
+	height: 90px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+
+.profile .navigation .avatar .img img:not(.avatar-frame) {
+	width: 75px;
+	height: auto;
+	border-radius: 50%;
+}
+
+.profile .navigation .avatar .img .avatar-frame {
+	position: absolute;
+	width: 90px;
+	height: auto;
+	top: -5px;
+}
+
+.profile .navigation .avatar .profile-info {
+	width: 100%;
+	text-align: center;
+}
+
+.profile .navigation .avatar .profile-info h3 {
+	margin-bottom: 5px;
+	color: #ffffff;
+}
+
+.profile .navigation .avatar .profile-info .btn-follow i {
+	font-size: 13px;
+	margin-right: 4px;
+	color: #02d5bd;
+}
+
+.profile .tabs .nav-item .nav-link {
+	color: #fff;
+}
+
+.profile .tabs .nav-item .nav-link.active {
+	color: #000;
+}
+
+.profile .tabs .tab-content {
+	margin-top: 16px;
+}
+
+.profile .tabs .icons {
+	margin-left: 16px;
+}
+
+.profile .tabs .icons .grid {
+	display: grid;
+	grid-template-columns: repeat(1, 1fr);
+	gap: 10px;
+}
+
+.profile .tabs .icons .icon-cat {
+	display: flex;
+	gap: 8px;
+}
+
+.profile .tabs .icons .icon-cat p {
+	margin: 0;
+	width: 100px;
+	text-align: start;
+}
+
+.profile .tabs .icons .list {
+	display: flex;
+	gap: 8px;
+	width: calc(100% - 110px);
+	flex-wrap: wrap;
+}
+
+.profile .tabs .icons .list img {
+	width: 30px;
+	height: 30px;
+	object-fit: contain;
+}
+
+.profile .tabs .movies-list {
+	min-height: 576px;
+	align-items: start;
+}

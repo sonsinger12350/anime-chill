@@ -85,6 +85,7 @@ if ($Json['action'] == 'live_search') {
     $HTML_DATA .= '<div class="movies-list">';
     $HisCheck = 0;
     $page_limit = !empty($Json['limit']) ? $Json['limit'] : 9;
+    $userId = !empty($Json['user']) ? $Json['user'] : $user['id'];
 
     if (!$_author_cookie) {
         $list_id = json_decode($Json['data_follow'], true);
@@ -130,7 +131,7 @@ if ($Json['action'] == 'live_search') {
             }
         }
     } else if (isset($_author_cookie)) {
-        $arr = $mysql->query("SELECT `movie_save`, `movie_save` FROM " . DATABASE_FX . "history WHERE user_id = '{$user['id']}' ORDER BY id DESC");
+        $arr = $mysql->query("SELECT `movie_save`, `movie_save` FROM " . DATABASE_FX . "history WHERE user_id = '$userId' ORDER BY id DESC");
         $list_id = $arr->fetchAll(PDO::FETCH_KEY_PAIR);
 
         if (empty($list_id)) {
@@ -342,7 +343,7 @@ if ($Json['action'] == 'live_search') {
                                         <div class="content">'.$htmlIconUser.'' . $row['content'] . '</div>
                                         <div class="flex fs-12"> 
                                             ' . $ShowReply . '
-                                            <div> ' . RemainTime($row['timestap']) . ' </div>
+                                            <div> ' . RemainTime($row['timestap']) . (!empty($row['episode']) ? ' | Tập '.$row['episode'] : '') . '</div>
                                         </div>
                                     </div>
                                 </div>
@@ -371,6 +372,7 @@ if ($Json['action'] == 'live_search') {
         die(json_encode(["result" => "Vui Lòng Thực Hiện Sau 20s, Càng Ấn Nhiều Đợi Càng Lâu", "status" => "failed"]));
     }
     $movie_id = sql_escape($Json['movie_id']);
+    $episode = sql_escape($Json['episode'] ?? null);
     $reply_comment_id = sql_escape($Json['reply_comment_id']);
     $reply_user_id = sql_escape($Json['reply_user_id']);
     $token = sql_escape($Json['token']);
@@ -387,9 +389,30 @@ if ($Json['action'] == 'live_search') {
     }
 
     if ($reply_comment_id >= 1 && $reply_user_id >= 1) {
-        $mysql->insert('comment', 'user_id,movie_id,content,reply_comment,reply_user_id,timestap,time', "'{$user['id']}','$movie_id','$content','$reply_comment_id','$reply_user_id','" . time() . "','" . DATEFULL . "'");
-    } else $mysql->insert('comment', 'user_id,movie_id,content,timestap,time', "'{$user['id']}','$movie_id','$content','" . time() . "','" . DATEFULL . "'");
-    
+        $insert = [
+            "user_id" => $user['id'],
+            "movie_id" => $movie_id,
+            "content" => $content,
+            "reply_comment" => $reply_comment_id,
+            "reply_user_id" => $reply_user_id,
+            "timestap" => time(),
+            "time" => DATEFULL
+        ];
+    }
+    else {
+        $insert = [
+            "user_id" => $user['id'],
+            "movie_id" => $movie_id,
+            "content" => $content,
+            "timestap" => time(),
+            "time" => DATEFULL
+        ];
+    }
+
+    if (!empty($episode)) $insert['episode'] = $episode;
+
+    $mysql->insert('comment', implode(',', array_keys($insert)),"'".implode("','", $insert)."'");
+
     if (!$_SESSION['add_comments']) setcookie("add_comments", $user['nickname'], time() + 20);
 
     $User_Arr = GetDataArr("user", "id = '{$user['id']}'");
@@ -452,7 +475,7 @@ if ($Json['action'] == 'live_search') {
                         </div>
                         <div class="content">'.$htmlIconUser.' ' . $content . '</div>
                         <div class="flex fs-12"> <a href="javascript:void(0)" onclick="showFrameReplyComment(' . $User_Arr['id'] . ',\'' . $User_Arr['nickname'] . '\',' . $User_Arr['id'] . ',\'0068c15cfb8ec6a0060b94d9def64ea0\')" class="margin-r-5">Trả lời</a>
-                            <div> 0 Phút Trước </div>
+                            <div> 0 Phút Trước '. (!empty($episode) ? '| Tập '.$episode : '') .' </div>
                         </div>
                     </div>
                 </div>
@@ -489,7 +512,8 @@ if ($Json['action'] == 'live_search') {
         $quote = $Profile['quote'];
     } else $quote = "Thanh Niên Này Chưa Cập Nhật Châm Ngôn Sống";
 
-    $HTMLProfile = '<div class="flex flex-hozi-center border-style-2" style="">
+    $HTMLProfile = '<div class="align-center margin-b-10"><a href="/trang-ca-nhan/' . $user_id . '" class="btn-grad">Xem trang cá nhân</a></div>
+                    <div class="flex flex-hozi-center border-style-2" style="">
                     <div class="avatar flex flex-column">
                         <div class="avatar-img">
                             <img class="avatar-image" src="' . $Profile['avatar'] . '">
@@ -664,7 +688,7 @@ if ($Json['action'] == 'live_search') {
                 $mysql->delete('comment', "user_id = '{$row['user_id']}'");
             }
             $HTML .= '<li style="margin-bottom: 10px;">
-                        <div class="boxchat-images">
+                        <div class="boxchat-images" onclick="initViewProfile(' . $row['user_id'] . ')">
                             <img class="avatar" src="' . $User_Arr['avatar'] . '" width="100" height="100" alt="' . $User_Arr['nickname'] . '">
                             <img class="avatar-frame" src="'.getIconStoreActive($User_Arr['id'], 'khung-vien').'">
                         </div>
@@ -715,7 +739,7 @@ if ($Json['action'] == 'live_search') {
             <li class="home-rank">
                 <div class="flex flex-hozi-center" style="padding: 10px 0px; border-bottom: 1px solid;">
                     <div class="stt-rank">
-                        <div class="top-avatar">
+                        <div class="top-avatar" onclick="initViewProfile(' . $row['id'] . ')">
                             <img class="avatar" src="' . $row['avatar'] . '" width="100" height="100" alt="' . $row['nickname'] . '">
                             <img class="avatar-frame" src="'.getIconStoreActive($row['id'], 'khung-vien').'">
                         </div>
@@ -992,8 +1016,7 @@ if ($Json['action'] == 'live_search') {
     $response['success'] = true;
     $response['message'] = 'Kích hoạt thành công';
     die(json_encode($response));
-} 
-else if ($Json['action'] == 'online_reward') {
+} else if ($Json['action'] == 'online_reward') {
     if (empty($user)) return false;
     if ($user['banned'] == 'true') die(json_encode(["result" => "Tài Khoản Bị Khóa", "status" => "failed"]));
 
@@ -1050,5 +1073,36 @@ else if ($Json['action'] == 'online_reward') {
     }
 
     $response['success'] = false;
+    die(json_encode($response));
+} else if ($Json['action'] == 'follow_user') {
+    if (empty($user)) return false;
+    if ($user['banned'] == 'true') die(json_encode(["result" => "Tài Khoản Bị Khóa", "status" => "failed"]));
+    if (empty($Json['user_id']))  die(json_encode(["result" => "Có lỗi xảy ra", "status" => "failed"]));
+
+    $table = 'follow';
+    $to = $Json['user_id'];
+
+    $arr = $mysql->query("SELECT id FROM " . DATABASE_FX . "$table WHERE `from` = {$user['id']} AND `to` = $to");
+    $data = $arr->fetch(PDO::FETCH_ASSOC);
+
+    if (empty($data)) {
+        $paramsInsert = [
+            'from' => $user['id'],
+            'to' => $to
+        ];
+        $mysql->insert($table, '`'.implode('`,`', array_keys($paramsInsert)).'`', '"'.implode('", "', $paramsInsert).'"');
+
+        $message = 'Theo dõi thành công';
+    }
+    else {
+        $mysql->delete($table, "id = '{$data['id']}'");
+
+        $message = 'Hủy theo dõi thành công';
+    }
+
+    $response['success'] = true;
+    $response['message'] = 'Hủy theo dõi thành công';
+    $response['action'] = empty($data) ? 'follow' : 'unfollow';
+    $response['follow'] = getTotalFollow($to);
     die(json_encode($response));
 }

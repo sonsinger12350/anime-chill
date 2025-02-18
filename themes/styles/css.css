@@ -101,6 +101,10 @@ div#view-profile>div>div>div {
     box-shadow: 0 0 4px 2px
 }
 
+#view-profile .flex-space-auto .color-white {
+    cursor: pointer;
+}
+
 .modal,
 #view-profile,
 #middle-box-screen {
@@ -3358,4 +3362,64 @@ input:checked+.slider:before {
 
 .user-figure img.mat-na-default {
 	z-index: 7;
+}
+
+#comments .user-comment .icon-user .more-content span:not([data-tooltip]) {
+	display: none;
+}
+
+#comments .user-comment .icon-user .more-content span:not(.more-icon) {
+	color: #ccc;
+}
+
+#comments .user-comment .icon-user .more-icon {
+	text-decoration: none;
+	color: #00B38F;
+	display: inline !important;
+	font-size: 12px;
+}
+
+.info-movie .list_episode .list-item-episode,
+.watching-movie .list-item-episode {
+    overflow: visible;
+}
+
+.info-movie .list_episode .list-item-episode a,
+.watching-movie .list_episode .list-item-episode a {
+    position: relative;
+}
+
+.info-movie .list_episode .list-item-episode a .vip,
+.watching-movie .list_episode .list-item-episode a .vip {
+    position: absolute;
+    top: -8px;
+    right: 0px;
+    padding: 2px 5px;
+    font-size: 10px;
+    color: #000;
+    background-color: #ffa400;
+    border: 1px solid #ccc;
+    border-top-right-radius: 8px;
+    border-bottom-left-radius: 8px;
+    z-index: 1;
+}
+
+.watching-movie #need-vip {
+    padding-top: 5%;
+    padding-bottom: 50%;
+    text-align: center;
+}
+
+.watching-movie #need-vip p {
+    color: #ffa400;
+}
+
+.watching-movie #need-vip a {
+    display: block;
+    width: max-content;
+    margin: 0 auto;
+    margin-top: 16px;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #fff;
 }

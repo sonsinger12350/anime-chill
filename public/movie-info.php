@@ -40,7 +40,7 @@ $statut = ($Movie['loai_phim'] == 'Phim Lẻ' ? "{$Movie['movie_duration']} Phú
     <meta property="og:locale" content="vi_VN" />
     <meta name="robots" content="index, follow, noodp">
     <meta property="fb:app_id" content="<?= $cf['fb_app_id'] ?>" />
-    <link href="<?= URL ?>/themes/styles/css.css?v=1.4.0" rel="stylesheet" />
+    <link href="<?= URL ?>/themes/styles/css.css?v=<?= time() ?>" rel="stylesheet" />
     <script src="https://polyfill.io/v3/polyfill.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <link href="//cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
@@ -229,6 +229,7 @@ $statut = ($Movie['loai_phim'] == 'Phim Lẻ' ? "{$Movie['movie_duration']} Phú
                                 while ($row = $arr->fetch(PDO::FETCH_ASSOC)) { ?>
                                     <a href="<?= URL ?>/xem-phim/<?= $Movie['slug'] ?>-episode-id-<?= $row['id'] ?>.html" title="<?= $row['ep_name'] ?>">
                                         <span><?= $row['ep_name'] ?></span>
+                                        <?= $row['vip'] == 1 ? '<span class="vip">VIP</span>' : '' ?>
                                     </a>
                                 <?php } ?>
                             </div>
@@ -326,7 +327,7 @@ $statut = ($Movie['loai_phim'] == 'Phim Lẻ' ? "{$Movie['movie_duration']} Phú
             <?php } ?>
         </script>
         <script type="text/javascript" src="/themes/js_ob/info_movie.js?v=1.7.4"></script>
-        <script type="text/javascript" src="/themes/js_ob/comments.js?v=1.7.4"></script>
+        <script type="text/javascript" src="/themes/js_ob/comments.js?v=<?= time() ?>"></script>
         <?= PopUnder('pop_under_info') ?>
         <?php require_once(ROOT_DIR . '/view/footer.php'); ?>
         <?php require_once(ROOT_DIR . '/view/footer-movie-info.php'); ?>

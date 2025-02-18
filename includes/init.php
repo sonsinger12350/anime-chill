@@ -366,3 +366,24 @@ function canShowAds($type, $timeDistance, $numberDisplayed) {
 
 	return 1;
 }
+
+function getTotalFollow($userId) {
+	if (empty($userId)) return 0;
+
+	global $mysql;
+
+	$sql = "SELECT COUNT(*) FROM `table_follow` WHERE `to` = $userId";
+	$result = $mysql->query($sql);
+	return $result->fetchColumn();
+}
+
+function isFollowed($userId) {
+	if (empty($userId)) return false;
+
+	global $mysql, $user;
+
+	$sql = "SELECT `id` FROM `table_follow` WHERE `from` = {$user['id']} AND `to` = $userId";
+	$result = $mysql->query($sql);
+
+	return !empty($result->fetchColumn()) ? true : false;
+} 

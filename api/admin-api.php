@@ -557,6 +557,20 @@ if ($action == 'loginadmin') {
     }
 
     die(JsonMessage(200, "Đồng bộ server thành công"));
+} else if ($action == 'episode-vip') {
+    $episode = $_POST['episode'];
+    $vip_action = $_POST['vip_action'] == 'on' ? 1 : 0;
+
+    if (empty($episode)) die(JsonMessage(400, "Lỗi rồi"));
+
+    try {
+        $sqlUpdate = "UPDATE `" . DATABASE_FX . "episode` SET `vip` = $vip_action  WHERE `id` IN (". implode(",", $episode) .")";
+        $mysql->query($sqlUpdate);
+    } catch (\Throwable $th) {
+        die(JsonMessage(400, "Lỗi rồi => [$th]"));
+    }
+
+    die(JsonMessage(200, "Đã lưu thay đổi"));
 }
 // Không Có Thằng Action Nào Trùng Hợp
 else die(HTMLMethodNot(503));
