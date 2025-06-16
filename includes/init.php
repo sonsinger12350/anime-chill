@@ -386,4 +386,39 @@ function isFollowed($userId) {
 	$result = $mysql->query($sql);
 
 	return !empty($result->fetchColumn()) ? true : false;
-} 
+}
+
+function getOptionsDepositCard() {
+	return [
+		'card_type' => [
+			'Viettel',
+			'Vinaphone',
+			'Mobiphone',
+			'Vietnammobile'
+		],
+		'card_value' => [
+			'10.000',
+			'20.000',
+			'30.000',
+			'50.000',
+			'100.000',
+			'200.000',
+			'300.000',
+			'500.000'
+		],
+		'status' => [
+			'Processing' => [
+				'text' => 'Đang xử lý',
+				'color' => 'warning'
+			],
+			'Cancel' => [
+				'text' => 'Hủy',
+				'color' => 'danger'
+			],
+			'Success' => [
+				'text' => 'Thành công',
+				'color' => 'success'
+			],
+		],
+	];
+}

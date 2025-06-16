@@ -82,6 +82,17 @@
                         </ul>
                     </li>
                     <li class="sidebar-list">
+                        <?php
+                            $countCard = get_total('the_nap', "WHERE seen = 0");
+                            if ($countCard > 0) $countCard = '<span class="text-danger">(' . $countCard . ')</span>';
+                            else $countCard = '';
+                        ?>
+                        <a class="sidebar-link sidebar-title link-nav" href="<?= URL ?>/admin_movie/the_nap">
+                            <i class="fa fa-smile-o fw-bold fs-6 text-primary"></i>
+                            <span>Quản Lý Thẻ Nạp <?= $countCard ?></span>
+                        </a>
+                    </li>
+                    <li class="sidebar-list">
                         <a class="sidebar-link sidebar-title link-nav" href="<?= URL ?>/admin_movie/report">
                             <i class="fa fa-smile-o fw-bold fs-6 text-primary"></i>
                             <span>Quản Lý Báo Lỗi</span>

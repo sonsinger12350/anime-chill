@@ -51,6 +51,7 @@
 	$listItemActive = listUserItemActive($user['id']);
 	$listItemIdActive = listUserItemActive($user['id'], 'get-id');
 	$listIconUserActive = listUserIconActive($user['id']);
+	$depositCardOptions = getOptionsDepositCard();
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -127,6 +128,11 @@
 							<li class="nav-item menu-item hvr-sweep-to-right">
 								<a class="nav-link" href="#tab-deposit" data-bs-toggle="tab">
 									<i class="fa-solid fa-cart-plus"></i> Nạp Xu
+								</a>
+							</li>
+							<li class="nav-item menu-item hvr-sweep-to-right">
+								<a class="nav-link" href="#tab-deposit-card-history" data-bs-toggle="tab">
+									<i class="fa-solid fa-file-invoice-dollar"></i> Lịch sử nạp thẻ
 								</a>
 							</li>
 							<li class="nav-item menu-item hvr-sweep-to-right">
@@ -308,8 +314,39 @@
 									<i class="fas fa-coins"></i> Thẻ Cào
 								</div>
 								<div class="alert-deposit mb-3">
-									<i class="fa-solid fa-circle-info"></i> Nạp xu bằng thẻ cào thủ công qua fanpge! (1.000đ = 1.000 xu)
+									<i class="fa-solid fa-circle-info"></i> Thời gian nhận được xự khi nạp bằng thẻ cảo có thể bị chậm trẻ do admin không thể hoạt động 24/24, khoảng thời gian nhận được xu nhanh nhất khi nạp thể vào lúc: 10h -> 14h và 18h -> 00h. (Thời gian nhận xu không quá 24h).
 								</div>
+								<form action="" method="POST" id="form-deposit-by-card" novalidate>
+									<div class="alert alert-danger d-none"></div>
+									<div class="alert alert-success d-none"></div>
+									<div class="form-group mb-3">
+										<label for="card_type" class="mb-1">Loại thẻ</label>
+										<select name="card_type" id="card_type" class="form-control" required>
+											<?php foreach ($depositCardOptions['card_type'] as $option): ?>
+												<option value="<?= $option ?>"><?= $option ?></option>
+											<?php endforeach; ?>
+										</select>
+									</div>
+									<div class="form-group mb-3">
+										<label for="card_value" class="mb-1">Mệnh giá (chọn sai mệnh giá nhận 50% xu)</label>
+										<select name="card_value" id="card_value" class="form-control" required>
+											<?php foreach ($depositCardOptions['card_value'] as $option): ?>
+												<option value="<?= $option ?>"><?= $option ?></option>
+											<?php endforeach; ?>
+										</select>
+									</div>
+									<div class="form-group mb-3">
+										<label for="card_code" class="mb-1">Mã thẻ</label>
+										<input type="text" name="card_code" id="card_code" class="form-control" required>
+									</div>
+									<div class="form-group mb-3">
+										<label for="card_serial" class="mb-1">Serial</label>
+										<input type="text" name="card_serial" id="card_serial" class="form-control" required>
+									</div>
+									<div class="text-center">
+										<button type="submit" class="btn btn-danger">Gửi thẻ</button>
+									</div>
+								</form>
 								<div class="flex flex-wrap flex-1">
                                 <a href="https://www.messenger.com/t/hhchina/" class="padding-1-1 fs-1 button-default fw-1 fs-1 flex flex-hozi-center bg-lochinvar" style="background: #337ab7;" title="Xem Ngay"><span style="font-size: 14px;">Nạp bằng thẻ cào tại đây!</span></a>
                                 </div>
@@ -341,6 +378,25 @@
 									</div>
 									<div id="deposit-checkout"></div>
 								</form>
+							</div>
+						</div>
+						<div class="tab-pane fade" id="tab-deposit-card-history">
+							<h4 class="tab-title">Lịch sử nạp thẻ</h4>
+							<div class="tab-body">
+								<table class="table">
+									<thead>
+										<tr>
+											<th>STT</th>
+											<th>Ngày gửi</th>
+											<th>Loại thẻ</th>
+											<th>Mệnh giá</th>
+											<th>Serial</th>
+											<th>Mã thẻ</th>
+											<th>Trạng thái</th>
+										</tr>
+									</thead>
+									<tbody></tbody>
+								</table>
 							</div>
 						</div>
 						<div class="tab-pane fade" id="tab-update-profile">
@@ -1182,6 +1238,100 @@
 		})
 		.catch(function(error) {
 			console.error(error);
+		});
+	});
+
+	$('#form-deposit-by-card').on('submit', function() {
+		if (!validateFormDepositByCard()) return false;
+		let form = $(this);
+		form.find('.alert-danger').addClass('d-none');
+		form.find('.alert-success').addClass('d-none');
+
+		axios.post('/server/api', {
+			'action': 'deposit_card',
+			'token': $dt.token,
+			'data': form.serialize(),
+		}).then(function(response) {
+			if (response.data.success) {
+				form.find('.alert-success').html(response.data.message);
+				form.find('.alert-success').removeClass('d-none');
+				form.find('input').val('');
+
+				setTimeout(function() {
+					form.find('.alert-success').addClass('d-none');
+				}, 4000);
+			}
+			else {
+				form.find('.alert-danger').html(response.data.message);
+				form.find('.alert-danger').removeClass('d-none');
+			} 
+		}).catch(function(error) {
+			alert('Đã có lỗi xảy ra, vui lòng thử lại sau');
+		});
+
+		return false;
+	});
+
+	function validateFormDepositByCard() {
+		let form = $('#form-deposit-by-card');
+		let isValid = true;
+		let cardCode = form.find('[name="card_code"]');
+		let cardSerial = form.find('[name="card_serial"]');
+		let regex = /^[a-zA-Z0-9]+$/;
+
+		form.find('[required]').each(function () {
+			if (!$(this).val()) {
+				isValid = false;
+				$(this).addClass('is-invalid');
+			}
+			else {
+				$(this).removeClass('is-invalid');
+			}
+		});
+
+		if (!isValid) {
+			form.find('.alert-danger').html("Vui lòng điền đầy đủ thông tin!");
+			form.find('.alert-danger').removeClass('d-none');
+			return false;
+		}
+		else {
+			form.find('.alert-danger').html('');
+			form.find('.alert-danger').addClass('d-none');
+		}
+
+		if (!regex.test(cardCode.val())) {
+			cardCode.addClass('is-invalid');
+			form.find('.alert-danger').html("Mã thẻ không được để khoảng trống hoặc ký tự đặc biệt.");
+			form.find('.alert-danger').removeClass('d-none');
+			return false;
+		}
+		else {
+			cardCode.removeClass('is-invalid');
+		};
+
+		if (!regex.test(cardSerial.val())) {
+			cardSerial.addClass('is-invalid');
+			form.find('.alert-danger').html("Serial không được để khoảng trống hoặc ký tự đặc biệt.");
+			form.find('.alert-danger').removeClass('d-none');
+			return false;
+		}
+		else {
+			cardSerial.removeClass('is-invalid');
+		};
+
+		return true;
+	}
+
+	$('body').on('click', '[href="#tab-deposit-card-history"]', function() {
+		axios.post('/server/api', {
+			'action': 'load_deposit_card_history',
+			'token': $dt.token
+		}).then(function(response) {
+			if (response.data.success) {
+				$('#tab-deposit-card-history .tab-body tbody').html(response.data.content);
+			}
+		}).catch(function(error) {
+			alert('Đã có lỗi xảy ra, vui lòng thử lại sau');
 		});
 	});
 </script>

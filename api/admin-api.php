@@ -571,6 +571,23 @@ if ($action == 'loginadmin') {
     }
 
     die(JsonMessage(200, "Đã lưu thay đổi"));
+} else if ($action == 'updateDepositCard') {
+    if (empty($_POST['id']) || empty($_POST['status'])) {
+        die(JsonMessage(400, "Thiếu thông tin cần thiết"));
+    }
+
+    if ($_POST['status'] == 'Success') {
+        $update = "status = 'Success', note = ''";
+    }
+    else {
+        if (empty($_POST['note'])) {
+            die(JsonMessage(400, "Vui lòng nhập lý do hủy thẻ nạp"));
+        }
+        $update = "status = 'Cancel', note = '" . sql_escape($_POST['note']) . "'";
+    }
+
+    $mysql->update('the_nap', $update, "id = {$_POST['id']}");
+    die(JsonMessage(200, "Cập Nhật Thành Công"));
 }
 // Không Có Thằng Action Nào Trùng Hợp
 else die(HTMLMethodNot(503));

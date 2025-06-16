@@ -1105,4 +1105,77 @@ if ($Json['action'] == 'live_search') {
     $response['action'] = empty($data) ? 'follow' : 'unfollow';
     $response['follow'] = getTotalFollow($to);
     die(json_encode($response));
+} else if ($Json['action'] == 'deposit_card') {
+    if (empty($user)) return false;
+    if ($user['banned'] == 'true') die(json_encode(["message" => "Tài Khoản Bị Khóa", "success" => 0]));
+
+    $table = 'the_nap';
+    $params = [];
+    parse_str($Json['data'], $params);
+
+    if (empty($params['card_type']) || empty($params['card_value']) || empty($params['card_code']) || empty($params['card_serial']))
+    die(json_encode(["message" => "Vui lòng nhập đầy đủ dữ liệu", "success" => 0]));
+
+    $arr = $mysql->query("SELECT id 
+        FROM " . DATABASE_FX . "$table 
+        WHERE `card_type` = '{$params['card_type']}'
+        AND (`card_code` = '{$params['card_code']}' OR `card_serial` = '{$params['card_serial']}')
+    ");
+    $data = $arr->fetch(PDO::FETCH_ASSOC);
+
+    if (!empty($data)) die(json_encode(["message" => "Thẻ này đã được sử dụng, vui lòng gửi lại mã thẻ khác", "success" => 0]));
+
+    $paramsInsert = [
+        'user_id'       => $user['id'],
+        'card_type'     => $params['card_type'],
+        'card_value'    => $params['card_value'],
+        'card_code'     => $params['card_code'],
+        'card_serial'   => $params['card_serial'],
+        'status'        => 'Processing',
+    ];
+    $mysql->insert($table, '`'.implode('`,`', array_keys($paramsInsert)).'`', '"'.implode('", "', $paramsInsert).'"');
+
+    $response['success'] = 1;
+    $response['message'] = 'Gửi thẻ thành công';
+    die(json_encode($response));
+} else if ($Json['action'] == 'load_deposit_card_history') {
+    if (empty($user)) return false;
+    if ($user['banned'] == 'true') die(json_encode(["message" => "Tài Khoản Bị Khóa", "success" => 0]));
+
+    $table = "the_nap";
+
+    if (get_total($table, "WHERE user_id = {$user['id']}") < 1) die(json_encode(["content" => '<tr><td colspan="7" align="center">Không có dữ liệu</td></tr>', "success" => 1]));
+
+    $depositCardOptions = getOptionsDepositCard();
+    $arr = $mysql->query("SELECT * FROM " . DATABASE_FX . "$table  WHERE `user_id` = {$user['id']}");
+    $content = '';
+    $count = 0;
+
+    while ($row = $arr->fetch(PDO::FETCH_ASSOC)) {
+        $count++;
+        $status = $depositCardOptions['status'][$row['status']];
+
+        if ($row['status'] == 'Cancel') {
+            $status = '<span class="text-' . $status['color'] . '" data-tooltip="' . $row['note'] . '">' . $status['text'] . ' <i class="fa-solid fa-circle-info"></i></span>';
+        }
+        else {
+            $status = '<span class="text-' . $status['color'] . '">' . $status['text'] . $note .' </span>';
+        }
+
+        $content .= '
+            <tr>
+                <td>'.$count.'</td>
+                <td>'.$row['created_at'].'</td>
+                <td>'.$row['card_type'].'</td>
+                <td>'.$row['card_value'].' Xu</td>
+                <td>'.$row['card_serial'].'</td>
+                <td>'.$row['card_code'].'</td>
+                <td>'.$status.'</td>
+            </tr>
+        ';
+    }
+
+    $response['success'] = 1;
+    $response['content'] = $content;
+    die(json_encode($response));
 }

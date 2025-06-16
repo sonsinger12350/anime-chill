@@ -341,7 +341,8 @@ a {
 	margin-bottom: 16px;
 }
 
-.profile .info .tab-content #tab-deposit #form-deposit .form-group label {
+.profile .info .tab-content #tab-deposit #form-deposit .form-group label,
+.profile .info .tab-content #tab-deposit #form-deposit-by-card .form-group label {
 	font-weight: 500;
 	color: #ff9393;
 }
@@ -690,6 +691,12 @@ ul.list-film {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+}
+
+#tab-deposit-card-history .table th,
+#tab-deposit-card-history .table td {
+	background-color: unset;
+	color: #fff;
 }
 
 @media (max-width: 991px) {
