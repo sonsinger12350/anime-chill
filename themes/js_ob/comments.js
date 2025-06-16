@@ -708,9 +708,16 @@ function collapseComment() {
     });
 }
 
-var limitIcon = 5;
+var limitIcon;
 var moreText = 'Xem thêm';
 var lessText = "Ẩn bớt";
+
+if (window.innerWidth > 768) { 
+    limitIcon = 5; // PC
+}
+else { 
+    limitIcon = 10; // Mobile
+}
 
 $(document).ready(function() {
     collapseComment();

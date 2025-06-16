@@ -1,6 +1,41 @@
 <?php
 if (!defined('MovieAnime')) die("You are illegally infiltrating our website");
 FireWall();
+
+$adBlockContent = [
+    'ab' => [
+        'title' => 'AdBlock',
+        'content' => '
+            <p>1. Trong phần tiện ích mở rộng của trình duyệt ở góc trên bên phải màn hình, nhấp vào biểu tượng AdBlock <img src="assets\adblock-image\ab_icon.svg">. (Bạn có thể thấy một số nhỏ che một phần biểu tượng.)</p>
+            <p>2. Chọn <b>không chạy trên các trang trên trang web này</b>.</p>
+            <p>3. Trong hộp thoại Không chạy AdBlock trên các trang web sau, chọn <b>Loại trừ</b>. Biểu tượng AdBlock sau đó sẽ đổi thành hình ảnh "ngón tay cái hướng lên".</p>
+        '
+    ],
+    'abp' => [
+        'title' => 'AdBlock Plus',
+        'content' => '
+            <p>1. Trong phần tiện ích mở rộng của trình duyệt ở góc trên bên phải màn hình, nhấp vào biểu tượng Adblock Plus <img src="assets\adblock-image\abp_icon.svg">. (Bạn có thể thấy một số nhỏ che một phần biểu tượng.)</p>
+            <p>2. Nhấp vào biểu tượng Nguồn <img src="assets\adblock-image\abp_power_icon.svg"> và trượt sang trái.</p>
+            <p>3. Nhấp vào nút <b>Làm mới</b>.</p>
+        '
+    ],
+    'uo' => [
+        'title' => 'uBlock Origin',
+        'content' => '
+            <p>1. Trong phần tiện ích mở rộng của trình duyệt ở góc trên bên phải màn hình, nhấp vào biểu tượng uBlock Origin <img src="assets\adblock-image\uo_icon.svg">. (Bạn có thể thấy một số nhỏ che một phần biểu tượng.)</p>
+            <p>2. Nhấp vào nút Nguồn <img src="assets\adblock-image\uo_power_icon.svg">. Sau đó, nút này sẽ chuyển sang màu xám, nghĩa là quảng cáo không còn bị chặn trên trang web đó nữa.</p>
+            <p>3. Nhấp vào nút Làm mới <img src="assets\adblock-image\uo_refresh_icon.svg"></p>
+        '
+    ],
+    'other' => [
+        'title' => 'Khác',
+        'content' => '
+            <p>1. Nhấp vào biểu tượng tiện ích mở rộng chặn quảng cáo được cài đặt trên trình duyệt của bạn.Bạn thường có thể tìm thấy biểu tượng này ở góc trên bên phải của màn hình. Có thể bạn đã cài đặt nhiều hơn 1 trình chặn quảng cáo.</p>
+            <p>2. Làm theo hướng dẫn để tắt trình chặn quảng cáo trên trang web bạn muốn xem.Bạn có thể phải chọn một tùy chọn menu hoặc nhấp vào một nút.</p>
+            <p>3. Làm theo lời nhắc hoặc nhấp vào nút Làm mới/Tải lại trên trình duyệt của bạn để làm mới trang.</p>
+        '
+    ]
+];
 ?>
 <div class="vip_user" data-vip="<?= $user['vip'] ?? 0 ?>"> </div>
 <script>
@@ -529,3 +564,315 @@ if (!empty($user['vip'])) {
     echo un_htmlchars($cf['script_footer']);
 }
 ?>
+
+<style>
+    #detect-adblock-modal, #introduction-modal {
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 24px;
+    }
+
+    #detect-adblock-modal .modal-dialog {
+        padding: 0px;
+    }
+
+    #detect-adblock-modal .modal-body {
+        text-align: center;
+    }
+
+    #detect-adblock-modal .modal-body .close-btn, 
+    #introduction-modal .modal-body .close-btn {
+        margin-left: auto;
+        border-radius: 50%;
+        height: 20px;
+        width: 20px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+    #detect-adblock-modal .modal-body .logo-web {
+        width: 60%;
+        margin-bottom: 16px;
+        margin-top: 8px;
+    }
+
+    #detect-adblock-modal .modal-body h4 {
+        margin-bottom: 16px;
+        font-size: 18px;
+    }
+
+    #detect-adblock-modal .modal-body p {
+        font-size: 13px;
+        margin-bottom: 16px;
+        font-weight: 500;
+    }
+
+    .modal-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1050;
+        width: 100vw;
+        height: 100vh;
+        background-color: #000;
+        opacity: 0;
+        transition: opacity .15s linear;
+    }
+
+    .modal-backdrop:not(.show) {
+        z-index: -1;
+    }
+
+    .modal-backdrop.show {
+        opacity: 0.5;
+    }
+
+    #introduction-modal .nav-tabs {
+        display: flex;
+        flex-wrap: wrap;
+        padding-left: 0;
+        margin-bottom: 0;
+        list-style: none;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    #introduction-modal .nav-tabs .nav-link {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        padding: .5rem 1rem 0 1rem;
+        color: #e9e9e9;
+        text-decoration: none;
+        transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out;
+        margin-bottom: -1px;
+        background: 0 0;
+        border: 1px solid transparent;
+        border-top-left-radius: .25rem;
+        border-top-right-radius: .25rem;
+        font-size: 14px;
+        font-weight: 400;
+    }
+
+    #introduction-modal .nav-tabs .nav-link span {
+        border-radius: 10px 10px 0 0;
+        height: 4px;
+        width: 100%;
+    }
+
+    #introduction-modal .nav-tabs .nav-link.active {
+        color: #0d6efd;
+    }
+
+    #introduction-modal .nav-tabs .nav-link.active span {
+        background-color: #1a73e8;
+    }
+
+    #introduction-modal .nav-tabs .nav-link .icon {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+    }
+
+    #introduction-modal .nav-tabs .nav-link i.icon {
+        background-color: #f1f3f4;
+        border-radius: 50%;
+        color: #5f6368;
+        display: inline-block;
+        font-size: 35px;
+        height: 40px;
+        line-height: 20px;
+        margin-bottom: 2px;
+        width: 40px;
+    }
+
+    #introduction-modal .tab-content {
+        margin-top: 16px;
+    }
+
+    #introduction-modal .tab-content .content {
+        display: none;
+        max-height: 300px;
+        overflow: auto;
+        padding-top: 24px;
+    }
+
+    #introduction-modal .tab-content .content.active {
+        display: block;
+    }
+
+    #introduction-modal .tab-content .content .content-image {
+        width: 400px;
+        height: 92px;
+        object-fit: cover;
+    }
+
+    #introduction-modal .tab-content .content .introdution {
+        padding: 16px;
+    }
+
+    #introduction-modal .tab-content .content .introdution p {
+        color: #e9e9e9;
+        font-size: 16px;
+        font-weight: 500;
+        text-align: left;
+        margin-bottom: 8px;
+    }
+
+    #introduction-modal .tab-content .content .introdution p img {
+        width: 20px;
+        height: 20px;
+        object-fit: cover;
+    }
+
+    @media (max-width: 576px) {
+        #detect-adblock-modal,
+        #introduction-modal {
+            max-width: 90%;
+            width: 90%;
+        }
+
+        #introduction-modal .nav-tabs .nav-item {
+            flex: 1;
+        }
+
+        #introduction-modal .tab-content .content .content-image {
+            width: 95%;
+            height: auto;
+        }
+    }
+</style>
+<div class="modal fade" id="detect-adblock-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button type="button" class="close close-btn" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <img src="<?= $cf['logo'] ?>" alt="logo-web" class="logo-web">
+                <h4>Có vẻ bạn đang sử dụng trình chặn quảng cáo</h4>
+                <p>Website chúng mình duy trì nhờ kinh phí kiếm được từ quảng cáo, bạn vui lòng tắt trình chặn quảng cáo để tiếp tục xem phim</p>
+                <button class="btn btn-primary btn-grad show-introduction">Bỏ chặn quảng cáo</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="introduction-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button type="button" class="close close-btn" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <ul class="nav nav-tabs">
+                    <?php foreach ($adBlockContent as $k => $v): ?>
+                        <li class="nav-item">
+                            <a class="nav-link <?= $k == 'ab' ? 'active' : '' ?>" href="javascript:void(0)" data-tab="<?= $k ?>">
+                                <?php if ($k == 'other'): ?>
+                                    <i class="icon">...</i>
+                                <?php else: ?>
+                                    <img src="assets\adblock-image\<?= $k ?>_icon.svg" alt="<?= $k ?>_icon" class="icon">
+                                <?php endif; ?>
+
+                                <?= $v['title'] ?>
+                                <span></span>
+                            </a>
+                        </li>
+                    <?php endforeach ?>
+                </ul>
+                <div class="tab-content">
+                    <?php foreach ($adBlockContent as $k => $v): ?>
+                        <div class="content <?= $k ?> <?= $k == 'ab' ? 'active' : '' ?>">
+                            <?php if ($k != 'other'): ?>
+                                <img src="assets\adblock-image\browser_<?= $k ?>.png" alt="content-<?= $k ?>" class="content-image">
+                            <?php endif ?>
+                            <div class="introdution">
+                                <?= $v['content'] ?>
+                            </div>
+                        </div>
+                    <?php endforeach ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-backdrop fade"></div>
+
+<script>
+    function detectAdBlock(callback) {
+        let isBlocked = false;
+
+        // image
+        let testAd = new Image();
+        testAd.src = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiKkDFLTzotsxETDVY96azVntGpvjnF3wo7caXJscnvFsjQnKoOx0G0daw91AZ-qba-sm8lzB1wGIugf8nxL57loDEwQvWCoyusdPazPj0fTzfN-jsO4ecmDGP8cTjxFeqxAXEwmqhDDvGCbWTidvCBNmpvxSv6xSIfOaLkmyr-tGgn1euk9SoeabfEZGQ/s0/a728x90.gif";
+        testAd.style.position = "absolute";
+        testAd.style.left = "-9999px";
+        
+        testAd.onerror = function () {
+            isBlocked = true;
+        };
+
+        document.body.appendChild(testAd);
+
+        // bait element
+        let $bait = $('<div class="ad ads banner-ad"></div>')
+            .css({ height: '1px', width: '1px', position: 'absolute', left: '-9999px' })
+            .appendTo('body');
+
+        // script
+        let scriptBlocked = false;
+        let script = document.createElement('script');
+        script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
+        script.onerror = function() { scriptBlocked = true; };
+        document.head.appendChild(script);
+
+        setTimeout(function() {
+            let isBaitHidden = $bait.is(':hidden') || $bait.height() === 0;
+
+            if (isBlocked || isBaitHidden || scriptBlocked) callback(true);
+            else callback(false);
+
+            testAd.remove();
+            $bait.remove();
+        }, 1000);
+    }
+
+    function showModal(action, modal) {
+        if (action == 'show') {
+            modal.show();
+            $(".modal-backdrop").addClass('show');
+        }
+        else {
+            modal.hide();
+            $(".modal-backdrop").removeClass('show');
+        }
+    }
+
+    $(document).ready(function () {
+        detectAdBlock(function(isEnabled) {
+            if (isEnabled) showModal('show', $("#detect-adblock-modal"));
+        });
+
+        $('body').on('click', '.modal .close', function() {
+            showModal('hide', $(this).closest('.modal'));
+        });
+
+        $('body').on('click', '#detect-adblock-modal .show-introduction', function() {
+            showModal('hide', $("#detect-adblock-modal"));
+            showModal('show', $("#introduction-modal"));
+        });
+
+        $('body').on('click', '#introduction-modal .nav-link', function() {
+            let tab = $(this).attr('data-tab');
+
+            $('#introduction-modal .nav-link').removeClass('active');
+            $(this).addClass('active');
+            $('.tab-content .content').removeClass('active');
+            $(`.tab-content .content.${tab}`).addClass('active');
+        });
+    });
+
+</script>
