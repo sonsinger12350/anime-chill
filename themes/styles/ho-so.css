@@ -693,10 +693,25 @@ ul.list-film {
 	align-items: center;
 }
 
+#tab-deposit-card-history .table {
+	width: max-content;
+}
+
 #tab-deposit-card-history .table th,
 #tab-deposit-card-history .table td {
 	background-color: unset;
 	color: #fff;
+}
+
+#tab-deposit-card-history .table td span[data-tooltip]::before {
+	bottom: -100%;
+	left: -200%;
+}
+
+#tab-deposit-card-history .table td span[data-tooltip]::after {
+	bottom: 0%;
+	left: -30%;
+	transform: rotate(270deg);
 }
 
 @media (max-width: 991px) {

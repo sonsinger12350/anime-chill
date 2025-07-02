@@ -382,7 +382,7 @@
 						</div>
 						<div class="tab-pane fade" id="tab-deposit-card-history">
 							<h4 class="tab-title">Lịch sử nạp thẻ</h4>
-							<div class="tab-body">
+							<div class="tab-body table-responsive">
 								<table class="table">
 									<thead>
 										<tr>
