@@ -15,16 +15,20 @@ $date_current = new DateTime();
 $vip_date_end = "";
 
 $pay = 0;
-if($vip_package == 1){
+
+if ($vip_package == 1) {
     $pay = 30000;
     $vip_date_end = $date_current->modify("+30 days");
-} elseif($vip_package == 12){
+}
+elseif ($vip_package == 12) {
     $pay = 360000;
     $vip_date_end = $date_current->modify("+390 days");
 }
-if($user['coins'] < $pay){
+
+if ($user['coins'] < $pay) {
     $respon['message'] = "Tiền của bạn không đủ để mua gói vip";
-}else{
+}
+else{
     #.Data to Edit Query
     #1. coins
     $cash_return = $user['coins'] - $pay;

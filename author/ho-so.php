@@ -678,17 +678,22 @@
 
 		// hàm cập nhật time
 		function updateTime() {
-			var vip_date_end = $(".vip-info").data('vip_date_end');
-			var currentDate = moment();
+			let vip_date_end = $(".vip-info").data('vip_date_end');
+			let currentDate = moment();
 			// Chuyển vip_date_end monent 
-			var vip_date_end = moment(vip_date_end, "YYYY-MM-DD");
+			vip_date_end = moment(vip_date_end, "YYYY-MM-DD");
 			// Tính chênh lệnh time
-			var duration = moment.duration(vip_date_end.diff(currentDate));
+			let duration = moment.duration(vip_date_end.diff(currentDate));
+
+			if (duration.asMilliseconds() <= 0) {
+				$(".vip-info .days").text('Đã hết hạn VIP');
+				return;
+			}
 
 			// Chia duration thành các thành phần: ngày, giờ, phút
-			var days = Math.floor(duration.asDays());
-			var hours = Math.floor(duration.asHours() % 24);
-			var minutes = Math.floor(duration.asMinutes() % 60);
+			let days = Math.floor(duration.asDays());
+			let hours = Math.floor(duration.asHours() % 24);
+			let minutes = Math.floor(duration.asMinutes() % 60);
 			$(".vip-info .days").text(days + ' Ngày' + ' ' + hours + ' ' + 'Giờ' + ' ' + minutes + ' Phút');
 		}
 		updateTime();

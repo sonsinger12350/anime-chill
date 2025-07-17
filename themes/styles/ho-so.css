@@ -694,7 +694,7 @@ ul.list-film {
 }
 
 #tab-deposit-card-history .table {
-	width: max-content;
+	width: 100%;
 }
 
 #tab-deposit-card-history .table th,
@@ -737,6 +737,10 @@ ul.list-film {
 
 	.profile .info .tab-content #tab-movie-follow .movie-follow .movies-list .movie-item a:not(.delete) div:has(img) {
 		flex: 1;
+	}
+
+	#tab-deposit-card-history .table {
+		width: max-content;
 	}
 }
 

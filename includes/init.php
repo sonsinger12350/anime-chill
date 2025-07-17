@@ -111,20 +111,31 @@ function UpdateVipUser($cash_return, $vip_icon, $vip_date_end, $vip_term, $user_
 		return false;
 	}
 }
-function resetVipUser($vip_date_end, $user_id, $vip_user)
-{	
-	
-	$vip_date_end = date("Y-m-d", $vip_date_end);
-	// $vip_date_end = "2023-10-26";
-	$date_current = new DateTime();
+
+function resetVipUser($vip_date_end, $user_id, $vip_user) {	
+	if (empty($vip_date_end)) return false;
+
+	global $mysql, $user;
+
+	date_default_timezone_set('Asia/Ho_Chi_Minh');
+	$vip_date_end_formatted = date("Y-m-d", $vip_date_end);
+	$vip_date_end = new DateTime($vip_date_end_formatted);
+	$date_current = new DateTime('2025-08-17', new DateTimeZone('Asia/Ho_Chi_Minh'));
 	$date_current_formatted = $date_current->format('Y-m-d');
-	if ($vip_date_end == $date_current_formatted || $vip_date_end < $date_current_formatted && $vip_date_end !== NULL) {
-		global $mysql;
-		$sql = "UPDATE `table_user` SET `vip`='0',`vip_icon`=NULL,`vip_term`='0' WHERE `id` = '{$user_id}'";
-		$result = $mysql->query($sql);
+	$interval = $vip_date_end->diff($date_current);
+
+	if ($user['vip_term'] != $interval->days) {
+		$mysql->query("UPDATE `table_user` SET `vip_term`='{$interval->days}' WHERE `id` = '{$user_id}'");
 	}
+
+	if ($vip_date_end_formatted <= $date_current_formatted) {
+		$sql = "UPDATE `table_user` SET `vip`='0',`vip_icon`=NULL,`vip_date_end`=NULL,`vip_term`='0' WHERE `id` = '{$user_id}'";
+		$mysql->query($sql);
+	}
+
 	return false;
 }
+
 #################
 # GET CONFIG	#
 $cf = GetDataArr('config', "id = 1");
