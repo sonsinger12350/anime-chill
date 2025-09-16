@@ -180,30 +180,22 @@ function imagesaver($image_data, $folder = '')
     if (preg_match('/^data:image\/(\w+);base64,/', $image_data, $type)) {
         $data = substr($data, strpos($data, ',') + 1);
         $type = strtolower($type[1]); // jpg, png, gif
-
-        if (!in_array($type, ['jpg', 'jpeg', 'gif', 'png', 'webp', 'gif'])) {
-            return false;
-        }
+        if (!in_array($type, ['jpg', 'jpeg', 'gif', 'png', 'webp', 'gif'])) return false;
 
         $data = base64_decode($data);
-
-        if ($data === false) {
-            return false;
-        }
+        if ($data === false) return false;
     }
     else {
         return false;
     }
 
     $FileName = tokenString(15) . time();
+    if (!empty($folder) && !file_exists(UPLOAD_DIR ."/". $folder)) mkdir(UPLOAD_DIR ."/". $folder, 0777, true);
+
     $FileNew = !empty($folder) ? UPLOAD_DIR ."/". $folder . "/$FileName.$type"  : UPLOAD_DIR . "/$FileName.$type";
 
-    if (file_put_contents($FileNew, $data)) {
-        $Images = !empty($folder) ? "/assets/upload/$folder/$FileName.$type" : URL . "/assets/upload/$FileName.$type";
-    }
-    else {
-        return false;
-    }
+    if (file_put_contents($FileNew, $data)) $Images = !empty($folder) ? "/assets/upload/$folder/$FileName.$type" : URL . "/assets/upload/$FileName.$type";
+    else return false;
 
     /* it will return image name if image is saved successfully 
     or it will return error on failing to save image. */
@@ -963,14 +955,14 @@ function getConfigGeneralUserInfo($keys)
 
 function getExpLevel($level) {
     $exp = 0;
-    if ($level < 2) return $KinhNghiem;
+    if ($level < 2) return $exp;
     for ($i = 1; $i < $level + 1; $i++) {
         if ($level > $i) {
             $e = ($i * 30);
             $exp += $e;
         }
     }
-    if ($KinhNghiem >= 1) return ($exp + $KinhNghiem);
+
     return $exp;
 }
 
@@ -992,6 +984,9 @@ function getIconStoreActive($id, $type) {
 
         if (!empty($rs)) {
             $image = $rs['image'];
+        }
+        else {
+            if ($type == 'background') $image = null;
         }
     }
     
@@ -1062,4 +1057,56 @@ function getUserCoin($user_id) {
     }
 
     return $data['coins'];
+}
+
+// Function update level by exp
+function updateLevelByExp($user, $gainExp) {
+    if (empty($user['id']) || empty($gainExp)) return false;
+
+    global $mysql;
+    $userId = $user['id'];
+    $gainExp = (int)$gainExp;
+
+    $level = (int)$user['level'];     // EXP đang lưu là EXP trong level hiện tại (0 → need(level))
+    $exp   = (int)$user['exp'];
+
+    $oldLevel = $level;
+
+    // Tiêu dần EXP nhận được qua các level
+    while ($gainExp > 0) {
+        $need = 30 * $level;          // EXP cần để lên level kế tiếp từ level hiện tại
+        $remain = $need - $exp;       // còn thiếu bao nhiêu để lên cấp
+
+        if ($gainExp >= $remain) {
+            // Đủ để lên cấp
+            $gainExp -= $remain;
+            $level++;
+            $exp = 0;                 // reset exp khi lên cấp
+        }
+        else {
+            // Không đủ, cộng dở và dừng
+            $exp += $gainExp;
+            $gainExp = 0;
+        }
+    }
+
+    // Cập nhật DB
+    $mysql->update("user", "level = {$level}, exp = {$exp}", "id = '{$userId}'");
+
+    // Tạo thông báo nếu có lên cấp
+    if ($level > $oldLevel) {
+        $content = sprintf(
+            "Chúc mừng! Bạn đã thăng cấp từ Level %s lên Level %s. Hãy cố gắng để đạt cấp cao hơn nhé!",
+            number_format($oldLevel), number_format($level)
+        );
+        $now = time();
+        $date = DATE; // giả sử hằng số DATE đã định nghĩa
+        $mysql->insert(
+            'notice',
+            'user_id,content,timestap,time',
+            "'{$userId}','{$content}','{$now}','{$date}'"
+        );
+    }
+
+    return true;
 }

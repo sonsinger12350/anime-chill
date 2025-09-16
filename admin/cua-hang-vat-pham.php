@@ -94,6 +94,12 @@
 											<label>Giá tiền</label>
 											<input type="number" class="form-control" name="New[price]">
 										</div>
+										<?php if ($type == 'dan-duoc'): ?>
+											<div class="col-12 mb-3">
+												<label>Kinh nghiệm</label>
+												<input type="number" class="form-control" name="New[exp]">
+											</div>
+										<?php endif; ?>
 										<div class="col-12 text-center mb-3">
 											<button class="btn btn-outline-info mt-" type="submit">Thêm Mới</button>
 										</div>
@@ -116,6 +122,9 @@
 												<th scope="col">Tên</th>
 												<th scope="col">Hình ảnh</th>
 												<th scope="col">Giá tiền</th>
+												<?php if ($type == 'dan-duoc'): ?>
+													<th scope="col">Kinh nghiệm</th>
+												<?php endif; ?>
 												<th scope="col">Thao Tác</th>
 											</tr>
 										</thead>
@@ -135,6 +144,9 @@
 														<td><?= $row['name'] ?></td>
 														<td><?= ($row['image'] ? "<img src=\"{$row['image']}\" width=\"50\" height=\"auto\">" : 'Không có ảnh') ?></td>
 														<td><?= numberFormat($row['price']) ?></td>
+														<?php if ($type == 'dan-duoc'): ?>
+															<td><?= numberFormat($row['exp']) ?></td>
+														<?php endif; ?>
 														<td>
 															<div class="btn-group" role="group">
 																<button class="btn btn-primary btn-xs" type="button" onclick="LoadFormEdit('<?= $table ?>',<?= $row['id'] ?>);">Edit</button>

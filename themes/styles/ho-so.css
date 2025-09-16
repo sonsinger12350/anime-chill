@@ -395,6 +395,16 @@ a {
 	height: auto;
 }
 
+#tab-profile #tab-store-owner-background .list-owned-icon .icon-owned {
+	width: 150px;
+}
+
+#tab-profile #tab-store-owner-background .list-owned-icon .icon-owned img:not(.loading) {
+	height: 100%;
+	object-fit: cover;
+}
+
+
 #tab-profile .list-owned-icon .icon-owned .loading {
 	width: 25px;
 	height: 25px;
@@ -624,6 +634,15 @@ ul.list-film {
 .list-store-item .store-item img {
 	width: 100%;
 	height: auto;
+}
+
+#tab-store-background .list-store-item .store-item {
+	width: 150px;
+}
+
+#tab-store-background .list-store-item .store-item img {
+	height: 100%;
+    object-fit: cover;
 }
 
 .icon-store-price {

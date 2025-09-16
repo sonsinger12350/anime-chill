@@ -7,7 +7,11 @@
 	$listItemStore = listItemStore();
 	$listItemOwned = listUserItemOwner($userId, false);
 	$currentUser = GetDataArr('user', "id = $userId");
-	if (!empty($currentUser)) $currentUser['khung-vien'] = getIconStoreActive($userId, 'khung-vien');
+
+	if (!empty($currentUser)) {
+		$currentUser['khung-vien'] = getIconStoreActive($userId, 'khung-vien');
+		$currentUser['background'] = getIconStoreActive($userId, 'background');
+	}
 
 	$totalFollow = getTotalFollow($userId);
 ?>
@@ -43,7 +47,7 @@
 				<?php if (!empty($currentUser)): ?>
 				<div class="navigation">
 					<!-- Avatar -->
-					<div class="avatar">
+					<div class="avatar" style="<?= $currentUser['background'] ? 'background-image: url(' . $currentUser['background'] . ');' : '' ?>">
 						<div class="img">
 							<img src="<?= $currentUser['avatar'] ?>" />
 							<img src="<?= $currentUser['khung-vien'] ?>" alt="" class="avatar-frame">
@@ -84,7 +88,7 @@
 												<p><?= $iconCategory[$cat] ?></p>
 												<div class="list">
 													<?php foreach ($list as $iconId): ?>
-														<img src="<?= $listItemStore[$cat][$iconId]['image'] ?>" alt="<?= $listItemStore[$cat][$iconId]['name'] ?>">
+														<a href="javascript:void(0)" data-tooltip="<?= $listItemStore[$cat][$iconId]['name'] ?>"><img src="<?= $listItemStore[$cat][$iconId]['image'] ?>" alt="<?= $listItemStore[$cat][$iconId]['name'] ?>"></a>
 													<?php endforeach;?>
 												</div>
 											</div>

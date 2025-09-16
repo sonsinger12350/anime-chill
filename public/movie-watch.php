@@ -11,6 +11,36 @@ $Ep = GetDataArr("episode", " id = '$EpisodeID'");
 $mysql->update("movie", "view = view + 1, view_day = view_day + 1, view_week = view_week + 1, view_month = view_month + 1, view_year = view_year + 1", "id = '{$Movie['id']}'");
 $statut = ($Movie['loai_phim'] == 'Phim Lẻ' ? "{$Movie['movie_duration']} Phút" : "$NumEpisode/{$Movie['ep_num']}");
 
+// ===== NEW LOGIC: GET ALL EPISODES AND SERVERS =====
+// Get all episodes of the movie
+$allEpisodes = [];
+$arr = $mysql->query("SELECT * FROM " . DATABASE_FX . "episode WHERE movie_id = '{$Movie['id']}' ORDER BY ep_num ASC");
+while ($row = $arr->fetch(PDO::FETCH_ASSOC)) {
+    $allEpisodes[] = $row;
+}
+
+// Create mapping server => list of episodes
+$serverEpisodes = [];
+foreach ($allEpisodes as $episode) {
+    $servers = json_decode($episode['server'], true);
+    if ($servers) {
+        foreach ($servers as $server) {
+            $serverName = $server['server_name'];
+            if (!empty($server['server_link'])) {
+                if (!isset($serverEpisodes[$serverName])) {
+                    $serverEpisodes[$serverName] = [];
+                }
+                $serverEpisodes[$serverName][] = $episode['ep_num'];
+            }
+        }
+    }
+}
+
+// Save current server into Session when accessing page
+if (!isset($_SESSION['current_server'])) {
+    $_SESSION['current_server'] = null;
+}
+
 $ep_num_plus = ($Ep['ep_num'] + 1);
 $ep_num = ($Ep['ep_num'] - 1);
 if (get_total('episode', "WHERE movie_id = '{$Movie['id']}' AND ep_num = '$ep_num_plus'") >= 1) {
@@ -293,17 +323,39 @@ if ($cf['tvc_on'] == 'true' && $activeTVC) $tvc = URL . "/tvc?url=";
                             $Defult = 0;
                             $movieServer = (!empty($Ep['server']) && $Ep['server'] != 'null') ? array_column(json_decode($Ep['server'], true), 'server_link', 'server_name') : [];
 
-                            foreach ($listServer as $server) {
-                                if (!empty($movieServer[$server])) {
-                                    $Defult++;
-                                    if ($Defult == 1) {
-                                        $ServerDF = "startStreaming('" . ServerName($server) . "', 1)";
-                                        echo '<a href="javascript:void(0)" class="button-default bg-green" id="sv_' . ServerName($server) . '" name="' . ServerName($server) . '">' . $server . '</a>';
-                                    } else {
-                                        echo '<a href="javascript:void(0)" class="button-default" id="sv_' . ServerName($server) . '" name="' . ServerName($server) . '">' . $server . '</a>';
+                            // Check current server from session
+                            $currentServer = !empty($_SESSION['current_server']) ? $_SESSION['current_server'] : $Defult;
+                            $serverFound = false;
+                            $alternativeServer = null;
+
+                            foreach ($serverEpisodes as $server => $episodes) {
+                                if (in_array($Ep['ep_num'], $episodes)) {
+                                    $alternativeServer = $server;
+                                    break;
+                                }
+                            }
+
+                            if (!empty($currentServer)) {
+                                foreach ($serverEpisodes as $server => $episodes) {
+                                    if (!in_array($Ep['ep_num'], $episodes)) {
+                                        $currentServer = $alternativeServer;
                                     }
                                 }
                             }
+                            else {
+                                $currentServer = $alternativeServer;
+                            }
+
+                            foreach ($listServer as $server) {
+                                if (!empty($movieServer[$server])) {
+                                    $Defult++;
+                                    $serverName = ServerName($server);
+
+                                    echo '<a href="javascript:void(0)" class="button-default" id="sv_' . $serverName . '" name="' . $serverName . '">' . $server . '</a>';
+                                }
+                            }
+
+                            $ServerDF = "startStreaming('" . ServerName($currentServer) . "', 1)";
                         ?>
                     </div>
                     <div id="video-player">
@@ -319,6 +371,15 @@ if ($cf['tvc_on'] == 'true' && $activeTVC) $tvc = URL . "/tvc?url=";
                         var $list_sv = document.getElementById("list_sv");
                         var final_ep, next_ep_act = false;
                         var aone_time, aone_event, skip_op, skip_op_time = 0;
+                        
+                        // Global variable to save server and episode information
+                        var serverEpisodes = <?= json_encode($serverEpisodes) ?>;
+                        var currentServer = "<?= $currentServer ?>";
+                        console.log(currentServer);
+
+                        if (currentServer)  $(`#sv_${currentServer}`).addClass("bg-green");
+                        else $('#list_sv a').first().addClass("bg-green");
+                        
                         if ($user.is_vip == 1) {
                             $info_play_video.vast = null;
                         }
@@ -364,7 +425,7 @@ if ($cf['tvc_on'] == 'true' && $activeTVC) $tvc = URL . "/tvc?url=";
                         function initSkip() {
                             let get_aone_time = setAoneTime();
                             let get_skip_op_time = setSkipOpTime();
-                            // console.log(get_aone_time,get_skip_op_time);
+
                             if (get_aone_time <= get_skip_op_time) {
                                 alert("Cài thời gian chuyển tập mới phải hơn thời gian bỏ qua OP");
                                 aone_time = 0;
@@ -537,9 +598,32 @@ if ($cf['tvc_on'] == 'true' && $activeTVC) $tvc = URL . "/tvc?url=";
                                 item.addEventListener("click", function(e) {
                                     list_sv.querySelector(".bg-green").classList.remove("bg-green");
                                     this.classList.add("bg-green");
-                                    startStreaming(this.getAttribute("name"));
+                                    var selectedServer = this.getAttribute("name");
+                                    
+                                    // Save current server into session
+                                    $.ajax({
+                                        type: "POST",
+                                        url: "/server/api",
+                                        contentType: "application/json",
+                                        dataType: "json",
+                                        data: JSON.stringify({
+                                            action: "set_current_server",
+                                            server: selectedServer
+                                        })
+                                    });
+
+                                    // Update current server
+                                    currentServer = selectedServer;
+                                    
+                                    startStreaming(selectedServer);
                                 })
                             });
+                            
+                            // Initialize current server when loading page
+                            var activeServer = document.querySelector("#list_sv .bg-green");
+                            if (activeServer) {
+                                currentServer = activeServer.getAttribute("name");
+                            }
                         })();
                     </script>
                     <div class="flex flex-ver-center margin-10">

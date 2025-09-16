@@ -13,6 +13,10 @@ a {
 	flex-direction: column;
 	padding: 20px;
 	margin-bottom: 24px;
+	background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+	border-radius: 10px;
 }
 
 .profile .navigation .avatar .img {

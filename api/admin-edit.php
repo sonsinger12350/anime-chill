@@ -506,6 +506,12 @@ if ($FormEdit == "server") {
                 <label>Giá tiền</label>
                 <input type="number" class="form-control" name="data[price]" value="<?=$data['price']?>">
             </div>
+            <?php if ($data['type'] == 'dan-duoc'): ?>
+                <div class="col-12 mb-3">
+                    <label>Kinh nghiệm</label>
+                    <input type="number" class="form-control" name="data[exp]" value="<?=$data['exp']?>">
+                </div>
+            <?php endif; ?>
             <div class="col-12 text-center mb-3">
                 <button class="btn btn-outline-info mt-" type="submit">Cập Nhật</button>
             </div>

@@ -157,6 +157,9 @@ function categoryStore() {
 		'do-cam-tay'	=>	'Đồ cầm tay',
 		'thu-cung'		=>	'Thú cưng',
 		'icon-user'		=>	'Icon',
+		'background'	=>	'Background',
+		'bo-do'			=>	'Bộ đồ',
+		'dan-duoc'		=>	'Đan dược',
 	];
 }
 
@@ -165,7 +168,7 @@ function isItemStore($item) {
 		return false;
 	}
 
-	if (!in_array($item, ['khung-vien', 'icon-user'])) {
+	if (!in_array($item, ['khung-vien', 'icon-user', 'background', 'dan-duoc'])) {
 		return true;
 	}
 
@@ -177,7 +180,7 @@ function listItemStore() {
 
 	$data = array_map(function ($value) {return [];}, categoryStore());
 
-	$sql = "SELECT `id`, `name`, `price`, `image`, `type` FROM `table_vat_pham` ORDER BY `price` DESC";
+	$sql = "SELECT `id`, `name`, `price`, `image`, `type`, `exp` FROM `table_vat_pham` ORDER BY `price` DESC";
 	$query = $mysql->query($sql);
 
 	while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
@@ -191,6 +194,10 @@ function listUserItemActive($userId, $option = 'get-image') {
 	global $mysql;
 
 	$categoryStore = categoryStore();
+	unset($categoryStore['background']);
+	unset($categoryStore['bo-do']);
+	unset($categoryStore['dan-duoc']);
+
 	$flipCategoryStore = array_flip($categoryStore);
 	$data = array_map(
 		function ($value) use ($flipCategoryStore) {
@@ -217,6 +224,12 @@ function listUserItemActive($userId, $option = 'get-image') {
 				$data[$row['type']] = $row['id'];
 			}
 		}
+	}
+
+	if (!empty($data['bo-do'])) {
+		$data = [
+			'bo-do' => $data['bo-do'],
+		];
 	}
 
 	return $data;

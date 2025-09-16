@@ -45,7 +45,6 @@
 	global $mysql;
 
 	$listItem = categoryStore();
-
 	$listItemStore = listItemStore();
 	$listItemOwned = listUserItemOwner($user['id']);
 	$listItemActive = listUserItemActive($user['id']);
@@ -182,7 +181,10 @@
 							<h4 class="tab-title mb-3">Tủ đồ cá nhân</h4>
 							<div class="tab-body mb-4 tab-avatar-frame-content">
 								<ul class="nav nav-tabs mb-2" role="tablist">
-									<?php foreach($listItem as $k => $v):?>
+									<?php 
+										foreach($listItem as $k => $v):
+											if ($k == 'dan-duoc') continue;
+										?>
 										<li class="nav-item menu-item hvr-sweep-to-right">
 											<a class="nav-link tab-store <?=$k=='khung-vien' ? 'active' : ''?>" href="#tab-store-owner-<?=$k?>" data-bs-toggle="tab">
 												<?=$v?>
@@ -191,7 +193,10 @@
 									<?php endforeach?>
 								</ul>
 								<div class="tab-content">
-									<?php foreach($listItemStore as $k => $v):?>
+									<?php 
+										foreach($listItemStore as $k => $v):
+											if ($k == 'dan-duoc') continue;
+										?>
 										<div class="tab-pane fade <?=$k=='khung-vien' ? 'show active' : ''?>" id="tab-store-owner-<?=$k?>">
 											<div class="tab-body">
 												<div class="list-owned-icon">
@@ -523,6 +528,9 @@
 									<?php endforeach?>
 								</ul>
 								<div class="tab-content">
+									<?php
+										$nextLevelExp = getExpLevel($user['level']);
+									?>
 									<?php foreach($listItemStore as $k => $v):?>
 										<div class="tab-pane fade <?=$k=='khung-vien' ? 'show active' : ''?>" id="tab-store-<?=$k?>">
 											<div class="tab-body">
@@ -530,7 +538,7 @@
 													<?php if (!empty($v)):?>
 														<?php foreach ($v as $k1 => $v1):?>
 															<div class="store-item <?= in_array($v1['id'], $listItemOwned[$k]) ? 'owned' : '' ?>" data-id="<?= $v1['id'] ?>" data-type="<?= $v1['type'] ?>" data-price="<?= numberFormat($v1['price']) ?>" data-icon="<?= $v1['image'] ?>"
-															data-name="<?=$v1['name']?>">
+															data-name="<?=$v1['name']?>" data-exp="<?= $v1['exp'] ?>">
 																<img src="<?= $v1['image'] ?>" alt="">
 															</div>
 														<?php endforeach ?>
@@ -538,12 +546,16 @@
 														<p class="text-center">Nội dung đang cập nhật</p>
 													<?php endif ?>
 												</div>
+												<?php if ($k == 'dan-duoc'):?>
+													<p class="mb-0">Exp level hiện tại: <?= $user['exp'].'/'.$nextLevelExp ?></p>
+													<p class="mb-0">Số exp cần để lên level tiếp theo: <?= $nextLevelExp - $user['exp'] ?></p>
+												<?php endif?>
 											</div>
 										</div>
 									<?php endforeach?>
 								</div>
 								<div class="current-coin mt-2">
-									<p class="coin fw-bold"><img src="/themes/img/coin_15.gif" alt=""> Tài sản: <?= number_format($user['coins']) ?> Xu</p>
+									<p class="coin fw-bold"><img src="/themes/img/coin_15.gif" alt=""> Tài sản: <span><?= number_format($user['coins']) ?></span> Xu</p>
 								</div>
 								<div class="store-overview">
 									<div class="user-icon-store">
@@ -1114,11 +1126,16 @@
 		let icon = $(this).attr('data-icon');
 		let type = $(this).attr('data-type');
 		let name = $(this).attr('data-name');
+		let exp = $(this).attr('data-exp');
 
 		$('.store-item').removeClass('active');
 		$(this).addClass('active');
 
 		if (name != '') {
+			if (exp != '') {
+				exp = Number(exp).toLocaleString('vi-VN') + ' exp';
+				name = name + ' (' + exp + ')';
+			}
 			$('.store-icon-price .icon-name').html(name);
 			$('.store-icon-price .icon-name').removeClass('d-none');
 		} else {

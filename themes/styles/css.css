@@ -649,6 +649,7 @@ div#navbar .logo img {
 .dropdown-option {
     position: absolute;
     top: 100%;
+    right: 0;
     z-index: 12;
     display: none;
     flex-wrap: wrap;
@@ -2311,7 +2312,10 @@ div#user-profile .right {
     padding: 10px;
     background: #171717;
     margin: 5px 0;
-    border-radius: 10px
+    border-radius: 10px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
 }
 
 .comment-editor .content-of-comment {
@@ -3364,6 +3368,13 @@ input:checked+.slider:before {
 	z-index: 7;
 }
 
+.user-figure img.bo-do-default {
+	z-index: 8;
+    width: 60px;
+    height: 70px;
+    object-fit: contain;
+}
+
 #comments .user-comment .icon-user .more-content span:not([data-tooltip]) {
 	display: none;
 }
@@ -3422,4 +3433,13 @@ input:checked+.slider:before {
     padding: 12px;
     border-radius: 6px;
     border: 1px solid #fff;
+}
+
+.chat_div .comment-item {
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    border-radius: 15px;
+    margin-right: 8px;
+    padding: 8px;
 }

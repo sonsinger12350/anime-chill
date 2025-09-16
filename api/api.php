@@ -275,6 +275,7 @@ if ($Json['action'] == 'live_search') {
             $htmlItemStore = '<div class="user-figure">';
             $htmlVip = '';
             $htmlIconUser = '';
+            $background = getIconStoreActive($User_Arr['id'], 'background');
 
             foreach ($listItemStore as $k => $v) {
                 if (isItemStore($k)) {
@@ -322,7 +323,7 @@ if ($Json['action'] == 'live_search') {
                 $ShowReply1 = "";
             }
             $Comment .= '<div id="comment_' . $row['id'] . '" class="user-comment relative">
-                            <div class="flex bg-comment">
+                            <div class="flex bg-comment" style=" ' . (!empty($background) ? 'background-image: url(' . $background . ');' : '') . '">
                                 <div class="left" onclick="initViewProfile(' . $row['user_id'] . ')">
                                     <div class="avatar">
                                         <img class="avatar-img" src="' . $User_Arr['avatar'] . '">
@@ -422,6 +423,7 @@ if ($Json['action'] == 'live_search') {
     $htmlItemStore = '<div class="user-figure">';
     $htmlVip = '';
     $htmlIconUser = '';
+    $background = getIconStoreActive($User_Arr['id'], 'background');
 
     foreach ($listItemStore as $k => $v) {
         if (isItemStore($k)) {
@@ -446,7 +448,7 @@ if ($Json['action'] == 'live_search') {
     }
 
     die(json_encode(["comment" => '<div id="comment_' . $User_Arr['id'] . '" class="user-comment relative">
-            <div class="flex bg-comment">
+            <div class="flex bg-comment" style=" ' . (!empty($background) ? 'background-image: url(' . $background . ');' : '') . '">
                 <div class="left" onclick="initViewProfile(' . $User_Arr['id'] . ')">
                     <div class="avatar">
                         <img class="avatar-img" src="' . $User_Arr['avatar'] . '">
@@ -672,6 +674,7 @@ if ($Json['action'] == 'live_search') {
         foreach ($Comment_data as $key => $row) {
             $User_Arr = GetDataArr("user", "id = '{$row['user_id']}'");
             $listUserIconActive = listUserIconActive($User_Arr['id'], 'all');
+            $background = getIconStoreActive($User_Arr['id'], 'background');
             $htmlIconUser = '';
 
             if (!empty($listUserIconActive)) {
@@ -687,24 +690,24 @@ if ($Json['action'] == 'live_search') {
             if (get_total('user', "WHERE id = '{$row['user_id']}'") < 1) {
                 $mysql->delete('comment', "user_id = '{$row['user_id']}'");
             }
-            $HTML .= '<li style="margin-bottom: 10px;">
-                        <div class="boxchat-images" onclick="initViewProfile(' . $row['user_id'] . ')">
-                            <img class="avatar" src="' . $User_Arr['avatar'] . '" width="100" height="100" alt="' . $User_Arr['nickname'] . '">
-                            <img class="avatar-frame" src="'.getIconStoreActive($User_Arr['id'], 'khung-vien').'">
-                        </div>
-                        
-
-                            <div class="p-comment-home">
-                                <div class="box-chat-nickname" style="color:' . LevelColor($User_Arr['level']) . ';">' . $User_Arr['nickname'] . ' (Lv.' . $User_Arr['level'] . ') ' . LevelIcon($User_Arr['level'], 20, 20) . ' ' . $htmlIconUser . '</div>
-                            </div>
-                            <div class="boxchat-content">' . $row['content'] . '</div>
-                    </li>';
+            $HTML .= '
+                <li class="comment-item" style="margin-bottom: 10px; ' . (!empty($background) ? 'background-image: url(' . $background . ');' : '') . '">
+                    <div class="boxchat-images" onclick="initViewProfile(' . $row['user_id'] . ')">
+                        <img class="avatar" src="' . $User_Arr['avatar'] . '" width="100" height="100" alt="' . $User_Arr['nickname'] . '">
+                        <img class="avatar-frame" src="'.getIconStoreActive($User_Arr['id'], 'khung-vien').'">
+                    </div>
+                    <div class="p-comment-home">
+                        <div class="box-chat-nickname" style="color:' . LevelColor($User_Arr['level']) . ';">' . $User_Arr['nickname'] . ' (Lv.' . $User_Arr['level'] . ') ' . LevelIcon($User_Arr['level'], 20, 20) . ' ' . $htmlIconUser . '</div>
+                    </div>
+                    <div class="boxchat-content">' . $row['content'] . '</div>
+                </li>
+            ';
         }
         die(json_encode(["result" => $HTML, "status" => "success"]));
     } else die(json_encode(["result" => '<div class="home-status">Không Có Comment Nào</div>', "status" => "failed"]));
 } else if ($Json['action'] == 'top_bxh') {
-    $cache_key = "cache.BangXepHang";
-    if ($InstanceCache->has($cache_key)) die($InstanceCache->get($cache_key));
+    // $cache_key = "cache.BangXepHang";
+    // if ($InstanceCache->has($cache_key)) die($InstanceCache->get($cache_key));
     $Top = 0;
     $arr = $mysql->query("SELECT * FROM " . DATABASE_FX . "user ORDER BY level DESC LIMIT {$cf['num_bxh']}");
     while ($row = $arr->fetch(PDO::FETCH_ASSOC)) {
@@ -766,7 +769,7 @@ if ($Json['action'] == 'live_search') {
                 </div>
             </li>';
     }
-    $InstanceCache->set($cache_key, json_encode(["result" => $HTML, "status" => "success"]), $cf['time_cache'] * 3600);
+    // $InstanceCache->set($cache_key, json_encode(["result" => $HTML, "status" => "success"]), $cf['time_cache'] * 3600);
     die(json_encode(["result" => $HTML, "status" => "success"]));
 } else if ($Json['action'] == 'huong_dan') {
     if (!$cf['huong_dan']) die(json_encode(["result" => '<div class="home-status">Chưa Có Hướng Dẫn Nào</div>', "status" => "failed"]));
@@ -792,9 +795,10 @@ if ($Json['action'] == 'live_search') {
     }
 
     foreach ($results as $result) {
+        $background = getIconStoreActive($user['id'], 'background');
         $html .= '
         <div class="comment-main user-comment cmt-438631">
-            <div class="flex bg-comment">
+            <div class="flex bg-comment" style=" ' . (!empty($background) ? 'background-image: url(' . $background . ');' : '') . '">
                 <div class="left">
                     <div class="avatar">
                         <img class="avatar-img" src="'.$user['avatar'].'">
@@ -939,21 +943,23 @@ if ($Json['action'] == 'live_search') {
         die(json_encode($response));
     }
 
-    $rs = $mysql->query('SELECT `user_id` FROM `table_user_icon_store` WHERE `user_id` = '.$user['id'].' AND `icon_id` = '.$data['id']);
-    $existIcon = $rs->fetch(PDO::FETCH_ASSOC);
-
-    if (!empty($existIcon)) {
-        $response['message'] = 'Đã sở hữu';
-        $response['exist'] = true;
-        die(json_encode($response));
-    }
-
-    $rs = $mysql->query('SELECT `id`,`image`,`price`, `type` FROM `table_vat_pham` WHERE `id` = '.$data['id']);
+    $rs = $mysql->query('SELECT `id`,`image`,`price`, `type`, `exp`, `name` FROM `table_vat_pham` WHERE `id` = '.$data['id']);
     $icon = $rs->fetch(PDO::FETCH_ASSOC);
     
     if (empty($icon)) {
         $response['message'] = 'Có lỗi. Vui lòng thử lại.';
         die(json_encode($response));
+    }
+
+    if ($icon['type'] != 'dan-duoc') {
+        $rs = $mysql->query('SELECT `user_id` FROM `table_user_icon_store` WHERE `user_id` = '.$user['id'].' AND `icon_id` = '.$data['id']);
+        $existIcon = $rs->fetch(PDO::FETCH_ASSOC);
+
+        if (!empty($existIcon)) {
+            $response['message'] = 'Đã sở hữu';
+            $response['exist'] = true;
+            die(json_encode($response));
+        }
     }
 
     if ($user['coins'] < $icon['price']) {
@@ -972,16 +978,25 @@ if ($Json['action'] == 'live_search') {
     $insert = $mysql->insert('transaction', '`'.implode('`,`', array_keys($insertTransaction)).'`', '"'.implode('", "', $insertTransaction).'"');
     $transactionId = getLastInsertId('transaction');
 
-    // insert to table_user_icon_store
-    $insertUserFrame = [
-        'user_id' => $user['id'],
-        'icon_id' => $icon['id'],
-        'type' => $icon['type']
-    ];
-    
-    $insert = $mysql->insert('user_icon_store', '`'.implode('`,`', array_keys($insertUserFrame)).'`', '"'.implode('", "', $insertUserFrame).'"');
-    $update = $mysql->update('user', 'coins = coins -'.$icon['price'], 'id = '.$user['id']);
-    activeIconStore($user['id'], $icon['id'], $icon['type'], 0);
+    if ($icon['type'] != 'dan-duoc') {
+        // insert to table_user_icon_store
+        $insertUserFrame = [
+            'user_id' => $user['id'],
+            'icon_id' => $icon['id'],
+            'type' => $icon['type']
+        ];
+        
+        $insert = $mysql->insert('user_icon_store', '`'.implode('`,`', array_keys($insertUserFrame)).'`', '"'.implode('", "', $insertUserFrame).'"');
+        activeIconStore($user['id'], $icon['id'], $icon['type'], 0);
+    }
+
+    // update user coin
+    $mysql->update('user', "coins = coins -".$icon['price'], 'id = '.$user['id']);
+
+    if ($icon['type'] == 'dan-duoc') {
+        $mysql->insert('notice', 'user_id,content,timestap,time', "'{$user['id']}', 'Bạn đã nhận được ".$icon['exp']." exp từ đan dược ".$icon['name']."','" . time() . "','" . DATE . "'");
+        updateLevelByExp($user, $icon['exp']);
+    }
     
     $response['success'] = true;
     $response['message'] = 'Mua vật phẩm thành công';
@@ -1178,4 +1193,8 @@ if ($Json['action'] == 'live_search') {
     $response['success'] = 1;
     $response['content'] = $content;
     die(json_encode($response));
+} else if ($Json['action'] == 'set_current_server') {
+    $server = sql_escape($Json['server']);
+    $_SESSION['current_server'] = $server;
+    die(json_encode(["result" => "success", "status" => "success"]));
 }
