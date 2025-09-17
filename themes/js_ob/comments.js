@@ -687,8 +687,13 @@ async function initViewProfile(_0x2f718b = -0x99b + 0x2036 + -0x169b * 0x1) {
     }
 }
 
-function collapseComment() {
-    $('#comments .user-comment .icon-user').each(function() {
+function collapseComment(place = 'comments') {
+    console.log(place);
+    
+    let element = '#comments .user-comment .icon-user';
+    if (place == 'home') element = '#HomeChatList .comment-item .icon-user';
+
+    $(element).each(function() {
         let icon = $(this).find('span');
 
         if(icon.length > limitIcon) {

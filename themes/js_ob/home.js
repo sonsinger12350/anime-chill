@@ -35,6 +35,7 @@ var LoadHome = async (action) => {
         }
         if (action == 'Load_Comment_Home') {
             $('#HomeChatList').html(res.result);
+            collapseComment('home');
         } else {
             $('#HomeListTop').html(res.result);
         }

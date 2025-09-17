@@ -955,7 +955,7 @@ function getConfigGeneralUserInfo($keys)
 
 function getExpLevel($level) {
     $exp = 0;
-    if ($level < 2) return $exp;
+    if ($level == 1) return 30;
     for ($i = 1; $i < $level + 1; $i++) {
         if ($level > $i) {
             $e = ($i * 30);

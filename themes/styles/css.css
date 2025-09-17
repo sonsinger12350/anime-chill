@@ -3257,6 +3257,7 @@ input:checked+.slider:before {
 
 .icon-user {
     display: inline-flex;
+    align-items: center;
     column-gap: 1px;
     width: 100%;
     flex-wrap: wrap; 
@@ -3375,19 +3376,25 @@ input:checked+.slider:before {
     object-fit: contain;
 }
 
-#comments .user-comment .icon-user .more-content span:not([data-tooltip]) {
+#comments .user-comment .icon-user .more-content span:not([data-tooltip]),
+#HomeChatList .comment-item .icon-user .more-content span:not([data-tooltip]) {
 	display: none;
 }
 
-#comments .user-comment .icon-user .more-content span:not(.more-icon) {
+#comments .user-comment .icon-user .more-content span:not(.more-icon),
+#HomeChatList .comment-item .icon-user .more-content span:not(.more-icon) {
 	color: #ccc;
 }
 
-#comments .user-comment .icon-user .more-icon {
+#comments .user-comment .icon-user .more-icon,
+#HomeChatList .comment-item .icon-user .more-icon {
 	text-decoration: none;
 	color: #00B38F;
 	display: inline !important;
 	font-size: 12px;
+    background-color: #000000ab;
+    padding: 4px;
+    border-radius: 4px;
 }
 
 .info-movie .list_episode .list-item-episode,
