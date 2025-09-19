@@ -100,8 +100,7 @@ if (isset($_author_cookie)) {
 }
 $VastPlayer = (get_total('ads', "WHERE position_name = 'vast_mp4' AND type = 'true'") >= 1 ? "'" . URL . "/player-ads.xml'" : '');
 $tvcConfig = !empty($cf['tvc_config']) ? json_decode($cf['tvc_config'], true) : [];
-unset($_SESSION['ads']['tvc_ads']);
-setcookie('tvc_ads', null, -1, '/');
+
 if (!empty($tvcConfig) && empty($user['vip'])) {
     $activeTVC = 0;
     $adsName = 'tvc_ads';
@@ -335,16 +334,19 @@ if ($cf['tvc_on'] == 'true' && $activeTVC) $tvc = URL . "/tvc?url=";
                                 }
                             }
 
-                            if (!empty($currentServer)) {
-                                foreach ($serverEpisodes as $server => $episodes) {
-                                    if (!in_array($Ep['ep_num'], $episodes)) {
-                                        $currentServer = $alternativeServer;
-                                    }
-                                }
+                            foreach (array_keys($serverEpisodes) as $s) {
+                               if (strtolower($currentServer) == strtolower($s)) {
+                                   $currentServer = $s;
+                                   $serverFound = true;
+                                   break;
+                               }
                             }
-                            else {
+
+                            if (!$serverFound || !in_array($Ep['ep_num'], $serverEpisodes[$currentServer])) {
                                 $currentServer = $alternativeServer;
                             }
+                            
+                            $currentServer = strtolower($currentServer);
 
                             foreach ($listServer as $server) {
                                 if (!empty($movieServer[$server])) {

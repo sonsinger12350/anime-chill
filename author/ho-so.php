@@ -529,7 +529,7 @@
 								</ul>
 								<div class="tab-content">
 									<?php
-										$nextLevelExp = getExpLevel($user['level']);
+										$nextLevelExp = $user['level']*30;
 									?>
 									<?php foreach($listItemStore as $k => $v):?>
 										<div class="tab-pane fade <?=$k=='khung-vien' ? 'show active' : ''?>" id="tab-store-<?=$k?>">

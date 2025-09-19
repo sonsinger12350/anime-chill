@@ -30,6 +30,7 @@ function ShowReplyComment($CommentID)
         $htmlItemStore = '<div class="user-figure">';
         $htmlVip = '';
         $htmlIconUser = '';
+        $background = getIconStoreActive($User_Arr['id'], 'background');
 
         foreach ($listItemStore as $k => $v) {
             if (isItemStore($k)) {
@@ -67,8 +68,8 @@ function ShowReplyComment($CommentID)
         }
         else $CmtSetting = "";
 
-        $Comment .= '<div id="reply_' . $row['id'] . '" class="user-comment relative">
-            <div class="flex bg-comment">
+        $Comment .= '<div id="reply_' . $row['id'] . '" class="user-comment relative" >
+            <div class="flex bg-comment" style=" ' . (!empty($background) ? 'background-image: url(' . $background . ');' : '') . '">
                 <div class="left" onclick="initViewProfile(' . $User_Arr['id'] . ')">
                     <div class="avatar">
                         <img class="avatar-img" src="' . $User_Arr['avatar'] . '">
