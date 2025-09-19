@@ -688,27 +688,20 @@ async function initViewProfile(_0x2f718b = -0x99b + 0x2036 + -0x169b * 0x1) {
 }
 
 function collapseComment(place = 'comments') {
-    console.log(place);
-    
     let element = '#comments .user-comment .icon-user';
-    if (place == 'home') element = '#HomeChatList .comment-item .icon-user';
+    if (place === 'home') element = '#HomeChatList .comment-item .icon-user';
 
     $(element).each(function() {
-        let icon = $(this).find('span');
+        let icons = $(this).find('span');
 
-        if(icon.length > limitIcon) {
-            let c = '';
-            let h = '';
-
-            icon.each(function(key, value) {
-                let html = $(this).prop('outerHTML');
-                if (key < limitIcon) c += html;
-                else h += html;
+        if (icons.length > limitIcon) {
+            icons.each(function(index) {
+                if (index >= limitIcon) {
+                    $(this).addClass('icon-hide');
+                }
             });
 
-            let content = c + `<span class="more-content"><span>${h}</span>&nbsp;&nbsp;<a class="more-icon" href="javascript:void(0)">${moreText}</a></span>`;
-
-            $(this).html(content);
+            $(this).append(`&nbsp;&nbsp;<a class="more-icon" href="javascript:void(0)">${moreText}</a>`);
         }
     });
 }
@@ -728,16 +721,17 @@ $(document).ready(function() {
     collapseComment();
     
     $("body").on('click', '.more-icon', function(){
-        if($(this).hasClass("less")) {
-            $(this).removeClass("less");
-            $(this).html(moreText);
+        let container = $(this).closest('.icon-user');
+
+        if(container.hasClass("show-all")) {
+            container.removeClass("show-all");
+            $(this).removeClass("less").html(moreText);
         }
         else {
-            $(this).addClass("less");
-            $(this).html(lessText);
+            container.addClass("show-all");
+            $(this).addClass("less").html(lessText);
         }
 
-        $(this).prev().toggle();
         return false;
     });
 });

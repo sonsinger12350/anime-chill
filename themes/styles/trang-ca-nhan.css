@@ -99,9 +99,19 @@ a {
 }
 
 .profile .tabs .icons .list img {
-	width: 30px;
-	height: 30px;
+	width: 50px;
+	height: 50px;
 	object-fit: contain;
+}
+
+.profile .tabs .icons .icon-cat.bo-do .list img {
+	width: 70px;
+	height: 70px;
+}
+
+.profile .tabs .icons .icon-cat.background .list img {
+	width: 150px;
+    height: auto;
 }
 
 .profile .tabs .movies-list {

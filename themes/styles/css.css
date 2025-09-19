@@ -3397,6 +3397,16 @@ input:checked+.slider:before {
     border-radius: 4px;
 }
 
+#comments .user-comment .icon-user .icon-hide,
+#HomeChatList .comment-item .icon-user .icon-hide {
+    display: none;
+}
+
+#comments .user-comment .icon-user.show-all .icon-hide,
+#HomeChatList .comment-item .icon-user.show-all .icon-hide {
+    display: inline-block;
+}
+
 .info-movie .list_episode .list-item-episode,
 .watching-movie .list-item-episode {
     overflow: visible;

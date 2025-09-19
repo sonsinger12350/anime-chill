@@ -84,7 +84,7 @@
 									<div class="grid">
 										<?php foreach ($listItemOwned as $cat => $list): ?>
 											<?php if (!empty($list)): ?>
-											<div class="icon-cat">
+											<div class="icon-cat <?= $cat ?>">
 												<p><?= $iconCategory[$cat] ?></p>
 												<div class="list">
 													<?php foreach ($list as $iconId): ?>
