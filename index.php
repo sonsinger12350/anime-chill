@@ -61,13 +61,14 @@ if (isset($_COOKIE['author'])) {
         $user['khung-vien'] = getIconStoreActive($user['id'], 'khung-vien');
         $user['background'] = getIconStoreActive($user['id'], 'background');
         $user['icon-user'] = '';
-        $listUserIconActive = listUserIconActive($user['id']);
+        $listUserIconActive = listUserIconActive($user['id'], 'all');
 
         if (!empty($listUserIconActive)) {
             $user['icon-user'] .= "<div class='icon-user'>";
 
-            foreach ($listUserIconActive as $k => $v) {
-                $user['icon-user'] .= "<img src='".$v."' />";
+            foreach ($listUserIconActive as $v) {
+                $tooltip = '<img src="'.$v['image'].'" /><span class="icon-name">'.$v['name'].'</span>';
+                $user['icon-user'] .= "<span data-tooltip-icon='".$tooltip."'><img src='".$v['image']."' /></span>";
             }
 
             $user['icon-user'] .= "</div>";

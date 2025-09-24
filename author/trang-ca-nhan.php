@@ -88,7 +88,10 @@
 												<p><?= $iconCategory[$cat] ?></p>
 												<div class="list">
 													<?php foreach ($list as $iconId): ?>
-														<a href="javascript:void(0)" data-tooltip="<?= $listItemStore[$cat][$iconId]['name'] ?>"><img src="<?= $listItemStore[$cat][$iconId]['image'] ?>" alt="<?= $listItemStore[$cat][$iconId]['name'] ?>"></a>
+														<?php
+															$tooltip = '<img src="'.$listItemStore[$cat][$iconId]['image'].'" /><span class="icon-name">'.$listItemStore[$cat][$iconId]['name'].'</span>';
+														?>
+														<a href="javascript:void(0)" data-tooltip-icon='<?= $tooltip ?>'><img src="<?= $listItemStore[$cat][$iconId]['image'] ?>" alt="<?= $listItemStore[$cat][$iconId]['name'] ?>"></a>
 													<?php endforeach;?>
 												</div>
 											</div>

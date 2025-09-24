@@ -167,16 +167,19 @@ var CommentHome = async () => {
             });
             $('textarea[name="HomeComment"]').val('');
             $('textarea[name="HomeComment"]').prop("disabled", true);
-            $('.chat_div').append(`<li class="comment-item" style="margin-bottom: 10px;${$user.background ? `background-image: url(${$user.background});` : ''}">
-                        <div class="boxchat-images">
-                            <img class="avatar" src="${$user.avatar}" width="100" height="100" alt="${$user.nickname}">
-                            <img class="avatar-frame" src="${$user.frame}">
-                        </div>
-                            <div class="p-comment-home">
-                                <div class="box-chat-nickname" style="color: ${$user.color};">${$user.nickname} (Lv.${$user.level}) ${$user.icon} ${$user['icon-user']}</div>
-                            </div>
-                            <div class="boxchat-content">${CommentText}</div>
-                    </li>`);
+            $('.chat_div').append(`
+                <li class="comment-item" style="margin-bottom: 10px;${$user.background ? `background-image: url(${$user.background});` : ''}">
+                    <div class="boxchat-images">
+                        <img class="avatar" src="${$user.avatar}" width="100" height="100" alt="${$user.nickname}">
+                        <img class="avatar-frame" src="${$user.frame}">
+                    </div>
+                    <div class="p-comment-home">
+                        <div class="box-chat-nickname" style="color: ${$user.color};">${$user.nickname} (Lv.${$user.level}) ${$user.icon} ${$user['icon-user']}</div>
+                    </div>
+                    <div class="boxchat-content">${CommentText}</div>
+                </li>
+            `);
+            collapseComment('home');
             $('.chat_div').animate({
                 scrollTop: 99999
             }, 0);

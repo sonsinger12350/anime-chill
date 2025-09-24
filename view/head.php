@@ -61,7 +61,7 @@ FireWall();
         "vip_expired": "<?= $user['vip'] ?>",
         "is_vip": "<?= $user['vip'] ?>",
         "frame": "<?= $user['khung-vien'] ?>",
-        "icon-user": "<?= $user['icon-user'] ?>",
+        "icon-user": `<?= $user['icon-user'] ?>`,
         "background": "<?= $user['background'] ?>"
     };
     const $elem = new Object();

@@ -44,7 +44,8 @@ function ShowReplyComment($CommentID)
             $htmlIconUser .= '<div class="icon-user">';
 
             foreach ($listUserIconActive as $k => $v) {
-                $htmlIconUser .= '<span data-tooltip="'.$v['name'].'"><img src="'.$v['image'].'" /></span>';
+                $tooltip = '<img src="'.$v['image'].'" /><span class="icon-name">'.$v['name'].'</span>';
+                $htmlIconUser .= "<span data-tooltip-icon='$tooltip'><img src='{$v['image']}' /></span>";
             }
 
             $htmlIconUser .= '</div>';

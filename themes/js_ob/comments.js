@@ -707,6 +707,54 @@ function collapseComment(place = 'comments') {
     });
 }
 
+function createPopover(content, parentElement, className = '') {
+    if (!content || !parentElement || !parentElement.length) return null;
+
+    // Tạo popover element
+    const popover = $('<div class="custom-popover ' + className + '"></div>').appendTo('body');
+    
+    // Set content
+    popover.html(content).show();
+    
+    // Get position of parent element
+    const offset = parentElement.offset();
+    const width = parentElement.outerWidth();
+    const height = parentElement.outerHeight();
+    const popoverWidth = popover.outerWidth();
+    const popoverHeight = popover.outerHeight();
+    
+    // Calculate position for popover
+    let top = offset.top - popoverHeight - 10;
+    let left = offset.left + (width / 2) - (popoverWidth / 2);
+    
+    // Check if popover is overflowing outside the screen
+    const windowWidth = $(window).width();
+    if (left < 10) {
+        left = 10;
+    }
+    else if (left + popoverWidth > windowWidth - 10) {
+        left = windowWidth - popoverWidth - 10;
+    }
+    
+    // If popover is overflowing above, display below
+    if (top < 10) {
+        top = offset.top + height + 10;
+        // Change arrow
+        popover.removeClass('arrow-top').addClass('arrow-bottom');
+    }
+    else {
+        popover.removeClass('arrow-bottom').addClass('arrow-top');
+    }
+    
+    // Set position for popover
+    popover.css({
+        'top': top + 'px',
+        'left': left + 'px'
+    });
+
+    return popover;
+}
+
 var limitIcon;
 var moreText = 'Xem thêm';
 var lessText = "Ẩn bớt";
@@ -717,6 +765,7 @@ if (window.innerWidth > 768) {
 else { 
     limitIcon = 10; // Mobile
 }
+
 
 $(document).ready(function() {
     collapseComment();
@@ -734,5 +783,48 @@ $(document).ready(function() {
         }
 
         return false;
+    });
+
+    // Initialize popover system
+    // Create global popover container
+    let currentPopover = null;
+
+    $('body').on('mouseenter', '[data-tooltip-icon]', function() {
+        let content = $(this).attr('data-tooltip-icon');
+        // Hide previous popover if exists
+        if (currentPopover) {
+            currentPopover.remove();
+        }
+        
+        // Create new popover
+        currentPopover = createPopover(content, $(this));
+    });
+
+    $('body').on('mouseleave', '[data-tooltip-icon]', function() {
+        if (currentPopover) {
+            currentPopover.remove();
+            currentPopover = null;
+        }
+    });
+
+    // Initialize popover system
+    // Create global popover container
+    let userFigurePopover = null;
+
+    $('body').on('mouseenter', '.user-figure', function() {
+        let content = $(this).html();
+        
+        // Hide previous popover if exists
+        if (userFigurePopover) userFigurePopover.remove();
+
+        // Create new popover
+        userFigurePopover = createPopover(content, $(this), 'user-figure-popover');
+    });
+
+    $('body').on('mouseleave', '.user-figure', function() {
+        if (userFigurePopover) {
+            userFigurePopover.remove();
+            userFigurePopover = null;
+        }
     });
 });
