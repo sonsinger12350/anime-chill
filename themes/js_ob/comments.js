@@ -692,6 +692,7 @@ function collapseComment(place = 'comments') {
     if (place === 'home') element = '#HomeChatList .comment-item .icon-user';
 
     $(element).each(function() {
+        if ($(this).find('.more-icon').length > 0) return;
         let icons = $(this).find('span');
 
         if (icons.length > limitIcon) {

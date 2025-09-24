@@ -229,6 +229,7 @@ function listUserItemActive($userId, $option = 'get-image') {
 	if (!empty($data['bo-do'])) {
 		$data = [
 			'bo-do' => $data['bo-do'],
+			'thu-cung' => $data['thu-cung'],
 		];
 	}
 

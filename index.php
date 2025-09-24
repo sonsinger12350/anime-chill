@@ -59,6 +59,7 @@ if (isset($_COOKIE['author'])) {
             addCoin($user['id'], 'first_login');
         }
         $user['khung-vien'] = getIconStoreActive($user['id'], 'khung-vien');
+        $user['background'] = getIconStoreActive($user['id'], 'background');
         $user['icon-user'] = '';
         $listUserIconActive = listUserIconActive($user['id']);
 

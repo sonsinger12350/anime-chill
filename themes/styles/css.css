@@ -3376,6 +3376,10 @@ input:checked+.slider:before {
     object-fit: contain;
 }
 
+.user-figure img.thu-cung-default {
+	z-index: 9;
+}
+
 #comments .user-comment .icon-user .more-content span:not([data-tooltip]),
 #HomeChatList .comment-item .icon-user .more-content span:not([data-tooltip]) {
 	display: none;
