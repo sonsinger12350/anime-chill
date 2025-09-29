@@ -52,7 +52,8 @@ function ShowReplyComment($CommentID)
         }
 
         if ($User_Arr['vip'] == 1) {
-            $htmlVip = '<div class="vip-icon"><img src="'.$vipIcon.'" /></div>';
+            $tooltipVip = '<img src="'.$vipIcon.'" />';
+            $htmlVip = "<div class='vip-icon' data-tooltip-icon='$tooltipVip'><img src='$vipIcon' /></div>";
         }
 
         if ($row['user_id'] == $user['id']) {

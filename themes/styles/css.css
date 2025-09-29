@@ -2196,6 +2196,7 @@ div#user-profile .right {
     justify-content: center;
     margin-right: 15px;
     margin-bottom: 5px;
+    cursor: pointer;
 }
 
 .user-comment .left .avatar .avatar-img {

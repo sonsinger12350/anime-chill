@@ -297,7 +297,8 @@ if ($Json['action'] == 'live_search') {
             }
 
             if ($User_Arr['vip'] == 1) {
-                $htmlVip = '<div class="vip-icon"><img src="'.$vipIcon.'" /></div>';
+                $tooltipVip = '<img src="'.$vipIcon.'" />';
+                $htmlVip = "<div class='vip-icon' data-tooltip-icon='$tooltipVip'><img src='$vipIcon' /></div>";
             }
 
             if (get_total('user', "WHERE id = '{$row['user_id']}'") < 1) {
@@ -325,8 +326,8 @@ if ($Json['action'] == 'live_search') {
             }
             $Comment .= '<div id="comment_' . $row['id'] . '" class="user-comment relative">
                             <div class="flex bg-comment" style=" ' . (!empty($background) ? 'background-image: url(' . $background . ');' : '') . '">
-                                <div class="left" onclick="initViewProfile(' . $row['user_id'] . ')">
-                                    <div class="avatar">
+                                <div class="left">
+                                    <div class="avatar" onclick="initViewProfile(' . $row['user_id'] . ')">
                                         <img class="avatar-img" src="' . $User_Arr['avatar'] . '">
                                         <img class="avatar-frame" src="'.getIconStoreActive($User_Arr['id'], 'khung-vien').'">
                                         <span class="rank-level">Lv ' . $User_Arr['level'] . '</span>
@@ -446,13 +447,14 @@ if ($Json['action'] == 'live_search') {
     }
 
     if ($User_Arr['vip'] == 1) {
-        $htmlVip = '<div class="vip-icon"><img src="'.$vipIcon.'" /></div>';
+        $tooltipVip = '<img src="'.$vipIcon.'" />';
+        $htmlVip = "<div class='vip-icon' data-tooltip-icon='$tooltipVip'><img src='$vipIcon' /></div>";
     }
 
     die(json_encode(["comment" => '<div id="comment_' . $User_Arr['id'] . '" class="user-comment relative">
             <div class="flex bg-comment" style=" ' . (!empty($background) ? 'background-image: url(' . $background . ');' : '') . '">
-                <div class="left" onclick="initViewProfile(' . $User_Arr['id'] . ')">
-                    <div class="avatar">
+                <div class="left">
+                    <div class="avatar" onclick="initViewProfile(' . $User_Arr['id'] . ')">
                         <img class="avatar-img" src="' . $User_Arr['avatar'] . '">
                         <img class="avatar-frame" src="'.getIconStoreActive($User_Arr['id'], 'khung-vien').'">
                         <span class="rank-level">Lv ' . $User_Arr['level'] . '</span>

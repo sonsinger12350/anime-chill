@@ -581,15 +581,43 @@ function LevelColor($level)
 }
 function LevelIcon($level, $width, $height)
 {
-    if (!$level) return '&nbsp;<span data-tooltip="Người Mới"><img style="border-radius: 5px;" src="' . URL . '/themes/img/new.png" width="' . $width . '" height="' . $height . '" alt="Người Mới"></span>&nbsp;';
-    if (get_total("level_color", "WHERE level <= '$level' ORDER BY level DESC") < 1) {
-        if ($level >= 10) {
-            return '&nbsp;<span data-tooltip="Người Mới"><img style="border-radius: 5px;" src="' . URL . '/themes/img/new.png" width="' . $width . '" height="' . $height . '" alt="Người Mới"></span>&nbsp;';
-        } else return '&nbsp;<span data-tooltip="Người Mới"><img style="border-radius: 5px;" src="' . URL . '/themes/img/new.png" width="' . $width . '" height="' . $height . '" alt="Người Mới"></span>&nbsp;';
+    $url = "";
+    $danh_hieu = "";
+
+    if (!$level) {
+        $url = URL . '/themes/img/new.png';
+        $danh_hieu = "Người Mới";
     }
-    $row = GetDataArr("level_color", "level <= '$level' ORDER BY level DESC");
-    if (!$row['icon']) return '&nbsp;<span data-tooltip="' . $row['danh_hieu'] . '"><img style="border-radius: 5px;" src="' . URL . '/themes/img/new.png" width="' . $width . '" height="' . $height . '" alt="' . $row['danh_hieu'] . '"></span>&nbsp;';
-    return '&nbsp;<span data-tooltip="' . $row['danh_hieu'] . '"><img style="border-radius: 5px;" src="' . $row['icon'] . '" width="' . $width . '" height="' . $height . '" alt="' . $row['danh_hieu'] . '"></span>&nbsp;';
+    else {
+        if (get_total("level_color", "WHERE level <= '$level' ORDER BY level DESC") < 1) {
+            if ($level >= 10) {
+                $url = URL . '/themes/img/new.png';
+                $danh_hieu = "Người Mới";
+            } 
+            else {
+                $url = URL . '/themes/img/new.png';
+                $danh_hieu = "Người Mới";
+            }
+        }
+        else {
+            $row = GetDataArr("level_color", "level <= '$level' ORDER BY level DESC");
+
+            if (!$row['icon']) {
+                $url = URL . '/themes/img/new.png';
+                $danh_hieu = $row['danh_hieu'];
+            }
+            else {
+                $url = $row['icon'];
+                $danh_hieu = $row['danh_hieu'];
+            }
+        }
+    }
+
+    if (!empty($url)) {
+        $tooltip = '<img style="border-radius: 5px;" src="' . $url . '" width="' . $width . '" height="' . $height . '" alt="' . $danh_hieu . '"><span class="icon-name">' . $danh_hieu . '</span>';
+        return "&nbsp;<span data-tooltip-icon='" . $tooltip . "'><img style='border-radius: 5px;' src='" . $url . "' width='" . $width . "' height='" . $height . "' alt='" . $danh_hieu . "'></span>&nbsp;";
+    }
+    
 }
 function Danh_Hieu($level)
 {
