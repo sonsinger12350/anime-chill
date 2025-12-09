@@ -17,8 +17,8 @@ define('URL', 'http://localhost');
 define('ADMIN', 'http://localhost/admin_movie');
 define('EMAIL', 'None');
 define('PASSMAIL', 'None');
-define('UPLOAD_DIR', $_SERVER["DOCUMENT_ROOT"] . '/assets/upload');
-define('ROOT_DIR', $_SERVER["DOCUMENT_ROOT"]);
+define('UPLOAD_DIR', dirname(__DIR__) . '/assets/upload');
+define('ROOT_DIR', dirname(__DIR__));
 if (isset($_SERVER['HTTP_CF_CONNECTING_IP'])) {
     $_SERVER['REMOTE_ADDR'] = $_SERVER['HTTP_CF_CONNECTING_IP'];
 }

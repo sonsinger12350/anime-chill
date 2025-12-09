@@ -23,6 +23,8 @@
                 setcookie('_accesstoken', $AccessToken, time() + (86400 * 30), '/', URL_None_HTTP(), false);
                 $mysql->update("user", "_accesstoken = '$AccessToken', online = 1", "email = '$email'");
                 $user = GetDataArr('user', "_accesstoken = '$AccessToken'");
+                // Đồng bộ lịch sử xem phim khi đăng nhập
+                syncHistoryOnLogin($user['id']);
                 die(header("location:/"));
                 break;
         }

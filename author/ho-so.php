@@ -834,12 +834,9 @@
 			};
 			_0x560c85();
 		}), loadHistorymovie = () => {
-			const _0xbb09c4 = _0x80f4a7,
-				_0x1ec641 = localStorage[_0xbb09c4(0x1cb)]('data_history'),
-				_0x4a6ccd = _0x1ec641 ? JSON[_0xbb09c4(0x1c9)](_0x1ec641) : [];
+			const _0xbb09c4 = _0x80f4a7;
 			return axios[_0xbb09c4(0x1cc)](_0xbb09c4(0x1cd), {
-				'action': _0xbb09c4(0x1c5),
-				'data_history': JSON[_0xbb09c4(0x1c4)](_0x4a6ccd)
+				'action': 'get_history'
 			});
 		};
 	})();

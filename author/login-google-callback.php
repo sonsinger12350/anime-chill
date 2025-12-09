@@ -29,6 +29,12 @@
         $mysql->update("user", "_accesstoken = '$AccessToken', online = 1", "email = '$email'");
         setcookie('author', $AccessToken, time() + (86400 * 30), '/', URL_None_HTTP(), false);
         setcookie('_accesstoken', $AccessToken, time() + (86400 * 30), '/', URL_None_HTTP(), false);
+        
+        // Đồng bộ lịch sử xem phim khi đăng nhập
+        $User_Arr = GetDataArr("user", "email = '$email'");
+        if (!empty($User_Arr['id'])) {
+            syncHistoryOnLogin($User_Arr['id']);
+        }
     
         die(header("location:/"));
     }

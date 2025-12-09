@@ -2,116 +2,86 @@
 if (!defined('MovieAnime')) die("You are illegally infiltrating our website");
 HeaderApplication();
 $Json = InputJson();
+
 if ($Json['action'] == 'live_search') {
-    $kw = sql_escape($Json['keyword']);
-    $kw = chuyenslug($kw);
-    $CheckMovie = get_total('movie', "WHERE public = 'true' AND name LIKE '%$kw%' OR slug LIKE '%$kw%'");
-    if ($CheckMovie < 1) die(json_encode(array(
-        "data" => "<div class='padding-10'>Không tìm thấy phim theo từ khoá</div>",
-        "result" => null,
-        "status" => "failed"
-    )));
-    $cache_key = "cache.Search_$kw";
-    if ($InstanceCache->has($cache_key)) die($InstanceCache->get($cache_key));
-    $data = array();
-    $arr = $mysql->query("SELECT * FROM " . DATABASE_FX . "movie WHERE public = 'true' AND name LIKE '%$kw%' OR slug LIKE '%$kw%' ORDER BY id DESC LIMIT 30");
-    while ($row = $arr->fetch(PDO::FETCH_ASSOC)) {
-        $NumEpisode = ($row['ep_hien_tai'] ? $row['ep_hien_tai'] : get_total("episode", "WHERE movie_id = '{$row['id']}'"));
-        if ($row['loai_phim'] == 'Phim Lẻ') {
-            $statut = "{$row['movie_duration']} Phút";
-        } else {
-            $statut = "$NumEpisode/{$row['ep_num']}";
-        }
-        $data['data'] = '<a href="' . URL . '/thong-tin-phim/' . $row['slug'] . '.html"><div class="row_one"><img src="' . $row['image'] . '"></div><div class="row_two"><span class="fw-500">' . $row['name'] . '</span> <span class="fs-12 margin-t-5">' . $statut . '</span></div></a>';
-        $data['result'] = '<a href="' . URL . '/thong-tin-phim/' . $row['slug'] . '.html"><div class="row_one"><img src="' . $row['image'] . '"></div><div class="row_two"><span class="fw-500">' . $row['name'] . '</span> <span class="fs-12 margin-t-5">' . $statut . '</span></div></a>';
-    }
-    $data['status'] = 'success';
-    $InstanceCache->set($cache_key, json_encode($data), $cf['time_cache'] * 3600);
-    die(json_encode($data));
+	$kw = sql_escape($Json['keyword']);
+	$kw = chuyenslug($kw);
+	$CheckMovie = get_total('movie', "WHERE public = 'true' AND name LIKE '%$kw%' OR slug LIKE '%$kw%'");
+	if ($CheckMovie < 1) die(json_encode(array(
+		"data" => "<div class='padding-10'>Không tìm thấy phim theo từ khoá</div>",
+		"result" => null,
+		"status" => "failed"
+	)));
+	$cache_key = "cache.Search_$kw";
+	if ($InstanceCache->has($cache_key)) die($InstanceCache->get($cache_key));
+	$data = array();
+	$arr = $mysql->query("SELECT * FROM " . DATABASE_FX . "movie WHERE public = 'true' AND name LIKE '%$kw%' OR slug LIKE '%$kw%' ORDER BY id DESC LIMIT 30");
+	while ($row = $arr->fetch(PDO::FETCH_ASSOC)) {
+		$NumEpisode = ($row['ep_hien_tai'] ? $row['ep_hien_tai'] : get_total("episode", "WHERE movie_id = '{$row['id']}'"));
+		if ($row['loai_phim'] == 'Phim Lẻ') {
+			$statut = "{$row['movie_duration']} Phút";
+		} else {
+			$statut = "$NumEpisode/{$row['ep_num']}";
+		}
+		$data['data'] = '<a href="' . URL . '/thong-tin-phim/' . $row['slug'] . '.html"><div class="row_one"><img src="' . $row['image'] . '"></div><div class="row_two"><span class="fw-500">' . $row['name'] . '</span> <span class="fs-12 margin-t-5">' . $statut . '</span></div></a>';
+		$data['result'] = '<a href="' . URL . '/thong-tin-phim/' . $row['slug'] . '.html"><div class="row_one"><img src="' . $row['image'] . '"></div><div class="row_two"><span class="fw-500">' . $row['name'] . '</span> <span class="fs-12 margin-t-5">' . $statut . '</span></div></a>';
+	}
+	$data['status'] = 'success';
+	$InstanceCache->set($cache_key, json_encode($data), $cf['time_cache'] * 3600);
+	die(json_encode($data));
 } elseif ($Json['action'] == 'add_rate') {
-    if ($_author_cookie) {
-        if ($user['banned'] == 'true') die(json_encode(["result" => "Tài Khoản Bị Khóa", "status" => "failed"]));
-    }
-    $movie_id = sql_escape($Json['movie_id']);
-    $rating = sql_escape($Json['rating']);
+	if ($_author_cookie) {
+		if ($user['banned'] == 'true') die(json_encode(["result" => "Tài Khoản Bị Khóa", "status" => "failed"]));
+	}
+	$movie_id = sql_escape($Json['movie_id']);
+	$rating = sql_escape($Json['rating']);
 
-    if (!json_decode($_COOKIE['vote'], true)[$movie_id]) {
-        $ServerJson = array(
-            "result" => "Vote Thành Công",
-            "status" => "success"
-        );
-        setcookie('vote', json_encode(array($movie_id => $rating)), time() + 48000, '/');
-        $mysql->update("movie", "vote_point = vote_point + '$rating',vote_all = vote_all + 1", "id = '$movie_id'");
-    } else {
-        $ServerJson = array(
-            "result" => "Bạn Đã Vote Phim Này Rồi",
-            "status" => "failed"
-        );
-    }
+	if (!json_decode($_COOKIE['vote'], true)[$movie_id]) {
+		$ServerJson = array(
+			"result" => "Vote Thành Công",
+			"status" => "success"
+		);
+		setcookie('vote', json_encode(array($movie_id => $rating)), time() + 48000, '/');
+		$mysql->update("movie", "vote_point = vote_point + '$rating',vote_all = vote_all + 1", "id = '$movie_id'");
+	} else {
+		$ServerJson = array(
+			"result" => "Bạn Đã Vote Phim Này Rồi",
+			"status" => "failed"
+		);
+	}
 
-    die(json_encode($ServerJson));
-} else if ($Json['action'] == 'data_history') {
-    $History .= '<div class="watch-history ah-frame-bg">';
-    $HisCheck = 0;
-
-    foreach (json_decode($Json['data_history'], true) as $key => $value) {
-        $MovieID = sql_escape($value['movie_id']);
-        $EpisodeID = sql_escape($value['no_ep']);
-        if (get_total("movie", "WHERE id = '$MovieID'") >= 1) {
-            if (get_total("episode", "WHERE ep_name = '$EpisodeID' AND movie_id = '$MovieID'") >= 1) {
-                $HisCheck++;
-                $Movie = GetDataArr("movie", "id = '$MovieID'");
-                $Ep = GetDataArr("episode", "ep_name = '$EpisodeID' AND movie_id = '$MovieID'");
-                $History .= '<div class="item">
-                <a href="' . URL . '/xem-hhchina/' . $Movie['slug'] . '-episode-id-' . $MovieID . '.html">
-                <div>
-                <img src="' . $Movie['image'] . '" />
-                </div>
-                <div>
-                <div>' . $Movie['name'] . '</div><div>Bạn đã xem tập ' . $Ep['ep_name'] . '</div>
-                </div>
-                </a>
-                </div>';
-            }
-        }
-    }
-
-    if ($HisCheck == 0) {
-        $History .= '<div class="ah_noti">Lịch sử trống</div>';
-    }
-    $History .= '</div>';
-    echo $History;
+	die(json_encode($ServerJson));
 } else if ($Json['action'] == 'data_follow') {
-    $HTML_DATA .= '<div class="movies-list">';
-    $HisCheck = 0;
-    $page_limit = !empty($Json['limit']) ? $Json['limit'] : 9;
-    $userId = !empty($Json['user']) ? $Json['user'] : $user['id'];
+	$HTML_DATA .= '<div class="movies-list">';
+	$HisCheck = 0;
+	$page_limit = !empty($Json['limit']) ? $Json['limit'] : 9;
+	$userId = !empty($Json['user']) ? $Json['user'] : $user['id'];
 
-    if (!$_author_cookie) {
-        $list_id = json_decode($Json['data_follow'], true);
+	if (!$_author_cookie) {
+		$list_id = json_decode($Json['data_follow'], true);
 
-        if (empty($list_id)) {
-            $HTML_DATA .= '<div class="ah_noti">Bạn Chưa Theo Dõi Bộ Phim Nào</div>';
-            $HTML_DATA .= '</div>';
-            die($HTML_DATA);
-        }
+		if (empty($list_id)) {
+			$HTML_DATA .= '<div class="ah_noti">Bạn Chưa Theo Dõi Bộ Phim Nào</div>';
+			$HTML_DATA .= '</div>';
+			die($HTML_DATA);
+		}
 
-        $id_chunk = array_chunk($list_id, $page_limit, true);
-        $pagination = array_keys($id_chunk);
-        $activePage = !empty($Json['page']) ? $Json['page']-1 : 0;
-        $id_query = $id_chunk[$activePage];
+		$id_chunk = array_chunk($list_id, $page_limit, true);
+		$pagination = array_keys($id_chunk);
+		$activePage = !empty($Json['page']) ? $Json['page'] - 1 : 0;
+		$id_query = $id_chunk[$activePage];
 
-        foreach ($id_query as $key => $value) {
-            $MovieID = sql_escape($value);
-            if (get_total("movie", "WHERE id = '$MovieID'") >= 1) {
-                $HisCheck++;
-                $Movie = GetDataArr("movie", "id = '$MovieID'");
-                $NumEpisode = ($Movie['ep_hien_tai'] ? $Movie['ep_hien_tai'] : get_total("episode", "WHERE movie_id = '{$Movie['id']}'"));
-                if ($Movie['loai_phim'] == 'Phim Lẻ') {
-                    $statut = "{$Movie['movie_duration']} Phút";
-                } else $statut = "$NumEpisode/{$Movie['ep_num']}";
+		foreach ($id_query as $key => $value) {
+			$MovieID = sql_escape($value);
+			if (get_total("movie", "WHERE id = '$MovieID'") >= 1) {
+				$HisCheck++;
+				$Movie = GetDataArr("movie", "id = '$MovieID'");
+				$NumEpisode = ($Movie['ep_hien_tai'] ? $Movie['ep_hien_tai'] : get_total("episode", "WHERE movie_id = '{$Movie['id']}'"));
+				if ($Movie['loai_phim'] == 'Phim Lẻ') {
+					$statut = "{$Movie['movie_duration']} Phút";
+				} else $statut = "$NumEpisode/{$Movie['ep_num']}";
 
-                $HTML_DATA .= '<div class="movie-item" movie-id="' . $MovieID . '">
+				$HTML_DATA .= '<div class="movie-item" movie-id="' . $MovieID . '">
                                     <a class="delete" href="#" onclick="delFollowmovie(event,' . $MovieID . ')">X</a>
                                     <a href="' . URL . '/thong-tin-phim/' . $Movie['slug'] . '.html" title="' . $Movie['name'] . '">
                                         <div class="episode-latest">
@@ -128,31 +98,31 @@ if ($Json['action'] == 'live_search') {
                                         </div>
                                     </a>
                                 </div>';
-            }
-        }
-    } else if (isset($_author_cookie)) {
-        $arr = $mysql->query("SELECT `movie_save`, `movie_save` FROM " . DATABASE_FX . "history WHERE user_id = '$userId' ORDER BY id DESC");
-        $list_id = $arr->fetchAll(PDO::FETCH_KEY_PAIR);
+			}
+		}
+	} else if (isset($_author_cookie)) {
+		$arr = $mysql->query("SELECT `movie_save`, `movie_save` FROM " . DATABASE_FX . "history WHERE user_id = '$userId' ORDER BY id DESC");
+		$list_id = $arr->fetchAll(PDO::FETCH_KEY_PAIR);
 
-        if (empty($list_id)) {
-            $HTML_DATA .= '<div class="ah_noti">Bạn Chưa Theo Dõi Bộ Phim Nào</div>';
-            $HTML_DATA .= '</div>';
-            die($HTML_DATA);
-        }
+		if (empty($list_id)) {
+			$HTML_DATA .= '<div class="ah_noti">Bạn Chưa Theo Dõi Bộ Phim Nào</div>';
+			$HTML_DATA .= '</div>';
+			die($HTML_DATA);
+		}
 
-        $id_chunk = array_chunk($list_id, $page_limit, true);
-        $pagination = array_keys($id_chunk);
-        $activePage = !empty($Json['page_now']) ? $Json['page_now'] : 0;
-        $id_query = $id_chunk[$activePage];
-        
-        foreach ($id_query as $id) {
-            $HisCheck++;
-            $Movie = GetDataArr("movie", "id = '{$id}'");
-            $NumEpisode = ($Movie['ep_hien_tai'] ? $Movie['ep_hien_tai'] : get_total("episode", "WHERE movie_id = '{$Movie['id']}'"));
-            if ($Movie['loai_phim'] == 'Phim Lẻ') {
-                $statut = "{$Movie['movie_duration']} Phút";
-            } else $statut = "$NumEpisode/{$Movie['ep_num']}";
-            $HTML_DATA .= '<div class="movie-item" movie-id="' . $id . '">
+		$id_chunk = array_chunk($list_id, $page_limit, true);
+		$pagination = array_keys($id_chunk);
+		$activePage = !empty($Json['page_now']) ? $Json['page_now'] : 0;
+		$id_query = $id_chunk[$activePage];
+
+		foreach ($id_query as $id) {
+			$HisCheck++;
+			$Movie = GetDataArr("movie", "id = '{$id}'");
+			$NumEpisode = ($Movie['ep_hien_tai'] ? $Movie['ep_hien_tai'] : get_total("episode", "WHERE movie_id = '{$Movie['id']}'"));
+			if ($Movie['loai_phim'] == 'Phim Lẻ') {
+				$statut = "{$Movie['movie_duration']} Phút";
+			} else $statut = "$NumEpisode/{$Movie['ep_num']}";
+			$HTML_DATA .= '<div class="movie-item" movie-id="' . $id . '">
                 <a class="delete" href="#" onclick="delFollowmovie(event,' . $id . ')">X</a>
                 <a href="' . URL . '/thong-tin-phim/' . $Movie['slug'] . '.html" title="' . $Movie['name'] . '">
                     <div class="episode-latest">
@@ -169,144 +139,144 @@ if ($Json['action'] == 'live_search') {
                     </div>
                 </a>
             </div>';
-        }
-    }
+		}
+	}
 
-    if ($HisCheck == 0) {
-        $HTML_DATA .= '<div class="ah_noti">Bạn Chưa Theo Dõi Bộ Phim Nào</div>';
-    }
+	if ($HisCheck == 0) {
+		$HTML_DATA .= '<div class="ah_noti">Bạn Chưa Theo Dõi Bộ Phim Nào</div>';
+	}
 
-    $HTML_DATA .= '</div>';
-    if (!empty($pagination) && count($pagination) > 1) {
-        $totalPage = count($pagination);
-        $HTML_DATA .= '<ul class="pagination">';
+	$HTML_DATA .= '</div>';
+	if (!empty($pagination) && count($pagination) > 1) {
+		$totalPage = count($pagination);
+		$HTML_DATA .= '<ul class="pagination">';
 
-        if ($totalPage > 5) {
-            if ($activePage > 2 ) {
-                $HTML_DATA .= '
-                <li class="pagination-item '.($activePage==$page ? 'active' : '').'">
+		if ($totalPage > 5) {
+			if ($activePage > 2) {
+				$HTML_DATA .= '
+                <li class="pagination-item ' . ($activePage == $page ? 'active' : '') . '">
                     <a href="javascript:void(0)" class="movie-follow-pagination" data-page="0"><i class="fa-solid fa-angles-left"></i></a>
                 </li>
                 ';
-            }
-            $count = 0;
-            foreach ($pagination as $page) {
-                if ($count == 5) {
-                    break;
-                }
+			}
+			$count = 0;
+			foreach ($pagination as $page) {
+				if ($count == 5) {
+					break;
+				}
 
-                if ($activePage >= 3) {
-                    if ($page > ($activePage-3)) {
-                        $HTML_DATA .= '
-                        <li class="pagination-item '.($activePage==$page ? 'active' : '').'">
-                            <a href="javascript:void(0)" class="movie-follow-pagination" data-page="'.$page.'">'.($page+1).'</a>
+				if ($activePage >= 3) {
+					if ($page > ($activePage - 3)) {
+						$HTML_DATA .= '
+                        <li class="pagination-item ' . ($activePage == $page ? 'active' : '') . '">
+                            <a href="javascript:void(0)" class="movie-follow-pagination" data-page="' . $page . '">' . ($page + 1) . '</a>
                         </li>
                         ';
-                        $count++;
-                    }
-                } else {
-                    $HTML_DATA .= '
-                    <li class="pagination-item '.($activePage==$page ? 'active' : '').'">
-                        <a href="javascript:void(0)" class="movie-follow-pagination" data-page="'.$page.'">'.($page+1).'</a>
+						$count++;
+					}
+				} else {
+					$HTML_DATA .= '
+                    <li class="pagination-item ' . ($activePage == $page ? 'active' : '') . '">
+                        <a href="javascript:void(0)" class="movie-follow-pagination" data-page="' . $page . '">' . ($page + 1) . '</a>
                     </li>
                     ';
-                    $count++;
-                }
-            }
+					$count++;
+				}
+			}
 
-            if ($activePage <= ($totalPage-2) ) {
-                $HTML_DATA .= '
-                <li class="pagination-item '.($activePage==$page ? 'active' : '').'">
-                    <a href="javascript:void(0)" class="movie-follow-pagination" data-page="'.end($pagination).'"><i class="fa-solid fa-angles-right"></i></a>
+			if ($activePage <= ($totalPage - 2)) {
+				$HTML_DATA .= '
+                <li class="pagination-item ' . ($activePage == $page ? 'active' : '') . '">
+                    <a href="javascript:void(0)" class="movie-follow-pagination" data-page="' . end($pagination) . '"><i class="fa-solid fa-angles-right"></i></a>
                 </li>
                 ';
-            }
-        } else {
-            foreach ($pagination as $page) {
-                $HTML_DATA .= '
-                <li class="pagination-item '.($activePage==$page ? 'active' : '').'">
-                    <a href="javascript:void(0)" class="movie-follow-pagination" data-page="'.$page.'">'.($page+1).'</a>
+			}
+		} else {
+			foreach ($pagination as $page) {
+				$HTML_DATA .= '
+                <li class="pagination-item ' . ($activePage == $page ? 'active' : '') . '">
+                    <a href="javascript:void(0)" class="movie-follow-pagination" data-page="' . $page . '">' . ($page + 1) . '</a>
                 </li>
                 ';
-            }
-        }
+			}
+		}
 
-        $HTML_DATA .= '</ul>';
-    }
+		$HTML_DATA .= '</ul>';
+	}
 
-    die($HTML_DATA);
+	die($HTML_DATA);
 } else if ($Json['action'] == 'upload_avatar') {
-    if ($user['banned'] == 'true') die(json_encode(["result" => "Tài Khoản Bị Khóa", "status" => "failed"]));
-    if (!$_author_cookie) die(json_encode(["result" => "Bạn Chưa Đăng Nhập", "status" => "failed"]));
-    if ($_COOKIE["success_avt"]) die(json_encode(["result" => "Để Tránh Spam Vui Lòng Thử Lại Sau 2 Tiếng", "status" => "failed"]));
-    $token = sql_escape($Json['token']);
-    if (!json_decode($_COOKIE["TokenTime"], true)[$token]) die(json_encode(["result" => "Token Hết Thời Hạn ", "status" => "failed"]));
-    $Uploader = imagesaver($Json['base64']);
-    if (!$Uploader) die(json_encode(["result" => "Upload Ảnh Không Thành Công , Thử Lại Sau", "status" => "failed"]));
-    $mysql->update("user", "avatar = '$Uploader'", "email = '$useremail'");
-    addCoin($user['id'], 'first_avatar');
-    setcookie("success_avt", "success", time() + (2 * 3600));
-    die(json_encode(["result" => "Tải Ảnh Lên Thành Công", "status" => "success"]));
+	if ($user['banned'] == 'true') die(json_encode(["result" => "Tài Khoản Bị Khóa", "status" => "failed"]));
+	if (!$_author_cookie) die(json_encode(["result" => "Bạn Chưa Đăng Nhập", "status" => "failed"]));
+	if ($_COOKIE["success_avt"]) die(json_encode(["result" => "Để Tránh Spam Vui Lòng Thử Lại Sau 2 Tiếng", "status" => "failed"]));
+	$token = sql_escape($Json['token']);
+	if (!json_decode($_COOKIE["TokenTime"], true)[$token]) die(json_encode(["result" => "Token Hết Thời Hạn ", "status" => "failed"]));
+	$Uploader = imagesaver($Json['base64']);
+	if (!$Uploader) die(json_encode(["result" => "Upload Ảnh Không Thành Công , Thử Lại Sau", "status" => "failed"]));
+	$mysql->update("user", "avatar = '$Uploader'", "email = '$useremail'");
+	addCoin($user['id'], 'first_avatar');
+	setcookie("success_avt", "success", time() + (2 * 3600));
+	die(json_encode(["result" => "Tải Ảnh Lên Thành Công", "status" => "success"]));
 } else if ($Json['action'] == 'load_comments') {
-    if ($cf['cmt_on'] == 'false') die(json_encode(["result" => "Chức Năng Comment Đang Tắt", "status" => "failed"]));
-    //if (!$_author_cookie) die(json_encode(["result" => "Bạn Chưa Đăng Nhập", "status" => "failed"]));
-    $get_type = sql_escape($Json['get_type']);
-    $id_load_more = sql_escape($Json['id_load_more']);
-    if ($id_load_more < 1) {
-        $CurenPage = 1;
-    } else $CurenPage = $id_load_more;
+	if ($cf['cmt_on'] == 'false') die(json_encode(["result" => "Chức Năng Comment Đang Tắt", "status" => "failed"]));
+	//if (!$_author_cookie) die(json_encode(["result" => "Bạn Chưa Đăng Nhập", "status" => "failed"]));
+	$get_type = sql_escape($Json['get_type']);
+	$id_load_more = sql_escape($Json['id_load_more']);
+	if ($id_load_more < 1) {
+		$CurenPage = 1;
+	} else $CurenPage = $id_load_more;
 
-    $limit = isset($Json['limit']) ? sql_escape($Json['limit']) : 6;
-    $movie_id = sql_escape($Json['movie_id']);
-    $token = sql_escape($Json['token']);
+	$limit = isset($Json['limit']) ? sql_escape($Json['limit']) : 6;
+	$movie_id = sql_escape($Json['movie_id']);
+	$token = sql_escape($Json['token']);
 
-    if (!json_decode($_COOKIE["TokenTime"], true)[$token]) die(json_encode(["result" => "Token Hết Thời Hạn ", "status" => "failed"]));
-    if (get_total('movie', "WHERE id = $movie_id") < 1) die(json_encode(["result" => "Phim Không Tồn Tại", "status" => "failed"]));
-    $P = CheckPages('comment', "WHERE movie_id = '$movie_id' AND show_cmt = 'true' AND reply_comment IS NULL", $limit, $CurenPage);
+	if (!json_decode($_COOKIE["TokenTime"], true)[$token]) die(json_encode(["result" => "Token Hết Thời Hạn ", "status" => "failed"]));
+	if (get_total('movie', "WHERE id = $movie_id") < 1) die(json_encode(["result" => "Phim Không Tồn Tại", "status" => "failed"]));
+	$P = CheckPages('comment', "WHERE movie_id = '$movie_id' AND show_cmt = 'true' AND reply_comment IS NULL", $limit, $CurenPage);
 
-    if ($P['total'] >= 1) {
-        $arr = $mysql->query("SELECT * FROM " . DATABASE_FX . "comment WHERE movie_id = '$movie_id' AND show_cmt = 'true' AND reply_comment IS NULL ORDER BY id DESC LIMIT {$P['start']},$limit");
-        
-        
-        while ($row = $arr->fetch(PDO::FETCH_ASSOC)) {
-            $User_Arr = GetDataArr("user", "id = '{$row['user_id']}'");
-            $listItemStore = listUserItemActive($User_Arr['id']);
-            $listUserIconActive = listUserIconActive($User_Arr['id'], 'all');
-            $htmlItemStore = '<div class="user-figure">';
-            $htmlVip = '';
-            $htmlIconUser = '';
-            $background = getIconStoreActive($User_Arr['id'], 'background');
+	if ($P['total'] >= 1) {
+		$arr = $mysql->query("SELECT * FROM " . DATABASE_FX . "comment WHERE movie_id = '$movie_id' AND show_cmt = 'true' AND reply_comment IS NULL ORDER BY id DESC LIMIT {$P['start']},$limit");
 
-            foreach ($listItemStore as $k => $v) {
-                if (isItemStore($k)) {
-                    $htmlItemStore .= '<img src="'.$v.'" alt="'.$k.'" class="'.$k.'-default">';
-                }
-            }
 
-            $htmlItemStore .= '</div>';
+		while ($row = $arr->fetch(PDO::FETCH_ASSOC)) {
+			$User_Arr = GetDataArr("user", "id = '{$row['user_id']}'");
+			$listItemStore = listUserItemActive($User_Arr['id']);
+			$listUserIconActive = listUserIconActive($User_Arr['id'], 'all');
+			$htmlItemStore = '<div class="user-figure">';
+			$htmlVip = '';
+			$htmlIconUser = '';
+			$background = getIconStoreActive($User_Arr['id'], 'background');
 
-            if (!empty($listUserIconActive)) {
-                $htmlIconUser .= '<div class="icon-user">';
+			foreach ($listItemStore as $k => $v) {
+				if (isItemStore($k)) {
+					$htmlItemStore .= '<img src="' . $v . '" alt="' . $k . '" class="' . $k . '-default">';
+				}
+			}
 
-                foreach ($listUserIconActive as $k => $v) {
-                    $tooltip = '<img src="'.$v['image'].'" /><span class="icon-name">'.$v['name'].'</span>';
-                    $htmlIconUser .= "<span data-tooltip-icon='$tooltip'><img src='{$v['image']}' /></span>";
-                }
+			$htmlItemStore .= '</div>';
 
-                $htmlIconUser .= '</div>';
-            }
+			if (!empty($listUserIconActive)) {
+				$htmlIconUser .= '<div class="icon-user">';
 
-            if ($User_Arr['vip'] == 1) {
-                $tooltipVip = '<img src="'.$vipIcon.'" />';
-                $htmlVip = "<div class='vip-icon' data-tooltip-icon='$tooltipVip'><img src='$vipIcon' /></div>";
-            }
+				foreach ($listUserIconActive as $k => $v) {
+					$tooltip = '<img src="' . $v['image'] . '" /><span class="icon-name">' . $v['name'] . '</span>';
+					$htmlIconUser .= "<span data-tooltip-icon='$tooltip'><img src='{$v['image']}' /></span>";
+				}
 
-            if (get_total('user', "WHERE id = '{$row['user_id']}'") < 1) {
-                $mysql->delete('comment', "user_id = '{$row['user_id']}'");
-            }
+				$htmlIconUser .= '</div>';
+			}
 
-            if ($row['user_id'] == $user['id']) {
-                $CmtSetting = '<div class="flex flex-hozi-center relative"><a href="javascript:void(0)" onclick="clickEventDropDown(this,\'expand_more\')" class="toggle-dropdown fs-21 inline-flex" bind="drop-down-oc-' . $row['id'] . '"><span class="material-icons-round">expand_more</span></a>
+			if ($User_Arr['vip'] == 1) {
+				$tooltipVip = '<img src="' . $vipIcon . '" />';
+				$htmlVip = "<div class='vip-icon' data-tooltip-icon='$tooltipVip'><img src='$vipIcon' /></div>";
+			}
+
+			if (get_total('user', "WHERE id = '{$row['user_id']}'") < 1) {
+				$mysql->delete('comment', "user_id = '{$row['user_id']}'");
+			}
+
+			if ($row['user_id'] == $user['id']) {
+				$CmtSetting = '<div class="flex flex-hozi-center relative"><a href="javascript:void(0)" onclick="clickEventDropDown(this,\'expand_more\')" class="toggle-dropdown fs-21 inline-flex" bind="drop-down-oc-' . $row['id'] . '"><span class="material-icons-round">expand_more</span></a>
                                     <div id="drop-down-oc-' . $row['id'] . '" class="dropdown-option bg-black">
                                         <div onclick="showFrameEditComment(' . $row['id'] . ',\'comment_main\')"><span class="material-icons-round margin-0-5">
                                                 edit
@@ -316,37 +286,37 @@ if ($Json['action'] == 'live_search') {
                                             </span>Ẩn</div>
                                     </div>
                                 </div>';
-            } else $CmtSetting = "";
-            if (isset($_author_cookie)) {
-                $ShowReply = '<a href="javascript:void(0)" onclick="showFrameReplyComment(' . $row['id'] . ',\'' . $User_Arr['nickname'] . '\',' . $row['user_id'] . ',\'0068c15cfb8ec6a0060b94d9def64ea0\')" class="margin-r-5">Trả lời</a>';
-                $ShowReply1 = '<div id="toggle_frame_comment_' . $row['id'] . '"></div>';
-            } else {
-                $ShowReply = "";
-                $ShowReply1 = "";
-            }
-            $Comment .= '<div id="comment_' . $row['id'] . '" class="user-comment relative">
+			} else $CmtSetting = "";
+			if (isset($_author_cookie)) {
+				$ShowReply = '<a href="javascript:void(0)" onclick="showFrameReplyComment(' . $row['id'] . ',\'' . $User_Arr['nickname'] . '\',' . $row['user_id'] . ',\'0068c15cfb8ec6a0060b94d9def64ea0\')" class="margin-r-5">Trả lời</a>';
+				$ShowReply1 = '<div id="toggle_frame_comment_' . $row['id'] . '"></div>';
+			} else {
+				$ShowReply = "";
+				$ShowReply1 = "";
+			}
+			$Comment .= '<div id="comment_' . $row['id'] . '" class="user-comment relative">
                             <div class="flex bg-comment" style=" ' . (!empty($background) ? 'background-image: url(' . $background . ');' : '') . '">
                                 <div class="left">
                                     <div class="avatar" onclick="initViewProfile(' . $row['user_id'] . ')">
                                         <img class="avatar-img" src="' . $User_Arr['avatar'] . '">
-                                        <img class="avatar-frame" src="'.getIconStoreActive($User_Arr['id'], 'khung-vien').'">
+                                        <img class="avatar-frame" src="' . getIconStoreActive($User_Arr['id'], 'khung-vien') . '">
                                         <span class="rank-level">Lv ' . $User_Arr['level'] . '</span>
                                     </div>
-                                    <div class="item-store">'.$htmlItemStore.'</div>
+                                    <div class="item-store">' . $htmlItemStore . '</div>
                                 </div>
                                 <div class="right">
                                     <div class="flex flex-column">
                                         <div class="flex flex-space-auto">
                                             <div class="flex flex-hozi-center" style="width: 100%">
                                                 <div class="nickname">' . $User_Arr['nickname'] . LevelIcon($User_Arr['level'], 18, 18) . '</div>
-                                                '.$htmlVip.'
+                                                ' . $htmlVip . '
                                             </div>
                                             ' . $CmtSetting . '
                                         </div>
-                                        <div class="content">'.$htmlIconUser.'' . $row['content'] . '</div>
+                                        <div class="content">' . $htmlIconUser . '' . $row['content'] . '</div>
                                         <div class="flex fs-12"> 
                                             ' . $ShowReply . '
-                                            <div> ' . RemainTime($row['timestap']) . (!empty($row['episode']) ? ' | Tập '.$row['episode'] : '') . '</div>
+                                            <div> ' . RemainTime($row['timestap']) . (!empty($row['episode']) ? ' | Tập ' . $row['episode'] : '') . '</div>
                                         </div>
                                     </div>
                                 </div>
@@ -355,118 +325,117 @@ if ($Json['action'] == 'live_search') {
                         <div id="feedback_' . $row['id'] . '" class="frame-reply-comments">
                                     ' . ShowReplyComment($row['id']) . '
                         </div>' . $ShowReply1;
-        }
+		}
 
-        $total = ceil($P['total'] / $limit);
-        if ($total > $CurenPage) {
-            $Comment .= '<div class="flex flex-ver-center fw-700 load-more button-default bg-blue" onclick="loadComments({id_load_more:' . ($CurenPage + 1) . ',element_append:this})"><a href="javascript:void(0)">Tải thêm bình luận</a></div>';
-        }
-    }
-    die(json_encode(["result" => $Comment, "status" => "success", "total" => $total]));
+		$total = ceil($P['total'] / $limit);
+		if ($total > $CurenPage) {
+			$Comment .= '<div class="flex flex-ver-center fw-700 load-more bg-blue" onclick="loadComments({id_load_more:' . ($CurenPage + 1) . ',element_append:this})"><a href="javascript:void(0)">Tải thêm bình luận</a></div>';
+		}
+	}
+	die(json_encode(["result" => $Comment, "status" => "success", "total" => $total]));
 } else if ($Json['action'] == 'add_comment') {
-    if ($cf['cmt_on'] == 'false') die(json_encode(["result" => "Chức Năng Comment Đang Tắt", "status" => "failed"]));
-    if ($user['banned'] == 'true') die(json_encode(["result" => "Tài Khoản Bị Khóa", "status" => "failed"]));
-    if (!$_author_cookie) die(json_encode(["result" => "Bạn Chưa Đăng Nhập", "status" => "failed"]));
-    $content = htmlchars_cmt(injection(urldecode($Json['content'])));
-    if (!$content) die(json_encode(["result" => "Nội Dung Comment Không Được Để Trống", "status" => "failed"]));
-    if (strlen($content) > 1000) die(json_encode(["result" => "Nội Dung Comment Quá Dài", "status" => "failed"]));
-    if (isset($_COOKIE['add_comments'])) {
-        setcookie("add_comments", $user['nickname'], time() + 20);
-        die(json_encode(["result" => "Vui Lòng Thực Hiện Sau 20s, Càng Ấn Nhiều Đợi Càng Lâu", "status" => "failed"]));
-    }
-    $movie_id = sql_escape($Json['movie_id']);
-    $episode = sql_escape($Json['episode'] ?? null);
-    $reply_comment_id = sql_escape($Json['reply_comment_id']);
-    $reply_user_id = sql_escape($Json['reply_user_id']);
-    $token = sql_escape($Json['token']);
-    if (!json_decode($_COOKIE["TokenTime"], true)[$token]) die(json_encode(["result" => "Token Hết Thời Hạn ", "status" => "failed"]));
-    if ($movie_id != 'all') {
-        if (get_total('movie', "WHERE id = $movie_id") < 1) die(json_encode(["result" => "Phim Không Tồn Tại", "status" => "failed"]));
-    }
-    if ($reply_comment_id >= 1) {
-        if (get_total('comment', "WHERE id = $reply_comment_id") < 1) die(json_encode(["result" => "Bình Luận Không Tồn Tại", "status" => "failed"]));
-    }
+	if ($cf['cmt_on'] == 'false') die(json_encode(["result" => "Chức Năng Comment Đang Tắt", "status" => "failed"]));
+	if ($user['banned'] == 'true') die(json_encode(["result" => "Tài Khoản Bị Khóa", "status" => "failed"]));
+	if (!$_author_cookie) die(json_encode(["result" => "Bạn Chưa Đăng Nhập", "status" => "failed"]));
+	$content = htmlchars_cmt(injection(urldecode($Json['content'])));
+	if (!$content) die(json_encode(["result" => "Nội Dung Comment Không Được Để Trống", "status" => "failed"]));
+	if (strlen($content) > 1000) die(json_encode(["result" => "Nội Dung Comment Quá Dài", "status" => "failed"]));
+	if (isset($_COOKIE['add_comments'])) {
+		setcookie("add_comments", $user['nickname'], time() + 20);
+		die(json_encode(["result" => "Vui Lòng Thực Hiện Sau 20s, Càng Ấn Nhiều Đợi Càng Lâu", "status" => "failed"]));
+	}
+	$movie_id = sql_escape($Json['movie_id']);
+	$episode = sql_escape($Json['episode'] ?? null);
+	$reply_comment_id = sql_escape($Json['reply_comment_id']);
+	$reply_user_id = sql_escape($Json['reply_user_id']);
+	$token = sql_escape($Json['token']);
+	if (!json_decode($_COOKIE["TokenTime"], true)[$token]) die(json_encode(["result" => "Token Hết Thời Hạn ", "status" => "failed"]));
+	if ($movie_id != 'all') {
+		if (get_total('movie', "WHERE id = $movie_id") < 1) die(json_encode(["result" => "Phim Không Tồn Tại", "status" => "failed"]));
+	}
+	if ($reply_comment_id >= 1) {
+		if (get_total('comment', "WHERE id = $reply_comment_id") < 1) die(json_encode(["result" => "Bình Luận Không Tồn Tại", "status" => "failed"]));
+	}
 
-    if ($reply_user_id >= 1) {
-        if (get_total('user', "WHERE id = $reply_user_id") < 1) die(json_encode(["result" => "Thành Viên Không Tồn Tại", "status" => "failed"]));
-    }
+	if ($reply_user_id >= 1) {
+		if (get_total('user', "WHERE id = $reply_user_id") < 1) die(json_encode(["result" => "Thành Viên Không Tồn Tại", "status" => "failed"]));
+	}
 
-    if ($reply_comment_id >= 1 && $reply_user_id >= 1) {
-        $insert = [
-            "user_id" => $user['id'],
-            "movie_id" => $movie_id,
-            "content" => $content,
-            "reply_comment" => $reply_comment_id,
-            "reply_user_id" => $reply_user_id,
-            "timestap" => time(),
-            "time" => DATEFULL
-        ];
-    }
-    else {
-        $insert = [
-            "user_id" => $user['id'],
-            "movie_id" => $movie_id,
-            "content" => $content,
-            "timestap" => time(),
-            "time" => DATEFULL
-        ];
-    }
+	if ($reply_comment_id >= 1 && $reply_user_id >= 1) {
+		$insert = [
+			"user_id" => $user['id'],
+			"movie_id" => $movie_id,
+			"content" => $content,
+			"reply_comment" => $reply_comment_id,
+			"reply_user_id" => $reply_user_id,
+			"timestap" => time(),
+			"time" => DATEFULL
+		];
+	} else {
+		$insert = [
+			"user_id" => $user['id'],
+			"movie_id" => $movie_id,
+			"content" => $content,
+			"timestap" => time(),
+			"time" => DATEFULL
+		];
+	}
 
-    if (!empty($episode)) $insert['episode'] = $episode;
+	if (!empty($episode)) $insert['episode'] = $episode;
 
-    $mysql->insert('comment', implode(',', array_keys($insert)),"'".implode("','", $insert)."'");
+	$mysql->insert('comment', implode(',', array_keys($insert)), "'" . implode("','", $insert) . "'");
 
-    if (!$_SESSION['add_comments']) setcookie("add_comments", $user['nickname'], time() + 20);
+	if (!$_SESSION['add_comments']) setcookie("add_comments", $user['nickname'], time() + 20);
 
-    $User_Arr = GetDataArr("user", "id = '{$user['id']}'");
-    addCoin($User_Arr['id'], 'first_comment', ['movie_id' => $movie_id]);
-    $listItemStore = listUserItemActive($User_Arr['id']);
-    $listUserIconActive = listUserIconActive($User_Arr['id'], 'all');
-    $htmlItemStore = '<div class="user-figure">';
-    $htmlVip = '';
-    $htmlIconUser = '';
-    $background = getIconStoreActive($User_Arr['id'], 'background');
+	$User_Arr = GetDataArr("user", "id = '{$user['id']}'");
+	addCoin($User_Arr['id'], 'first_comment', ['movie_id' => $movie_id]);
+	$listItemStore = listUserItemActive($User_Arr['id']);
+	$listUserIconActive = listUserIconActive($User_Arr['id'], 'all');
+	$htmlItemStore = '<div class="user-figure">';
+	$htmlVip = '';
+	$htmlIconUser = '';
+	$background = getIconStoreActive($User_Arr['id'], 'background');
 
-    foreach ($listItemStore as $k => $v) {
-        if (isItemStore($k)) {
-            $htmlItemStore .= '<img src="'.$v.'" alt="'.$k.'" class="'.$k.'-default">';
-        }
-    }
+	foreach ($listItemStore as $k => $v) {
+		if (isItemStore($k)) {
+			$htmlItemStore .= '<img src="' . $v . '" alt="' . $k . '" class="' . $k . '-default">';
+		}
+	}
 
-    $htmlItemStore .= '</div>';
+	$htmlItemStore .= '</div>';
 
-    if (!empty($listUserIconActive)) {
-        $htmlIconUser .= '<div class="icon-user">';
+	if (!empty($listUserIconActive)) {
+		$htmlIconUser .= '<div class="icon-user">';
 
-        foreach ($listUserIconActive as $k => $v) {
-            $tooltip = '<img src="'.$v['image'].'" /><span class="icon-name">'.$v['name'].'</span>';
-            $htmlIconUser .= "<span data-tooltip-icon='$tooltip'><img src='{$v['image']}' /></span>";
-        }
+		foreach ($listUserIconActive as $k => $v) {
+			$tooltip = '<img src="' . $v['image'] . '" /><span class="icon-name">' . $v['name'] . '</span>';
+			$htmlIconUser .= "<span data-tooltip-icon='$tooltip'><img src='{$v['image']}' /></span>";
+		}
 
-        $htmlIconUser .= '</div>';
-    }
+		$htmlIconUser .= '</div>';
+	}
 
-    if ($User_Arr['vip'] == 1) {
-        $tooltipVip = '<img src="'.$vipIcon.'" />';
-        $htmlVip = "<div class='vip-icon' data-tooltip-icon='$tooltipVip'><img src='$vipIcon' /></div>";
-    }
+	if ($User_Arr['vip'] == 1) {
+		$tooltipVip = '<img src="' . $vipIcon . '" />';
+		$htmlVip = "<div class='vip-icon' data-tooltip-icon='$tooltipVip'><img src='$vipIcon' /></div>";
+	}
 
-    die(json_encode(["comment" => '<div id="comment_' . $User_Arr['id'] . '" class="user-comment relative">
+	die(json_encode(["comment" => '<div id="comment_' . $User_Arr['id'] . '" class="user-comment relative">
             <div class="flex bg-comment" style=" ' . (!empty($background) ? 'background-image: url(' . $background . ');' : '') . '">
                 <div class="left">
                     <div class="avatar" onclick="initViewProfile(' . $User_Arr['id'] . ')">
                         <img class="avatar-img" src="' . $User_Arr['avatar'] . '">
-                        <img class="avatar-frame" src="'.getIconStoreActive($User_Arr['id'], 'khung-vien').'">
+                        <img class="avatar-frame" src="' . getIconStoreActive($User_Arr['id'], 'khung-vien') . '">
                         <span class="rank-level">Lv ' . $User_Arr['level'] . '</span>
                     </div>
-                    <div class="item-store">'.$htmlItemStore.'</div>
+                    <div class="item-store">' . $htmlItemStore . '</div>
                 </div>
                 <div class="right">
                     <div class="flex flex-column">
                         <div class="flex flex-space-auto">
                             <div class="flex flex-hozi-center" style="width: 100%">
                                 <div class="nickname">' . $User_Arr['nickname'] . LevelIcon($User_Arr['level'], 18, 18) . '</div>
-                                '.$htmlVip.'
+                                ' . $htmlVip . '
                             </div>
                             <div class="flex flex-hozi-center relative"><a href="javascript:void(0)" onclick="clickEventDropDown(this,\'expand_more\')" class="toggle-dropdown fs-21 inline-flex" bind="drop-down-oc-' . $User_Arr['id'] . '"><span class="material-icons-round">expand_more</span></a>
                                 <div id="drop-down-oc-' . $User_Arr['id'] . '" class="dropdown-option bg-black">
@@ -479,9 +448,9 @@ if ($Json['action'] == 'live_search') {
                                 </div>
                             </div>
                         </div>
-                        <div class="content">'.$htmlIconUser.' ' . $content . '</div>
+                        <div class="content">' . $htmlIconUser . ' ' . $content . '</div>
                         <div class="flex fs-12"> <a href="javascript:void(0)" onclick="showFrameReplyComment(' . $User_Arr['id'] . ',\'' . $User_Arr['nickname'] . '\',' . $User_Arr['id'] . ',\'0068c15cfb8ec6a0060b94d9def64ea0\')" class="margin-r-5">Trả lời</a>
-                            <div> 0 Phút Trước '. (!empty($episode) ? '| Tập '.$episode : '') .' </div>
+                            <div> 0 Phút Trước ' . (!empty($episode) ? '| Tập ' . $episode : '') . ' </div>
                         </div>
                     </div>
                 </div>
@@ -490,35 +459,35 @@ if ($Json['action'] == 'live_search') {
         <div id="feedback_' . $User_Arr['id'] . '" class="frame-reply-comments"></div>
         <div id="toggle_frame_comment_' . $User_Arr['id'] . '"></div>', "result" => "Gửi bình luận thành công!", "status" => "success"]));
 } else if ($Json['action'] == 'option_comment') {
-    if ($cf['cmt_on'] == 'false') die(json_encode(["result" => "Chức Năng Comment Đang Tắt", "status" => "failed"]));
-    if ($user['banned'] == 'true') die(json_encode(["result" => "Tài Khoản Bị Khóa", "status" => "failed"]));
-    if (!$_author_cookie) die(json_encode(["result" => "Bạn Chưa Đăng Nhập", "status" => "failed"]));
-    $content = htmlchars_cmt(injection(urldecode($Json['content'])));
-    $id_comment = sql_escape($Json['id_comment']);
-    $perform = sql_escape($Json['perform']);
-    $token = sql_escape($Json['token']);
-    if (!json_decode($_COOKIE["TokenTime"], true)[$token]) die(json_encode(["result" => "Token Hết Thời Hạn ", "status" => "failed"]));
-    if (get_total('comment', "WHERE id = $id_comment AND user_id = '{$user['id']}'") < 1) die(json_encode(["result" => "Bình Luận Không Tồn Tại", "status" => "failed"]));
-    if ($perform == 'edit') {
-        $mysql->update('comment', "content = '$content'", "id = '$id_comment' AND user_id = '{$user['id']}'");
-        die(json_encode(["result" => "Chỉnh Sửa Comment Thành Công", "status" => "success"]));
-    } else if ($perform == 'hide') {
-        $mysql->update('comment', "show_cmt = 'false'", "id = '$id_comment' AND user_id = '{$user['id']}'");
-        die(json_encode(["result" => "Ẩn bình luận Thành công!", "status" => "success"]));
-    }
+	if ($cf['cmt_on'] == 'false') die(json_encode(["result" => "Chức Năng Comment Đang Tắt", "status" => "failed"]));
+	if ($user['banned'] == 'true') die(json_encode(["result" => "Tài Khoản Bị Khóa", "status" => "failed"]));
+	if (!$_author_cookie) die(json_encode(["result" => "Bạn Chưa Đăng Nhập", "status" => "failed"]));
+	$content = htmlchars_cmt(injection(urldecode($Json['content'])));
+	$id_comment = sql_escape($Json['id_comment']);
+	$perform = sql_escape($Json['perform']);
+	$token = sql_escape($Json['token']);
+	if (!json_decode($_COOKIE["TokenTime"], true)[$token]) die(json_encode(["result" => "Token Hết Thời Hạn ", "status" => "failed"]));
+	if (get_total('comment', "WHERE id = $id_comment AND user_id = '{$user['id']}'") < 1) die(json_encode(["result" => "Bình Luận Không Tồn Tại", "status" => "failed"]));
+	if ($perform == 'edit') {
+		$mysql->update('comment', "content = '$content'", "id = '$id_comment' AND user_id = '{$user['id']}'");
+		die(json_encode(["result" => "Chỉnh Sửa Comment Thành Công", "status" => "success"]));
+	} else if ($perform == 'hide') {
+		$mysql->update('comment', "show_cmt = 'false'", "id = '$id_comment' AND user_id = '{$user['id']}'");
+		die(json_encode(["result" => "Ẩn bình luận Thành công!", "status" => "success"]));
+	}
 } else if ($Json['action'] == 'get_profile') {
-    $user_id = sql_escape($Json['user_id']);
-    $token = sql_escape($Json['token']);
-    if (!json_decode($_COOKIE["TokenTime"], true)[$token]) die(json_encode(["result" => "Token Hết Thời Hạn", "status" => "failed"]));
-    if (get_total('user', "WHERE id = '$user_id'") < 1) die(json_encode(["result" => "Tài Khoản Không Tồn Tại", "status" => "failed"]));
-    // $cache_key = "cache.Profile_$user_id";
-    // if ($InstanceCache->has($cache_key)) die($InstanceCache->get($cache_key));
-    $Profile = GetDataArr('user', "id = '$user_id'");
-    if ($Profile['quote']) {
-        $quote = $Profile['quote'];
-    } else $quote = "Thanh Niên Này Chưa Cập Nhật Châm Ngôn Sống";
+	$user_id = sql_escape($Json['user_id']);
+	$token = sql_escape($Json['token']);
+	if (!json_decode($_COOKIE["TokenTime"], true)[$token]) die(json_encode(["result" => "Token Hết Thời Hạn", "status" => "failed"]));
+	if (get_total('user', "WHERE id = '$user_id'") < 1) die(json_encode(["result" => "Tài Khoản Không Tồn Tại", "status" => "failed"]));
+	// $cache_key = "cache.Profile_$user_id";
+	// if ($InstanceCache->has($cache_key)) die($InstanceCache->get($cache_key));
+	$Profile = GetDataArr('user', "id = '$user_id'");
+	if ($Profile['quote']) {
+		$quote = $Profile['quote'];
+	} else $quote = "Thanh Niên Này Chưa Cập Nhật Châm Ngôn Sống";
 
-    $HTMLProfile = '<div class="align-center margin-b-10"><a href="/trang-ca-nhan/' . $user_id . '" class="btn-grad">Xem trang cá nhân</a></div>
+	$HTMLProfile = '<div class="align-center margin-b-10"><a href="/trang-ca-nhan/' . $user_id . '" class="btn-grad">Xem trang cá nhân</a></div>
                     <div class="flex flex-hozi-center border-style-2" style="">
                     <div class="avatar flex flex-column">
                         <div class="avatar-img">
@@ -557,24 +526,24 @@ if ($Json['action'] == 'live_search') {
                 <div class="flex flex-ver-center color-green-2 fs-19 fw-700">
                 ' . $quote . '
                 </div>';
-    // $InstanceCache->set($cache_key, json_encode(["result" => $HTMLProfile, "status" => "success"]), $cf['time_cache'] * 3600);
-    die(json_encode(["result" => $HTMLProfile, "status" => "success"]));
+	// $InstanceCache->set($cache_key, json_encode(["result" => $HTMLProfile, "status" => "success"]), $cf['time_cache'] * 3600);
+	die(json_encode(["result" => $HTMLProfile, "status" => "success"]));
 } else if ($Json['action'] == 'load_notification') {
-    $token = sql_escape($Json['token']);
-    if (!json_decode($_COOKIE["TokenTime"], true)[$token]) die(json_encode(["result" => '<div class="padding-0-10 fw-500 fs-15">Token Hết Thời Hạn</div>', "status" => "success"]));
-    if (!$_author_cookie) die(json_encode(["result" => '<div class="padding-0-10 fw-500 fs-15">Bạn Chưa Đăng Nhập Tài Khoản</div>', "status" => "success"]));
-    if (get_total("notice", "WHERE user_id = '{$user['id']}'") < 1) die(json_encode(["result" => '<div class="padding-0-10 fw-500 fs-15">Chưa Có Thông Báo Nào</div>', "status" => "success"]));
-    $Check = 0;
-    $arr = $mysql->query("SELECT * FROM " . DATABASE_FX . "notice WHERE user_id = '{$user['id']}' ORDER BY id DESC LIMIT 10");
-    while ($row = $arr->fetch(PDO::FETCH_ASSOC)) {
-        if ($Check < 1) {
-            $Check++;
-        } else $Check++;
-        if ($row['view'] == 'true') {
-            $visited = 'visited';
-        } else $visited = '';
-        if ($row['time'] == DATE) {
-            $HTML_NOTICE .= '<div onclick="javascript:window.location.href=\'/tin-nhan/view/' . $row['id'] . '?notif_id=' . $row['id'] . '\'" noti-id="' . $row['id'] . '" class="notification notification-comment flex flex-hozi-center ' . $visited . '">
+	$token = sql_escape($Json['token']);
+	if (!json_decode($_COOKIE["TokenTime"], true)[$token]) die(json_encode(["result" => '<div class="padding-0-10 fw-500 fs-15">Token Hết Thời Hạn</div>', "status" => "success"]));
+	if (!$_author_cookie) die(json_encode(["result" => '<div class="padding-0-10 fw-500 fs-15">Bạn Chưa Đăng Nhập Tài Khoản</div>', "status" => "success"]));
+	if (get_total("notice", "WHERE user_id = '{$user['id']}'") < 1) die(json_encode(["result" => '<div class="padding-0-10 fw-500 fs-15">Chưa Có Thông Báo Nào</div>', "status" => "success"]));
+	$Check = 0;
+	$arr = $mysql->query("SELECT * FROM " . DATABASE_FX . "notice WHERE user_id = '{$user['id']}' ORDER BY id DESC LIMIT 10");
+	while ($row = $arr->fetch(PDO::FETCH_ASSOC)) {
+		if ($Check < 1) {
+			$Check++;
+		} else $Check++;
+		if ($row['view'] == 'true') {
+			$visited = 'visited';
+		} else $visited = '';
+		if ($row['time'] == DATE) {
+			$HTML_NOTICE .= '<div onclick="javascript:window.location.href=\'/tin-nhan/view/' . $row['id'] . '?notif_id=' . $row['id'] . '\'" noti-id="' . $row['id'] . '" class="notification notification-comment flex flex-hozi-center ' . $visited . '">
                                 <div class="avatar margin-r-5"><img src="https://i.imgur.com/JzGNfi6.png"></div>
                                 <div class="flex flex-column flex-1">
                                     <div class="text-shortcut fw-700"><span class="color-red-2">Tin nhắn từ hệ thống</span></div>
@@ -583,9 +552,9 @@ if ($Json['action'] == 'live_search') {
 
                                 </div>
                             </div>';
-        }
-        if ($row['time'] != DATE) {
-            $HTML_NOTICE .= '<div onclick="javascript:window.location.href=\'/tin-nhan/view/' . $row['id'] . '?notif_id=' . $row['id'] . '\'" noti-id="' . $row['id'] . '" class="notification notification-comment flex flex-hozi-center ' . $visited . '">
+		}
+		if ($row['time'] != DATE) {
+			$HTML_NOTICE .= '<div onclick="javascript:window.location.href=\'/tin-nhan/view/' . $row['id'] . '?notif_id=' . $row['id'] . '\'" noti-id="' . $row['id'] . '" class="notification notification-comment flex flex-hozi-center ' . $visited . '">
             <div class="avatar margin-r-5"><img src="https://i.imgur.com/JzGNfi6.png"></div>
             <div class="flex flex-column flex-1">
                 <div class="text-shortcut fw-700"><span class="color-red-2">Tin nhắn từ hệ thống</span></div>
@@ -594,112 +563,121 @@ if ($Json['action'] == 'live_search') {
 
             </div>
         </div>';
-        }
-    }
-    die(json_encode(["result" => $HTML_NOTICE, "status" => "success"]));
+		}
+	}
+	die(json_encode(["result" => $HTML_NOTICE, "status" => "success"]));
 } else if ($Json['action'] == 'visited_noti') {
-    if (!$_author_cookie) die(json_encode(["result" => "Bạn Chưa Đăng Nhập", "status" => "failed"]));
-    $notif_id = sql_escape($Json['notif_id']);
-    if (get_total("notice", "WHERE id = '$notif_id' AND view = 'false'") < 1) die(json_encode(["result" => "updated visited notification fail", "status" => "failed"]));
-    $mysql->update("notice", "view = 'true'", "id = '$notif_id'");
-    die(json_encode(["result" => "updated visited notification success", "status" => "success"]));
+	if (!$_author_cookie) die(json_encode(["result" => "Bạn Chưa Đăng Nhập", "status" => "failed"]));
+	$notif_id = sql_escape($Json['notif_id']);
+	if (get_total("notice", "WHERE id = '$notif_id' AND view = 'false'") < 1) die(json_encode(["result" => "updated visited notification fail", "status" => "failed"]));
+	$mysql->update("notice", "view = 'true'", "id = '$notif_id'");
+	die(json_encode(["result" => "updated visited notification success", "status" => "success"]));
 } else if ($Json['action'] == 'add_follow') {
-    if (!$_author_cookie) die(json_encode(["result" => "Bạn Chưa Đăng Nhập", "status" => "failed"]));
-    $movie_id = sql_escape($Json['movie_id']);
-    if (get_total('history', "WHERE movie_save = '$movie_id' AND user_id = '{$user['id']}'") < 1) {
-        $mysql->insert('history', 'user_id,movie_save', "'{$user['id']}','$movie_id'");
-        die("success");
-    } else die(json_encode(["result" => "Phim Này Bạn Đã Follow Rồi", "status" => "failed"]));
+	if (!$_author_cookie) die(json_encode(["result" => "Bạn Chưa Đăng Nhập", "status" => "failed"]));
+	$movie_id = sql_escape($Json['movie_id']);
+	if (get_total('history', "WHERE movie_save = '$movie_id' AND user_id = '{$user['id']}'") < 1) {
+		$mysql->insert('history', 'user_id,movie_save', "'{$user['id']}','$movie_id'");
+		die("success");
+	} else die(json_encode(["result" => "Phim Này Bạn Đã Follow Rồi", "status" => "failed"]));
 } else if ($Json['action'] == 'async_follow') {
-    if (!$_author_cookie) die(json_encode(["result" => "Bạn Chưa Đăng Nhập", "status" => "failed"]));
-    $JsonFollow = json_decode($Json['data_follow'], true);
-    if (count($JsonFollow) < 1) die('failed');
-    foreach ($JsonFollow as $key => $value) {
-        $Movie_Id = sql_escape($value);
-        if (get_total('history', "WHERE movie_save = '$Movie_Id' AND user_id = '{$user['id']}'") < 1 && get_total('movie', "WHERE id = '$Movie_Id'") >= 1) {
-            $mysql->insert('history', 'user_id,movie_save', "'{$user['id']}','$Movie_Id'");
-        }
-    }
-    die('success');
+	if (!$_author_cookie) die(json_encode(["result" => "Bạn Chưa Đăng Nhập", "status" => "failed"]));
+	$JsonFollow = json_decode($Json['data_follow'], true);
+	if (count($JsonFollow) < 1) die('failed');
+	foreach ($JsonFollow as $key => $value) {
+		$Movie_Id = sql_escape($value);
+		if (get_total('history', "WHERE movie_save = '$Movie_Id' AND user_id = '{$user['id']}'") < 1 && get_total('movie', "WHERE id = '$Movie_Id'") >= 1) {
+			$mysql->insert('history', 'user_id,movie_save', "'{$user['id']}','$Movie_Id'");
+		}
+	}
+	die('success');
 } else if ($Json['action'] == 'del_follow') {
-    if (!$_author_cookie) die(json_encode(["result" => "Bạn Chưa Đăng Nhập", "status" => "failed"]));
-    $movie_id = sql_escape($Json['movie_id']);
-    if (get_total('history', "WHERE movie_save = '$movie_id' AND user_id = '{$user['id']}'") < 1) die(json_encode(["result" => "Bạn Chưa Follow Phim Này", "status" => "failed"]));
-    // if (get_total('movie', "WHERE id = '$movie_id'") < 1) die('success'); //json_encode(["result" => "Phim Không Tồn Tại", "status" => "success"])
-    $mysql->delete('history', "movie_save = '$movie_id' AND user_id = '{$user['id']}'");
-    die('success');
+	if (!$_author_cookie) die(json_encode(["result" => "Bạn Chưa Đăng Nhập", "status" => "failed"]));
+	$movie_id = sql_escape($Json['movie_id']);
+	if (get_total('history', "WHERE movie_save = '$movie_id' AND user_id = '{$user['id']}'") < 1) die(json_encode(["result" => "Bạn Chưa Follow Phim Này", "status" => "failed"]));
+	// if (get_total('movie', "WHERE id = '$movie_id'") < 1) die('success'); //json_encode(["result" => "Phim Không Tồn Tại", "status" => "success"])
+	$mysql->delete('history', "movie_save = '$movie_id' AND user_id = '{$user['id']}'");
+	die('success');
+} else if ($Json['action'] == 'remove_all_bookmarks') {
+	if (!$_author_cookie) die(json_encode(["result" => "Bạn Chưa Đăng Nhập", "status" => "failed", "message" => "Vui lòng đăng nhập"]));
+	// Xóa tất cả bookmark của user (xóa các record có movie_save IS NOT NULL)
+	$mysql->delete('history', "movie_save IS NOT NULL AND user_id = '{$user['id']}'");
+	die(json_encode([
+		"result" => "Xóa tất cả bookmark thành công",
+		"status" => "success",
+		"message" => "Đã xóa tất cả phim đã theo dõi"
+	]));
 } else if ($Json['action'] == 'init_ads') {
-    $token = sql_escape($Json['token']);
-    if (!json_decode($_COOKIE["TokenTime"], true)[$token]) die(json_encode(["result" => 'Token Hết Thời Hạn', "status" => "success"]));
-    if (get_total('ads', "WHERE type = 'true'") < 1) die(json_encode(["result" => 'Không Có Quảng Cáo Nào', "status" => "failed"]));
-    $cache_key = "cache.WebsiteADS";
-    if ($InstanceCache->has($cache_key)) die($InstanceCache->get($cache_key));
-    $ADS = array();
-    $arr = $mysql->query("SELECT * FROM " . DATABASE_FX . "ads WHERE type = 'true' ORDER BY id ASC");
-    while ($row = $arr->fetch(PDO::FETCH_ASSOC)) {
-        $ADS['data'][] = array(
-            'position_name' => $row['position_name'],
-            'href' => $row['href'],
-            'image' => $row['image'],
-            'id' => $row['id'],
-            'num' => $row['num'],
-        );
-    }
-    $ADS['status'] = 'success';
-    $InstanceCache->set($cache_key, json_encode($ADS), $cf['time_cache'] * 3600);
-    die(json_encode($ADS));
+	$token = sql_escape($Json['token']);
+	if (!json_decode($_COOKIE["TokenTime"], true)[$token]) die(json_encode(["result" => 'Token Hết Thời Hạn', "status" => "success"]));
+	if (get_total('ads', "WHERE type = 'true'") < 1) die(json_encode(["result" => 'Không Có Quảng Cáo Nào', "status" => "failed"]));
+	$cache_key = "cache.WebsiteADS";
+	if ($InstanceCache->has($cache_key)) die($InstanceCache->get($cache_key));
+	$ADS = array();
+	$arr = $mysql->query("SELECT * FROM " . DATABASE_FX . "ads WHERE type = 'true' ORDER BY id ASC");
+	while ($row = $arr->fetch(PDO::FETCH_ASSOC)) {
+		$ADS['data'][] = array(
+			'position_name' => $row['position_name'],
+			'href' => $row['href'],
+			'image' => $row['image'],
+			'id' => $row['id'],
+			'num' => $row['num'],
+		);
+	}
+	$ADS['status'] = 'success';
+	$InstanceCache->set($cache_key, json_encode($ADS), $cf['time_cache'] * 3600);
+	die(json_encode($ADS));
 } else if ($Json['action'] == 'update_click_ads') {
-    $token = sql_escape($Json['token']);
-    if (!json_decode($_COOKIE["TokenTime"], true)[$token]) die(json_encode(["result" => 'Token Hết Thời Hạn', "status" => "success"]));
-    $adv_id = sql_escape($Json['adv_id']);
-    $mysql->update('ads', "click = click + 1", "id = '$adv_id'");
+	$token = sql_escape($Json['token']);
+	if (!json_decode($_COOKIE["TokenTime"], true)[$token]) die(json_encode(["result" => 'Token Hết Thời Hạn', "status" => "success"]));
+	$adv_id = sql_escape($Json['adv_id']);
+	$mysql->update('ads', "click = click + 1", "id = '$adv_id'");
 
-    if (!empty($user)) {
-        $resultAds =  $mysql->query("SELECT `position_name` FROM `table_ads` WHERE `id` = '$adv_id'");
-        $adsData = $resultAds->fetch(PDO::FETCH_ASSOC);
-        addCoin($user['id'], 'first_ads_by_type', ['ads_type' => $adsData['position_name']]);
-    }
+	if (!empty($user)) {
+		$resultAds =  $mysql->query("SELECT `position_name` FROM `table_ads` WHERE `id` = '$adv_id'");
+		$adsData = $resultAds->fetch(PDO::FETCH_ASSOC);
+		addCoin($user['id'], 'first_ads_by_type', ['ads_type' => $adsData['position_name']]);
+	}
 
-    die(json_encode(["result" => 'Click To ADS', "status" => "success"]));
+	die(json_encode(["result" => 'Click To ADS', "status" => "success"]));
 } else if ($Json['action'] == 'view_all_notice') {
-    if (!$_author_cookie) die(json_encode(["result" => "Bạn Chưa Đăng Nhập", "status" => "failed"]));
-    $mysql->update('notice', "view = 'true'", "user_id = '{$user['id']}'");
-    die(json_encode(["result" => "view", "status" => "success"]));
+	if (!$_author_cookie) die(json_encode(["result" => "Bạn Chưa Đăng Nhập", "status" => "failed"]));
+	$mysql->update('notice', "view = 'true'", "user_id = '{$user['id']}'");
+	die(json_encode(["result" => "view", "status" => "success"]));
 } else if ($Json['action'] == 'Load_Comment_Home') {
 
-    $limit = 30;
-    $CurenPage = 1;
-    $data = array();
-    $P = CheckPages('comment', "WHERE show_cmt = 'true' AND reply_comment IS NULL AND movie_id = 'all'", $limit, $CurenPage);
-    if ($P['total'] >= 1) {
-        $arr = $mysql->query("SELECT * FROM " . DATABASE_FX . "comment WHERE show_cmt = 'true' AND reply_comment IS NULL AND movie_id = 0 ORDER BY id DESC LIMIT {$P['start']},$limit");
-        $Comment_data = $arr->fetchAll(PDO::FETCH_ASSOC);
-        sort($Comment_data);
-        foreach ($Comment_data as $key => $row) {
-            $User_Arr = GetDataArr("user", "id = '{$row['user_id']}'");
-            $listUserIconActive = listUserIconActive($User_Arr['id'], 'all');
-            $background = getIconStoreActive($User_Arr['id'], 'background');
-            $htmlIconUser = '';
+	$limit = 30;
+	$CurenPage = 1;
+	$data = array();
+	$P = CheckPages('comment', "WHERE show_cmt = 'true' AND reply_comment IS NULL AND movie_id = 'all'", $limit, $CurenPage);
+	if ($P['total'] >= 1) {
+		$arr = $mysql->query("SELECT * FROM " . DATABASE_FX . "comment WHERE show_cmt = 'true' AND reply_comment IS NULL AND movie_id = 0 ORDER BY id DESC LIMIT {$P['start']},$limit");
+		$Comment_data = $arr->fetchAll(PDO::FETCH_ASSOC);
+		sort($Comment_data);
+		foreach ($Comment_data as $key => $row) {
+			$User_Arr = GetDataArr("user", "id = '{$row['user_id']}'");
+			$listUserIconActive = listUserIconActive($User_Arr['id'], 'all');
+			$background = getIconStoreActive($User_Arr['id'], 'background');
+			$htmlIconUser = '';
 
-            if (!empty($listUserIconActive)) {
-                $htmlIconUser .= '<div class="icon-user">';
+			if (!empty($listUserIconActive)) {
+				$htmlIconUser .= '<div class="icon-user">';
 
-                foreach ($listUserIconActive as $k => $v) {
-                    $tooltip = '<img src="'.$v['image'].'" /><span class="icon-name">'.$v['name'].'</span>';
-                    $htmlIconUser .= "<span data-tooltip-icon='$tooltip'><img src='{$v['image']}' /></span>";
-                }
+				foreach ($listUserIconActive as $k => $v) {
+					$tooltip = '<img src="' . $v['image'] . '" /><span class="icon-name">' . $v['name'] . '</span>';
+					$htmlIconUser .= "<span data-tooltip-icon='$tooltip'><img src='{$v['image']}' /></span>";
+				}
 
-                $htmlIconUser .= '</div>';
-            }
+				$htmlIconUser .= '</div>';
+			}
 
-            if (get_total('user', "WHERE id = '{$row['user_id']}'") < 1) {
-                $mysql->delete('comment', "user_id = '{$row['user_id']}'");
-            }
-            $HTML .= '
+			if (get_total('user', "WHERE id = '{$row['user_id']}'") < 1) {
+				$mysql->delete('comment', "user_id = '{$row['user_id']}'");
+			}
+			$HTML .= '
                 <li class="comment-item" style="margin-bottom: 10px; ' . (!empty($background) ? 'background-image: url(' . $background . ');' : '') . '">
                     <div class="boxchat-images" onclick="initViewProfile(' . $row['user_id'] . ')">
                         <img class="avatar" src="' . $User_Arr['avatar'] . '" width="100" height="100" alt="' . $User_Arr['nickname'] . '">
-                        <img class="avatar-frame" src="'.getIconStoreActive($User_Arr['id'], 'khung-vien').'">
+                        <img class="avatar-frame" src="' . getIconStoreActive($User_Arr['id'], 'khung-vien') . '">
                     </div>
                     <div class="p-comment-home">
                         <div class="box-chat-nickname" style="color:' . LevelColor($User_Arr['level']) . ';">' . $User_Arr['nickname'] . ' (Lv.' . $User_Arr['level'] . ') ' . LevelIcon($User_Arr['level'], 20, 20) . ' ' . $htmlIconUser . '</div>
@@ -707,208 +685,208 @@ if ($Json['action'] == 'live_search') {
                     <div class="boxchat-content">' . $row['content'] . '</div>
                 </li>
             ';
-        }
-        die(json_encode(["result" => $HTML, "status" => "success"]));
-    } else die(json_encode(["result" => '<div class="home-status">Không Có Comment Nào</div>', "status" => "failed"]));
+		}
+		die(json_encode(["result" => $HTML, "status" => "success"]));
+	} else die(json_encode(["result" => '<div class="home-status">Không Có Comment Nào</div>', "status" => "failed"]));
 } else if ($Json['action'] == 'top_bxh') {
-    // $cache_key = "cache.BangXepHang";
-    // if ($InstanceCache->has($cache_key)) die($InstanceCache->get($cache_key));
-    $Top = 0;
-    $arr = $mysql->query("SELECT * FROM " . DATABASE_FX . "user ORDER BY level DESC LIMIT {$cf['num_bxh']}");
-    while ($row = $arr->fetch(PDO::FETCH_ASSOC)) {
-        $listItem = listUserItemActive($row['id']);
-        $listUserIconActive = listUserIconActive($row['id'], 'all');
-        $htmlIconUser = '';
+	// $cache_key = "cache.BangXepHang";
+	// if ($InstanceCache->has($cache_key)) die($InstanceCache->get($cache_key));
+	$Top = 0;
+	$arr = $mysql->query("SELECT * FROM " . DATABASE_FX . "user ORDER BY level DESC LIMIT {$cf['num_bxh']}");
+	while ($row = $arr->fetch(PDO::FETCH_ASSOC)) {
+		$listItem = listUserItemActive($row['id']);
+		$listUserIconActive = listUserIconActive($row['id'], 'all');
+		$htmlIconUser = '';
 
-        if (!empty($listUserIconActive)) {
-            $htmlIconUser .= '<div class="icon-user">';
+		if (!empty($listUserIconActive)) {
+			$htmlIconUser .= '<div class="icon-user">';
 
-            foreach ($listUserIconActive as $k => $v) {
-                $tooltip = '<img src="'.$v['image'].'" /><span class="icon-name">'.$v['name'].'</span>';
-                $htmlIconUser .= "<span data-tooltip-icon='$tooltip'><img src='{$v['image']}' /></span>";
-            }
+			foreach ($listUserIconActive as $k => $v) {
+				$tooltip = '<img src="' . $v['image'] . '" /><span class="icon-name">' . $v['name'] . '</span>';
+				$htmlIconUser .= "<span data-tooltip-icon='$tooltip'><img src='{$v['image']}' /></span>";
+			}
 
-            $htmlIconUser .= '</div>';
-        }
+			$htmlIconUser .= '</div>';
+		}
 
-        $Top++;
-        if ($Top == 1) {
-            $TopImage = "/themes/img/top1.png";
-        } else if ($Top == 2) {
-            $TopImage = "/themes/img/top2.png";
-        } else if ($Top == 3) {
-            $TopImage = "/themes/img/top3.png";
-        } else if ($Top == 4) {
-            $TopImage = "/themes/img/top4.png";
-        } else if ($Top == 5) {
-            $TopImage = "/themes/img/top5.png";
-        } else $TopImage = "/themes/img/out_top.png";
-        
-        $HTML .= '
+		$Top++;
+		if ($Top == 1) {
+			$TopImage = "/themes/img/top1.png";
+		} else if ($Top == 2) {
+			$TopImage = "/themes/img/top2.png";
+		} else if ($Top == 3) {
+			$TopImage = "/themes/img/top3.png";
+		} else if ($Top == 4) {
+			$TopImage = "/themes/img/top4.png";
+		} else if ($Top == 5) {
+			$TopImage = "/themes/img/top5.png";
+		} else $TopImage = "/themes/img/out_top.png";
+
+		$HTML .= '
             <li class="home-rank">
                 <div class="flex flex-hozi-center" style="padding: 10px 0px; border-bottom: 1px solid;">
                     <div class="stt-rank">
                         <div class="top-avatar" onclick="initViewProfile(' . $row['id'] . ')">
                             <img class="avatar" src="' . $row['avatar'] . '" width="100" height="100" alt="' . $row['nickname'] . '">
-                            <img class="avatar-frame" src="'.getIconStoreActive($row['id'], 'khung-vien').'">
+                            <img class="avatar-frame" src="' . getIconStoreActive($row['id'], 'khung-vien') . '">
                         </div>
                         <div class="top-rank">#TOP ' . $Top . '</div>
                     </div>
                     <div class="image-container-rank">
                         <div class="user-figure">';
-                            foreach ($listItem as $k => $v) {
-                                if (isItemStore($k)) {
-                                    $HTML .= '<img src="'.$v.'" alt="'.$k.'" class="'.$k.'-default">';
-                                }
-                            }
-        $HTML .=    '   </div>
+		foreach ($listItem as $k => $v) {
+			if (isItemStore($k)) {
+				$HTML .= '<img src="' . $v . '" alt="' . $k . '" class="' . $k . '-default">';
+			}
+		}
+		$HTML .=    '   </div>
                         
                         <span class="rank-level">Lv ' . $row['level'] . '</span>
                     </div>
                     <div class="rank-info">
                         <p class="rank-text name">' . $row['nickname'] . ' ' . RankIcon($row['level']) . '</p>
                         <span class="rank-text" style="color: ' . LevelColor($row['level']) . ';"> ' . Danh_Hieu($row['level']) . '</span>
-                        <span class="rank-text coin">'.number_format($row['coins']). ' Xu | Exp: '.number_format(LevelExp($row['level'], $row['exp'])).'</span>
+                        <span class="rank-text coin">' . number_format($row['coins']) . ' Xu | Exp: ' . number_format(LevelExp($row['level'], $row['exp'])) . '</span>
                         <span class="rank-text">Icon: ' . $htmlIconUser . '</span>
                     </div>
 
                 </div>
             </li>';
-    }
-    // $InstanceCache->set($cache_key, json_encode(["result" => $HTML, "status" => "success"]), $cf['time_cache'] * 3600);
-    die(json_encode(["result" => $HTML, "status" => "success"]));
+	}
+	// $InstanceCache->set($cache_key, json_encode(["result" => $HTML, "status" => "success"]), $cf['time_cache'] * 3600);
+	die(json_encode(["result" => $HTML, "status" => "success"]));
 } else if ($Json['action'] == 'huong_dan') {
-    if (!$cf['huong_dan']) die(json_encode(["result" => '<div class="home-status">Chưa Có Hướng Dẫn Nào</div>', "status" => "failed"]));
-    die(json_encode(["result" => un_htmlchars($cf['huong_dan']), "status" => "success"]));
+	if (!$cf['huong_dan']) die(json_encode(["result" => '<div class="home-status">Chưa Có Hướng Dẫn Nào</div>', "status" => "failed"]));
+	die(json_encode(["result" => un_htmlchars($cf['huong_dan']), "status" => "success"]));
 } else if ($Json['action'] == 'list_comment') {
-    if ($user['banned'] == 'true') {
-        die(json_encode(["result" => "Tài Khoản Bị Khóa", "status" => "failed"]));
-    }
+	if ($user['banned'] == 'true') {
+		die(json_encode(["result" => "Tài Khoản Bị Khóa", "status" => "failed"]));
+	}
 
-    $sql = "SELECT `c`.*, `m`.`name` `movie_name` , `m`.`slug` `movie_slug` 
+	$sql = "SELECT `c`.*, `m`.`name` `movie_name` , `m`.`slug` `movie_slug` 
     FROM `table_comment` as `c`
     JOIN `table_movie` as `m` ON `c`.`movie_id` = `m`.`id`
-    WHERE `user_id` = ".$user['id']." AND `show_cmt` = 'true' 
+    WHERE `user_id` = " . $user['id'] . " AND `show_cmt` = 'true' 
     ORDER BY `timestap` DESC 
     LIMIT 10
     ";
-    $arr = $mysql->query($sql);
-    $html = '';
-    $results = $arr->fetchAll(PDO::FETCH_ASSOC);
-    
-    if (empty($results)) {
-        die(json_encode(["result" => "Không có bình luận", "status" => "success"]));
-    }
+	$arr = $mysql->query($sql);
+	$html = '';
+	$results = $arr->fetchAll(PDO::FETCH_ASSOC);
 
-    foreach ($results as $result) {
-        $background = getIconStoreActive($user['id'], 'background');
-        $html .= '
+	if (empty($results)) {
+		die(json_encode(["result" => "Không có bình luận", "status" => "success"]));
+	}
+
+	foreach ($results as $result) {
+		$background = getIconStoreActive($user['id'], 'background');
+		$html .= '
         <div class="comment-main user-comment cmt-438631">
             <div class="flex bg-comment" style=" ' . (!empty($background) ? 'background-image: url(' . $background . ');' : '') . '">
                 <div class="left">
                     <div class="avatar">
-                        <img class="avatar-img" src="'.$user['avatar'].'">
-                        <img class="avatar-frame" src="'.getIconStoreActive($user['id'], 'khung-vien').'">
+                        <img class="avatar-img" src="' . $user['avatar'] . '">
+                        <img class="avatar-frame" src="' . getIconStoreActive($user['id'], 'khung-vien') . '">
                     </div>
                 </div>
                 <div class="right">
                     <div class="flex flex-column">
-                        <div class="content">'.$result['content'].'</div>
+                        <div class="content">' . $result['content'] . '</div>
                         <div class="flex fs-12 toolbarr">
                             <label>
-                                <a href="' . URL . '/thong-tin-phim/' . $result['movie_slug'] . '.html"><i class="fa fa-film"></i> '.$result['movie_name'].'</a>
+                                <a href="' . URL . '/thong-tin-phim/' . $result['movie_slug'] . '.html"><i class="fa fa-film"></i> ' . $result['movie_name'] . '</a>
                             </label>
-                            <span class="cmt-time color-gray">'.RemainTime($result['timestap']).'</span><br>
+                            <span class="cmt-time color-gray">' . RemainTime($result['timestap']) . '</span><br>
                         </div>
                     </div>
                 </div>
             </div>
         </div>';
-    }
+	}
 
-    die(json_encode(["result" => $html, "status" => "success"]));
+	die(json_encode(["result" => $html, "status" => "success"]));
 } else if ($Json['action'] == 'change_password') {
-    if ($user['banned'] == 'true') {
-        die(json_encode(["result" => "Tài Khoản Bị Khóa", "status" => "failed"]));
-    }
+	if ($user['banned'] == 'true') {
+		die(json_encode(["result" => "Tài Khoản Bị Khóa", "status" => "failed"]));
+	}
 
-    if (empty($Json['new_password'])) {
-        die(json_encode(["result" => "Chưa nhập mật khẩu mới", "status" => "failed"]));
-    }
+	if (empty($Json['new_password'])) {
+		die(json_encode(["result" => "Chưa nhập mật khẩu mới", "status" => "failed"]));
+	}
 
-    $new_password = md5(sql_escape($Json['new_password']));
-    $error = 0;
+	$new_password = md5(sql_escape($Json['new_password']));
+	$error = 0;
 
-    if ($new_password == $user['password']) {
-        $error++;
-        die(json_encode(["result" => "Mật khẩu mới phải khác mật khẩu hiện tại", "status" => "failed"]));
-    }
+	if ($new_password == $user['password']) {
+		$error++;
+		die(json_encode(["result" => "Mật khẩu mới phải khác mật khẩu hiện tại", "status" => "failed"]));
+	}
 
-    if (strlen($Json['new_password']) < 6) {
-        $error++;
-        die(json_encode(["result" => "Mật khẩu đặt phải nhiều hơn 6 kí tự", "status" => "failed"]));
-    }
+	if (strlen($Json['new_password']) < 6) {
+		$error++;
+		die(json_encode(["result" => "Mật khẩu đặt phải nhiều hơn 6 kí tự", "status" => "failed"]));
+	}
 
-    if ($error == 0) {
-        $useremail = $user['email'];
-        $mysql->update("user", "password = '$new_password'", "email = '$useremail'");
-        die(json_encode(["result" => "Thay Đổi Mật Khẩu Thành Công", "status" => "success"]));
-    }
+	if ($error == 0) {
+		$useremail = $user['email'];
+		$mysql->update("user", "password = '$new_password'", "email = '$useremail'");
+		die(json_encode(["result" => "Thay Đổi Mật Khẩu Thành Công", "status" => "success"]));
+	}
 } else if ($Json['action'] == 'add_deposit') {
-    if ($user['banned'] == 'true') {
-        die(json_encode(["result" => "Tài Khoản Bị Khóa", "status" => "failed"]));
-    }
+	if ($user['banned'] == 'true') {
+		die(json_encode(["result" => "Tài Khoản Bị Khóa", "status" => "failed"]));
+	}
 
-    $data = $Json['data'];
-    $configs = getConfigGeneralUserInfo([
+	$data = $Json['data'];
+	$configs = getConfigGeneralUserInfo([
 		'deposit_rate',
 		'deposit_exp',
 	]);
 
-    $rs = [
-        'success'   => false,
-        'message'   => ''
-    ];
+	$rs = [
+		'success'   => false,
+		'message'   => ''
+	];
 
-    // save log
-    if (!empty($data['id'])) {
-        $pathLog = 'storage\log\deposit.log';
-        $logDeposit = "\n".date('Y-m-d H:i:s') .' '. "Deposit ".$data['purchase_units'][0]['amount']['value']. ' '.$data['purchase_units'][0]['amount']['currency_code']. ' by user '.$user['id'].' with paypalID '.$data['id'];
-        error_log($logDeposit, 3, $pathLog);
-    }
+	// save log
+	if (!empty($data['id'])) {
+		$pathLog = 'storage\log\deposit.log';
+		$logDeposit = "\n" . date('Y-m-d H:i:s') . ' ' . "Deposit " . $data['purchase_units'][0]['amount']['value'] . ' ' . $data['purchase_units'][0]['amount']['currency_code'] . ' by user ' . $user['id'] . ' with paypalID ' . $data['id'];
+		error_log($logDeposit, 3, $pathLog);
+	}
 
-    if (empty($data['purchase_units'][0]['amount']['currency_code'])) {
-        $rs['message'] = 'Có lỗi. Vui lòng thử lại';
-        die(json_encode($rs));
-    }
+	if (empty($data['purchase_units'][0]['amount']['currency_code'])) {
+		$rs['message'] = 'Có lỗi. Vui lòng thử lại';
+		die(json_encode($rs));
+	}
 
-    $currency = $data['purchase_units'][0]['amount']['currency_code'];
-    $amount = $data['purchase_units'][0]['amount']['value'];
-    $coin = $amount * $configs['deposit_rate'];
-    $exp = $amount * $configs['deposit_exp'];
+	$currency = $data['purchase_units'][0]['amount']['currency_code'];
+	$amount = $data['purchase_units'][0]['amount']['value'];
+	$coin = $amount * $configs['deposit_rate'];
+	$exp = $amount * $configs['deposit_exp'];
 
-    $insertHistory = [
-        'user'          =>  $user['id'],
-        'money'         =>  $amount,
-        'currency'      =>  $currency,
-        'coin'          =>  $coin,
-        'exp'           =>  $exp,
-        'id_paypal'     =>  $data['id'],
-        'status'        =>  1,
-        'created_at'    =>  date('Y-m-d H:i'),
-    ];
+	$insertHistory = [
+		'user'          =>  $user['id'],
+		'money'         =>  $amount,
+		'currency'      =>  $currency,
+		'coin'          =>  $coin,
+		'exp'           =>  $exp,
+		'id_paypal'     =>  $data['id'],
+		'status'        =>  1,
+		'created_at'    =>  date('Y-m-d H:i'),
+	];
 
-    // insert deposit history
-    $insert = $mysql->insert('deposit_history', implode(',', array_keys($insertHistory)), '"'.implode('", "', $insertHistory).'"');
-    
-    // plus coin and exp for user
-    $userQuery = $mysql->query('SELECT `id`,`exp`,`level`,`coins` FROM `table_user` WHERE `id` = '.$user['id']);
-    $userData = $userQuery->fetch(PDO::FETCH_ASSOC);
-    
-    $level = $userData['level'];
+	// insert deposit history
+	$insert = $mysql->insert('deposit_history', implode(',', array_keys($insertHistory)), '"' . implode('", "', $insertHistory) . '"');
+
+	// plus coin and exp for user
+	$userQuery = $mysql->query('SELECT `id`,`exp`,`level`,`coins` FROM `table_user` WHERE `id` = ' . $user['id']);
+	$userData = $userQuery->fetch(PDO::FETCH_ASSOC);
+
+	$level = $userData['level'];
 	$currentExp = $userData['exp'];
 
-	while($exp > 0) {
+	while ($exp > 0) {
 		$expLevel = getExpLevel($level) - $currentExp;
 		$currentExp = 0;
 
@@ -919,159 +897,159 @@ if ($Json['action'] == 'live_search') {
 			$currentExp = $exp;
 			$exp = 0;
 		}
-    }
+	}
 
-    $updateUser = "level = ". $level . ", exp = " . $currentExp . ", coins = coins +" . $coin;
-    $mysql->update("user", $updateUser, "id = ".$user['id']);
+	$updateUser = "level = " . $level . ", exp = " . $currentExp . ", coins = coins +" . $coin;
+	$mysql->update("user", $updateUser, "id = " . $user['id']);
 
-    // insert notify
-    $mysql->insert('notice', 'user_id,content,timestap,time', "'{$user['id']}','Chúc Mừng Bạn Đã Thằng Cấp Từ Level " . number_format($user['level']) . " Lên Level " . number_format($level) . " Hãy Cố Gắng Để Đạt Được Những Cấp Cao Hơn Nhé','" . time() . "','" . DATE . "'");
-    
+	// insert notify
+	$mysql->insert('notice', 'user_id,content,timestap,time', "'{$user['id']}','Chúc Mừng Bạn Đã Thằng Cấp Từ Level " . number_format($user['level']) . " Lên Level " . number_format($level) . " Hãy Cố Gắng Để Đạt Được Những Cấp Cao Hơn Nhé','" . time() . "','" . DATE . "'");
 
-    $rs['success'] = true;
-    $rs['message'] = 'Nạp xu thành công';
-    die(json_encode($rs));
+
+	$rs['success'] = true;
+	$rs['message'] = 'Nạp xu thành công';
+	die(json_encode($rs));
 } else if ($Json['action'] == 'buy_icon_store') {
-    if ($user['banned'] == 'true') {
-        die(json_encode(["result" => "Tài Khoản Bị Khóa", "status" => "failed"]));
-    }
+	if ($user['banned'] == 'true') {
+		die(json_encode(["result" => "Tài Khoản Bị Khóa", "status" => "failed"]));
+	}
 
-    $data = $Json['data'];
-    $response = [
-        'success'   => false,
-        'message'   => '',
-        'data'      => [],
-        'exist'     => false
-    ];
+	$data = $Json['data'];
+	$response = [
+		'success'   => false,
+		'message'   => '',
+		'data'      => [],
+		'exist'     => false
+	];
 
-    if (empty($data['id'])) {
-        $response['message'] = 'Có lỗi. Vui lòng thử lại';
-        die(json_encode($response));
-    }
+	if (empty($data['id'])) {
+		$response['message'] = 'Có lỗi. Vui lòng thử lại';
+		die(json_encode($response));
+	}
 
-    $rs = $mysql->query('SELECT `id`,`image`,`price`, `type`, `exp`, `name` FROM `table_vat_pham` WHERE `id` = '.$data['id']);
-    $icon = $rs->fetch(PDO::FETCH_ASSOC);
-    
-    if (empty($icon)) {
-        $response['message'] = 'Có lỗi. Vui lòng thử lại.';
-        die(json_encode($response));
-    }
+	$rs = $mysql->query('SELECT `id`,`image`,`price`, `type`, `exp`, `name` FROM `table_vat_pham` WHERE `id` = ' . $data['id']);
+	$icon = $rs->fetch(PDO::FETCH_ASSOC);
 
-    if ($icon['type'] != 'dan-duoc') {
-        $rs = $mysql->query('SELECT `user_id` FROM `table_user_icon_store` WHERE `user_id` = '.$user['id'].' AND `icon_id` = '.$data['id']);
-        $existIcon = $rs->fetch(PDO::FETCH_ASSOC);
+	if (empty($icon)) {
+		$response['message'] = 'Có lỗi. Vui lòng thử lại.';
+		die(json_encode($response));
+	}
 
-        if (!empty($existIcon)) {
-            $response['message'] = 'Đã sở hữu';
-            $response['exist'] = true;
-            die(json_encode($response));
-        }
-    }
+	if ($icon['type'] != 'dan-duoc') {
+		$rs = $mysql->query('SELECT `user_id` FROM `table_user_icon_store` WHERE `user_id` = ' . $user['id'] . ' AND `icon_id` = ' . $data['id']);
+		$existIcon = $rs->fetch(PDO::FETCH_ASSOC);
 
-    if ($user['coins'] < $icon['price']) {
-        $response['message'] = 'Không đủ xu.';
-        die(json_encode($response));
-    }
+		if (!empty($existIcon)) {
+			$response['message'] = 'Đã sở hữu';
+			$response['exist'] = true;
+			die(json_encode($response));
+		}
+	}
 
-    // insert to table transaction
-    $insertTransaction = [
-        'user_id' => $user['id'],
-        'amount' => $icon['price'],
-        'type' => $icon['type'],
-        'desc' => "User ".$user['id']." đã mua ".$icon['type']." ".$icon['id'],
-    ];
-    
-    $insert = $mysql->insert('transaction', '`'.implode('`,`', array_keys($insertTransaction)).'`', '"'.implode('", "', $insertTransaction).'"');
-    $transactionId = getLastInsertId('transaction');
+	if ($user['coins'] < $icon['price']) {
+		$response['message'] = 'Không đủ xu.';
+		die(json_encode($response));
+	}
 
-    if ($icon['type'] != 'dan-duoc') {
-        // insert to table_user_icon_store
-        $insertUserFrame = [
-            'user_id' => $user['id'],
-            'icon_id' => $icon['id'],
-            'type' => $icon['type']
-        ];
-        
-        $insert = $mysql->insert('user_icon_store', '`'.implode('`,`', array_keys($insertUserFrame)).'`', '"'.implode('", "', $insertUserFrame).'"');
-        activeIconStore($user['id'], $icon['id'], $icon['type'], 0);
-    }
+	// insert to table transaction
+	$insertTransaction = [
+		'user_id' => $user['id'],
+		'amount' => $icon['price'],
+		'type' => $icon['type'],
+		'desc' => "User " . $user['id'] . " đã mua " . $icon['type'] . " " . $icon['id'],
+	];
 
-    // update user coin
-    $mysql->update('user', "coins = coins -".$icon['price'], 'id = '.$user['id']);
+	$insert = $mysql->insert('transaction', '`' . implode('`,`', array_keys($insertTransaction)) . '`', '"' . implode('", "', $insertTransaction) . '"');
+	$transactionId = getLastInsertId('transaction');
 
-    if ($icon['type'] == 'dan-duoc') {
-        $mysql->insert('notice', 'user_id,content,timestap,time', "'{$user['id']}', 'Bạn đã nhận được ".$icon['exp']." exp từ đan dược ".$icon['name']."','" . time() . "','" . DATE . "'");
-        updateLevelByExp($user, $icon['exp']);
-    }
-    
-    $response['success'] = true;
-    $response['message'] = 'Mua vật phẩm thành công';
-    $response['data']['coin'] = number_format(getUserCoin($user['id']));
-    die(json_encode($response));
+	if ($icon['type'] != 'dan-duoc') {
+		// insert to table_user_icon_store
+		$insertUserFrame = [
+			'user_id' => $user['id'],
+			'icon_id' => $icon['id'],
+			'type' => $icon['type']
+		];
+
+		$insert = $mysql->insert('user_icon_store', '`' . implode('`,`', array_keys($insertUserFrame)) . '`', '"' . implode('", "', $insertUserFrame) . '"');
+		activeIconStore($user['id'], $icon['id'], $icon['type'], 0);
+	}
+
+	// update user coin
+	$mysql->update('user', "coins = coins -" . $icon['price'], 'id = ' . $user['id']);
+
+	if ($icon['type'] == 'dan-duoc') {
+		$mysql->insert('notice', 'user_id,content,timestap,time', "'{$user['id']}', 'Bạn đã nhận được " . $icon['exp'] . " exp từ đan dược " . $icon['name'] . "','" . time() . "','" . DATE . "'");
+		updateLevelByExp($user, $icon['exp']);
+	}
+
+	$response['success'] = true;
+	$response['message'] = 'Mua vật phẩm thành công';
+	$response['data']['coin'] = number_format(getUserCoin($user['id']));
+	die(json_encode($response));
 } else if ($Json['action'] == 'active_icon_store') {
-    if ($user['banned'] == 'true') {
-        die(json_encode(["result" => "Tài Khoản Bị Khóa", "status" => "failed"]));
-    }
+	if ($user['banned'] == 'true') {
+		die(json_encode(["result" => "Tài Khoản Bị Khóa", "status" => "failed"]));
+	}
 
-    $data = $Json['data'];
-    $response = [
-        'success'   => false,
-        'message'   => '',
-    ];
+	$data = $Json['data'];
+	$response = [
+		'success'   => false,
+		'message'   => '',
+	];
 
-    if (empty($data['id'])) {
-        $response['message'] = 'Có lỗi. Vui lòng thử lại';
-        die(json_encode($response));
-    }
+	if (empty($data['id'])) {
+		$response['message'] = 'Có lỗi. Vui lòng thử lại';
+		die(json_encode($response));
+	}
 
-    $rs = $mysql->query('SELECT `user_id` FROM `table_user_icon_store` WHERE `user_id` = '.$user['id'].' AND `icon_id` = '.$data['id']);
-    $existIcon = $rs->fetch(PDO::FETCH_ASSOC);
+	$rs = $mysql->query('SELECT `user_id` FROM `table_user_icon_store` WHERE `user_id` = ' . $user['id'] . ' AND `icon_id` = ' . $data['id']);
+	$existIcon = $rs->fetch(PDO::FETCH_ASSOC);
 
-    if (empty($existIcon)) {
-        $response['message'] = 'Chưa sở hữu';
-        die(json_encode($response));
-    }
+	if (empty($existIcon)) {
+		$response['message'] = 'Chưa sở hữu';
+		die(json_encode($response));
+	}
 
-    activeIconStore($user['id'], $data['id'], $data['type'], $data['active']);
+	activeIconStore($user['id'], $data['id'], $data['type'], $data['active']);
 
-    $response['success'] = true;
-    $response['message'] = 'Kích hoạt thành công';
-    die(json_encode($response));
+	$response['success'] = true;
+	$response['message'] = 'Kích hoạt thành công';
+	die(json_encode($response));
 } else if ($Json['action'] == 'online_reward') {
-    if (empty($user)) return false;
-    if ($user['banned'] == 'true') die(json_encode(["result" => "Tài Khoản Bị Khóa", "status" => "failed"]));
+	if (empty($user)) return false;
+	if ($user['banned'] == 'true') die(json_encode(["result" => "Tài Khoản Bị Khóa", "status" => "failed"]));
 
-    $reward = [
-        '5' => 3,
-        '10' => 5,
-        '15' => 15,
-        '60' => 30,
-        '120' => 60,
-    ];
-    $now = date('Y-m-d H:i:s');
-    $sql = "SELECT * FROM `table_user` WHERE `id` = ".$user['id'];
-    $rs = $mysql->query($sql);
-    $result = $rs->fetch(PDO::FETCH_ASSOC);
+	$reward = [
+		'5' => 3,
+		'10' => 5,
+		'15' => 15,
+		'60' => 30,
+		'120' => 60,
+	];
+	$now = date('Y-m-d H:i:s');
+	$sql = "SELECT * FROM `table_user` WHERE `id` = " . $user['id'];
+	$rs = $mysql->query($sql);
+	$result = $rs->fetch(PDO::FETCH_ASSOC);
 
-    if (date('Y-m-d') != date('Y-m-d', strtotime($result['last_activity']))) {
-        $mysql->update('user', "online_time = 0, last_activity = '$now'", 'id = '.$user['id']);
-        $response['success'] = false;
-        die(json_encode($response));
-    }
+	if (date('Y-m-d') != date('Y-m-d', strtotime($result['last_activity']))) {
+		$mysql->update('user', "online_time = 0, last_activity = '$now'", 'id = ' . $user['id']);
+		$response['success'] = false;
+		die(json_encode($response));
+	}
 
-    $online_time = $result['online_time'] + 1;
-    
+	$online_time = $result['online_time'] + 1;
 
-    if (time() - strtotime($result['last_activity']) < 60) {
-        $response['success'] = false;
-        die(json_encode($response));
-    }
 
-    $mysql->update('user', "online_time = $online_time, `last_activity` = '$now'", 'id = '.$user['id']);
+	if (time() - strtotime($result['last_activity']) < 60) {
+		$response['success'] = false;
+		die(json_encode($response));
+	}
 
-    if (!empty($reward[$online_time])) {
-        $reward_add = $reward[$online_time];
-        $paramsInsert = [
+	$mysql->update('user', "online_time = $online_time, `last_activity` = '$now'", 'id = ' . $user['id']);
+
+	if (!empty($reward[$online_time])) {
+		$reward_add = $reward[$online_time];
+		$paramsInsert = [
 			'user_id'	    =>	$user['id'],
 			'type'		    =>	'online',
 			'movie_id'	    =>	$online_time,
@@ -1079,128 +1057,368 @@ if ($Json['action'] == 'live_search') {
 			'created_at'	=>	date('Y-m-d')
 		];
 
-        $result['exp'] += $reward_add;
-        $result['coins'] += $reward_add;
-        $message = "Bạn được cộng $reward_add xu và $reward_add exp thưởng online $online_time phút";
+		$result['exp'] += $reward_add;
+		$result['coins'] += $reward_add;
+		$message = "Bạn được cộng $reward_add xu và $reward_add exp thưởng online $online_time phút";
 
-        $mysql->insert('history_add_coin', '`'.implode('`,`', array_keys($paramsInsert)).'`', '"'.implode('", "', $paramsInsert).'"');
-        $mysql->update('user', "coins = coins + $reward_add, exp = exp + $reward_add", 'id = '.$user['id']);
-        $mysql->insert('notice', 'user_id,content,timestap,time', "'{$user['id']}', '{$message}', '" . time() . "','" . date('Y-m-d') . "'");
-        UpdateLevel($result);
+		$mysql->insert('history_add_coin', '`' . implode('`,`', array_keys($paramsInsert)) . '`', '"' . implode('", "', $paramsInsert) . '"');
+		$mysql->update('user', "coins = coins + $reward_add, exp = exp + $reward_add", 'id = ' . $user['id']);
+		$mysql->insert('notice', 'user_id,content,timestap,time', "'{$user['id']}', '{$message}', '" . time() . "','" . date('Y-m-d') . "'");
+		UpdateLevel($result);
 
-        $response['success'] = true;
-        $response['message'] = $message;
-        die(json_encode($response));
-    }
+		$response['success'] = true;
+		$response['message'] = $message;
+		die(json_encode($response));
+	}
 
-    $response['success'] = false;
-    die(json_encode($response));
+	$response['success'] = false;
+	die(json_encode($response));
 } else if ($Json['action'] == 'follow_user') {
-    if (empty($user)) return false;
-    if ($user['banned'] == 'true') die(json_encode(["result" => "Tài Khoản Bị Khóa", "status" => "failed"]));
-    if (empty($Json['user_id']))  die(json_encode(["result" => "Có lỗi xảy ra", "status" => "failed"]));
+	if (empty($user)) return false;
+	if ($user['banned'] == 'true') die(json_encode(["result" => "Tài Khoản Bị Khóa", "status" => "failed"]));
+	if (empty($Json['user_id']))  die(json_encode(["result" => "Có lỗi xảy ra", "status" => "failed"]));
 
-    $table = 'follow';
-    $to = $Json['user_id'];
+	$table = 'follow';
+	$to = $Json['user_id'];
 
-    $arr = $mysql->query("SELECT id FROM " . DATABASE_FX . "$table WHERE `from` = {$user['id']} AND `to` = $to");
-    $data = $arr->fetch(PDO::FETCH_ASSOC);
+	$arr = $mysql->query("SELECT id FROM " . DATABASE_FX . "$table WHERE `from` = {$user['id']} AND `to` = $to");
+	$data = $arr->fetch(PDO::FETCH_ASSOC);
 
-    if (empty($data)) {
-        $paramsInsert = [
-            'from' => $user['id'],
-            'to' => $to
-        ];
-        $mysql->insert($table, '`'.implode('`,`', array_keys($paramsInsert)).'`', '"'.implode('", "', $paramsInsert).'"');
+	if (empty($data)) {
+		$paramsInsert = [
+			'from' => $user['id'],
+			'to' => $to
+		];
+		$mysql->insert($table, '`' . implode('`,`', array_keys($paramsInsert)) . '`', '"' . implode('", "', $paramsInsert) . '"');
 
-        $message = 'Theo dõi thành công';
-    }
-    else {
-        $mysql->delete($table, "id = '{$data['id']}'");
+		$message = 'Theo dõi thành công';
+	} else {
+		$mysql->delete($table, "id = '{$data['id']}'");
 
-        $message = 'Hủy theo dõi thành công';
-    }
+		$message = 'Hủy theo dõi thành công';
+	}
 
-    $response['success'] = true;
-    $response['message'] = 'Hủy theo dõi thành công';
-    $response['action'] = empty($data) ? 'follow' : 'unfollow';
-    $response['follow'] = getTotalFollow($to);
-    die(json_encode($response));
+	$response['success'] = true;
+	$response['message'] = 'Hủy theo dõi thành công';
+	$response['action'] = empty($data) ? 'follow' : 'unfollow';
+	$response['follow'] = getTotalFollow($to);
+	die(json_encode($response));
 } else if ($Json['action'] == 'deposit_card') {
-    if (empty($user)) return false;
-    if ($user['banned'] == 'true') die(json_encode(["message" => "Tài Khoản Bị Khóa", "success" => 0]));
+	if (empty($user)) return false;
+	if ($user['banned'] == 'true') die(json_encode(["message" => "Tài Khoản Bị Khóa", "success" => 0]));
 
-    $table = 'the_nap';
-    $params = [];
-    parse_str($Json['data'], $params);
+	$table = 'the_nap';
+	$params = [];
+	parse_str($Json['data'], $params);
 
-    if (empty($params['card_type']) || empty($params['card_value']) || empty($params['card_code']) || empty($params['card_serial']))
-    die(json_encode(["message" => "Vui lòng nhập đầy đủ dữ liệu", "success" => 0]));
+	if (empty($params['card_type']) || empty($params['card_value']) || empty($params['card_code']) || empty($params['card_serial']))
+		die(json_encode(["message" => "Vui lòng nhập đầy đủ dữ liệu", "success" => 0]));
 
-    $arr = $mysql->query("SELECT id 
+	$arr = $mysql->query("SELECT id 
         FROM " . DATABASE_FX . "$table 
         WHERE `card_type` = '{$params['card_type']}'
         AND (`card_code` = '{$params['card_code']}' OR `card_serial` = '{$params['card_serial']}')
     ");
-    $data = $arr->fetch(PDO::FETCH_ASSOC);
+	$data = $arr->fetch(PDO::FETCH_ASSOC);
 
-    if (!empty($data)) die(json_encode(["message" => "Thẻ này đã được sử dụng, vui lòng gửi lại mã thẻ khác", "success" => 0]));
+	if (!empty($data)) die(json_encode(["message" => "Thẻ này đã được sử dụng, vui lòng gửi lại mã thẻ khác", "success" => 0]));
 
-    $paramsInsert = [
-        'user_id'       => $user['id'],
-        'card_type'     => $params['card_type'],
-        'card_value'    => $params['card_value'],
-        'card_code'     => $params['card_code'],
-        'card_serial'   => $params['card_serial'],
-        'status'        => 'Processing',
-    ];
-    $mysql->insert($table, '`'.implode('`,`', array_keys($paramsInsert)).'`', '"'.implode('", "', $paramsInsert).'"');
+	$paramsInsert = [
+		'user_id'       => $user['id'],
+		'card_type'     => $params['card_type'],
+		'card_value'    => $params['card_value'],
+		'card_code'     => $params['card_code'],
+		'card_serial'   => $params['card_serial'],
+		'status'        => 'Processing',
+	];
+	$mysql->insert($table, '`' . implode('`,`', array_keys($paramsInsert)) . '`', '"' . implode('", "', $paramsInsert) . '"');
 
-    $response['success'] = 1;
-    $response['message'] = 'Gửi thẻ thành công';
-    die(json_encode($response));
+	$response['success'] = 1;
+	$response['message'] = 'Gửi thẻ thành công';
+	die(json_encode($response));
 } else if ($Json['action'] == 'load_deposit_card_history') {
-    if (empty($user)) return false;
-    if ($user['banned'] == 'true') die(json_encode(["message" => "Tài Khoản Bị Khóa", "success" => 0]));
+	if (empty($user)) return false;
+	if ($user['banned'] == 'true') die(json_encode(["message" => "Tài Khoản Bị Khóa", "success" => 0]));
 
-    $table = "the_nap";
+	$table = "the_nap";
 
-    if (get_total($table, "WHERE user_id = {$user['id']}") < 1) die(json_encode(["content" => '<tr><td colspan="7" align="center">Không có dữ liệu</td></tr>', "success" => 1]));
+	if (get_total($table, "WHERE user_id = {$user['id']}") < 1) die(json_encode(["content" => '<tr><td colspan="7" align="center">Không có dữ liệu</td></tr>', "success" => 1]));
 
-    $depositCardOptions = getOptionsDepositCard();
-    $arr = $mysql->query("SELECT * FROM " . DATABASE_FX . "$table  WHERE `user_id` = {$user['id']}");
-    $content = '';
-    $count = 0;
+	$depositCardOptions = getOptionsDepositCard();
+	$arr = $mysql->query("SELECT * FROM " . DATABASE_FX . "$table  WHERE `user_id` = {$user['id']}");
+	$content = '';
+	$count = 0;
 
-    while ($row = $arr->fetch(PDO::FETCH_ASSOC)) {
-        $count++;
-        $status = $depositCardOptions['status'][$row['status']];
+	while ($row = $arr->fetch(PDO::FETCH_ASSOC)) {
+		$count++;
+		$status = $depositCardOptions['status'][$row['status']];
 
-        if ($row['status'] == 'Cancel') {
-            $status = '<span class="text-' . $status['color'] . '" data-tooltip="' . $row['note'] . '">' . $status['text'] . ' <i class="fa-solid fa-circle-info"></i></span>';
-        }
-        else {
-            $status = '<span class="text-' . $status['color'] . '">' . $status['text'] . $note .' </span>';
-        }
+		if ($row['status'] == 'Cancel') {
+			$status = '<span class="text-' . $status['color'] . '" data-tooltip="' . $row['note'] . '">' . $status['text'] . ' <i class="fa-solid fa-circle-info"></i></span>';
+		} else {
+			$status = '<span class="text-' . $status['color'] . '">' . $status['text'] . $note . ' </span>';
+		}
 
-        $content .= '
+		$content .= '
             <tr>
-                <td>'.$count.'</td>
-                <td>'.$row['created_at'].'</td>
-                <td>'.$row['card_type'].'</td>
-                <td>'.$row['card_value'].' Xu</td>
-                <td>'.$row['card_serial'].'</td>
-                <td>'.$row['card_code'].'</td>
-                <td>'.$status.'</td>
+                <td>' . $count . '</td>
+                <td>' . $row['created_at'] . '</td>
+                <td>' . $row['card_type'] . '</td>
+                <td>' . $row['card_value'] . ' Xu</td>
+                <td>' . $row['card_serial'] . '</td>
+                <td>' . $row['card_code'] . '</td>
+                <td>' . $status . '</td>
             </tr>
         ';
-    }
+	}
 
-    $response['success'] = 1;
-    $response['content'] = $content;
-    die(json_encode($response));
+	$response['success'] = 1;
+	$response['content'] = $content;
+	die(json_encode($response));
 } else if ($Json['action'] == 'set_current_server') {
-    $server = sql_escape($Json['server']);
-    $_SESSION['current_server'] = $server;
-    die(json_encode(["result" => "success", "status" => "success"]));
+	$server = sql_escape($Json['server']);
+	$_SESSION['current_server'] = $server;
+	die(json_encode(["result" => "success", "status" => "success"]));
+} else if ($Json['action'] == 'load_movie_list') {
+	// Load movie list với pagination qua AJAX
+	$page = isset($Json['page']) ? intval($Json['page']) : 1;
+	if ($page < 1) $page = 1;
+
+	// Lấy filter từ request (mảng filter)
+	$filter = [];
+	if (isset($Json['filter']) && is_array($Json['filter'])) $filter = $Json['filter'];
+
+	$view = isset($Json['view']) ? $Json['view'] : 'home';
+
+	// Sử dụng hàm loadMovieList với mảng params
+	$content = loadMovieList([
+		'view' => $view,
+		'page' => $page,
+		'filter' => $filter
+	]);
+
+	die(json_encode([
+		'status' => 'success',
+		'data' => $content
+	]));
+} else if ($Json['action'] == 'load_movie_showtimes') {
+	$content = loadMovieShowtimes($Json['day']);
+
+	die(json_encode([
+		'status' => 'success',
+		'data' => $content
+	]));
+} else if ($Json['action'] == 'data_history') {
+	$History .= '<div class="watch-history ah-frame-bg">';
+	$HisCheck = 0;
+
+	foreach (json_decode($Json['data_history'], true) as $key => $value) {
+		$MovieID = sql_escape($value['movie_id']);
+		$EpisodeID = sql_escape($value['no_ep']);
+
+		if (get_total("movie", "WHERE id = '$MovieID'") >= 1) {
+			if (get_total("episode", "WHERE ep_name = '$EpisodeID' AND movie_id = '$MovieID'") >= 1) {
+				$HisCheck++;
+				$Movie = GetDataArr("movie", "id = '$MovieID'");
+				$Ep = GetDataArr("episode", "ep_name = '$EpisodeID' AND movie_id = '$MovieID'");
+				$History .= '
+                    <article class="col-md-2 col-sm-4 col-xs-6 thumb grid-item">
+                        <div class="halim-item">
+                            <a class="halim-thumb" href="' . URL . '/thong-tin-phim/' . $Movie['slug'] . '.html" title="' . $Movie['name'] . '">
+                                <figure>
+                                    <img class="blur-up img-responsive lazyloaded" data-src="' . $Movie['image'] . '" alt="' . $Movie['name'] . '" title="' . $Movie['name'] . '" sizes="300x400" src="' . $Movie['image'] . '" />
+                                </figure>
+                                <div class="halim-post-title-box">
+                                    <div class="halim-post-title">
+                                        <h2 class="entry-title">' . $Movie['other_name'] . '</h2>
+                                        <p class="original_title">' . $Movie['name'] . '</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </article>
+                ';
+			}
+		}
+	}
+
+	if ($HisCheck == 0) $History .= '<div class="ah_noti">Lịch sử trống</div>';
+	$History .= '</div>';
+	echo $History;
+} else if ($Json['action'] == 'save_history') {
+	$movie_id = sql_escape($Json['movie_id']);
+	$episode_id = sql_escape($Json['episode_id']);
+	$episode_name = sql_escape($Json['episode_name']);
+
+	if (empty($movie_id) || empty($episode_id)) die(json_encode(["result" => "Thiếu thông tin", "status" => "failed"]));
+	// Kiểm tra phim và tập phim có tồn tại
+	if (get_total("movie", "WHERE id = '$movie_id'") < 1) die(json_encode(["result" => "Phim không tồn tại", "status" => "failed"]));
+	if (get_total("episode", "WHERE id = '$episode_id' AND movie_id = '$movie_id'") < 1) die(json_encode(["result" => "Tập phim không tồn tại", "status" => "failed"]));
+
+	// Lưu lịch sử (tự động check đăng nhập và lưu vào cookie hoặc database)
+	saveHistory($movie_id, $episode_id, $episode_name);
+
+	die(json_encode(["result" => "Đã lưu lịch sử", "status" => "success"]));
+} else if ($Json['action'] == 'get_history') {
+	$History = '<div class="watch-history ah-frame-bg">';
+	$HisCheck = 0;
+
+	// Lấy lịch sử (tự động check đăng nhập)
+	$history_data = getHistory();
+
+	ob_start();
+	// Hiển thị lịch sử
+	foreach ($history_data as $value) {
+		$MovieID = sql_escape($value['movie_id']);
+		$EpisodeID = sql_escape($value['episode_id']);
+
+		if (get_total("movie", "WHERE id = '$MovieID'") >= 1) {
+			if (get_total("episode", "WHERE id = '$EpisodeID' AND movie_id = '$MovieID'") >= 1) {
+				$HisCheck++;
+				$row = GetDataArr("movie", "id = '$MovieID'");
+				include(ROOT_DIR . '/view/single-movie.php');
+			}
+		}
+	}
+
+	if ($HisCheck == 0) $History .= '<div class="ah_noti">Lịch sử trống</div>';
+	$History .= '</div>';
+	$History = ob_get_clean();
+
+	die(json_encode(["result" => $History, "status" => "success"]));
+} else if ($Json['action'] == 'load_bookmarked_movies') {
+	// Load danh sách phim đã theo dõi qua AJAX
+	$page = isset($Json['page']) ? intval($Json['page']) : 1;
+	if ($page < 1) $page = 1;
+
+	// Kiểm tra đăng nhập
+	if (!$_author_cookie || !isset($user['id']) || $user['id'] < 1) {
+		die(json_encode([
+			'status' => 'failed',
+			'message' => 'Vui lòng đăng nhập để xem phim đã theo dõi',
+			'data' => '<h3 class="section-title"><span>Phim đã theo dõi</span></h3><div class="list-movie"><div class="noti-error">Vui lòng đăng nhập để xem phim đã theo dõi</div></div>'
+		]));
+	}
+
+	$user_id = $user['id'];
+	$limit = isset($Json['limit']) ? intval($Json['limit']) : 30;
+
+	// Sử dụng hàm renderBookmarkedMovies
+	$content = renderBookmarkedMovies([
+		'user_id' => $user_id,
+		'page' => $page,
+		'limit' => $limit,
+		'showPagination' => true
+	]);
+
+	die(json_encode([
+		'status' => 'success',
+		'data' => $content
+	]));
+} elseif ($Json['action'] == 'get_google_auth_url') {
+	// Tạo Google OAuth URL
+	try {
+		$client = new Google_Client();
+		$client->setClientId(GOOGLE_CLIENT_ID);
+		$client->setClientSecret(GOOGLE_CLIENT_SECRET);
+		$client->setRedirectUri(GOOGLE_REDIRECT_URI);
+		$client->addScope("email");
+		$client->addScope("profile");
+		$authUrl = $client->createAuthUrl();
+
+		die(json_encode([
+			'status' => 'success',
+			'auth_url' => $authUrl
+		]));
+	} catch (Exception $e) {
+		die(json_encode([
+			'status' => 'failed',
+			'message' => 'Không thể tạo Google auth URL'
+		]));
+	}
+} elseif ($Json['action'] == 'login') {
+	// Xử lý đăng nhập qua AJAX
+	$email = sql_escape($Json['email']);
+	$password = md5(sql_escape($Json['password']));
+	$Success = false;
+	$message = '';
+
+	if (!$email || !$password) $message = 'Bạn Không Được Để Trống Email Hoặc Password';
+	elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) $message = 'Địa Chỉ Email Không Hợp Lệ';
+	elseif (get_total("user", "WHERE email = '$email' AND password = '$password'") >= 1) $Success = true;
+	else $message = 'Địa Chỉ Email Hoặc Mật Khẩu Không Đúng';
+
+	if ($Success) {
+		$AccessToken = RenderAccessToken();
+		setcookie('author', $AccessToken, time() + (86400 * 30), '/', URL_None_HTTP(), false);
+		setcookie('_accesstoken', $AccessToken, time() + (86400 * 30), '/', URL_None_HTTP(), false);
+		$mysql->update("user", "_accesstoken = '$AccessToken', online = 1", "email = '$email'");
+		$user = GetDataArr('user', "_accesstoken = '$AccessToken'");
+		// Đồng bộ lịch sử xem phim khi đăng nhập
+		syncHistoryOnLogin($user['id']);
+
+		die(json_encode([
+			'status' => 'success',
+			'message' => 'Đăng nhập thành công',
+			'redirect' => '/'
+		]));
+	} else {
+		die(json_encode([
+			'status' => 'failed',
+			'message' => $message
+		]));
+	}
+} elseif ($Json['action'] == 'change_password') {
+	// Xử lý đổi mật khẩu qua AJAX
+	if (!isset($user) || !$user || !isset($user['id'])) {
+		die(json_encode([
+			'status' => 'failed',
+			'message' => 'Bạn cần đăng nhập để đổi mật khẩu'
+		]));
+	}
+
+	$current_password = md5(sql_escape($Json['current_password']));
+	$new_password = sql_escape($Json['new_password']);
+	$confirm_new_password = sql_escape($Json['confirm_new_password']);
+
+	// Kiểm tra các trường không được rỗng
+	if (empty($Json['current_password']) || empty($Json['new_password']) || empty($Json['confirm_new_password'])) {
+		die(json_encode([
+			'status' => 'failed',
+			'message' => 'Vui lòng điền đầy đủ thông tin'
+		]));
+	}
+
+	// Kiểm tra mật khẩu hiện tại
+	if ($user['password'] != $current_password) {
+		die(json_encode([
+			'status' => 'failed',
+			'message' => 'Mật khẩu hiện tại không đúng'
+		]));
+	}
+
+	// Kiểm tra mật khẩu mới và xác nhận khớp nhau
+	if ($new_password != $confirm_new_password) {
+		die(json_encode([
+			'status' => 'failed',
+			'message' => 'Hai mật khẩu mới không khớp nhau'
+		]));
+	}
+
+	// Kiểm tra độ dài mật khẩu mới
+	if (strlen($new_password) < 6) {
+		die(json_encode([
+			'status' => 'failed',
+			'message' => 'Mật khẩu mới phải có ít nhất 6 ký tự'
+		]));
+	}
+
+	// Cập nhật mật khẩu
+	$new_password_md5 = md5($new_password);
+	$mysql->update("user", "password = '$new_password_md5'", "id = {$user['id']}");
+
+	die(json_encode([
+		'status' => 'success',
+		'message' => 'Đổi mật khẩu thành công'
+	]));
 }

@@ -5,7 +5,7 @@ date_default_timezone_set('Asia/Ho_Chi_Minh');
 mb_internal_encoding("UTF-8");
 ob_start();
 session_start();
-error_reporting(E_ALL);
+error_reporting(E_ERROR);
 ini_set('display_errors', 0);
 ini_set('memory_limit', '512M');
 require_once(__DIR__ . '/includes/configurations.php');
@@ -26,93 +26,93 @@ use Phpfastcache\Helper\Psr16Adapter;
 $defaultDriver = 'Files';
 $InstanceCache = new Psr16Adapter($defaultDriver);
 if (isset($_SESSION['csrf-token'])) {
-    define('TOKEN', $_SESSION['csrf-token']);
+	define('TOKEN', $_SESSION['csrf-token']);
 } else {
-    $csrfToken = tokenString(35);
-    define('TOKEN', $csrfToken);
-    $_SESSION['csrf-token'] = $csrfToken;
+	$csrfToken = tokenString(35);
+	define('TOKEN', $csrfToken);
+	$_SESSION['csrf-token'] = $csrfToken;
 }
 
 if (isset($_SESSION['admin'])) {
-    $admin_username = $_SESSION['admin'];
-    $admin = GetDataArr('admin', "username = '$admin_username'");
+	$admin_username = $_SESSION['admin'];
+	$admin = GetDataArr('admin', "username = '$admin_username'");
 }
 
 if (isset($_COOKIE['author'])) {
-    $_accesstoken = sql_escape($_COOKIE['_accesstoken']);
-    $_author_cookie = sql_escape($_COOKIE['author']);
-    if (get_total('user', "WHERE _accesstoken = '$_author_cookie'") >= 1) {
-        $user = GetDataArr('user', "_accesstoken = '$_author_cookie'");
-        $useremail = $user['email'];
-        UpdateLevel($user);
-        resetVipUser($user['vip_date_end'], $user['id'], $user['vip']);
-        $mysql->update("user", "online = 0", "1");
-        $mysql->update("user", "online = 1", "email = '$useremail'");
-        // Check is first login
-        $sqlCheck = "SELECT `id`, `type`, `movie_id`, `ads_type`
+	$_accesstoken = sql_escape($_COOKIE['_accesstoken']);
+	$_author_cookie = sql_escape($_COOKIE['author']);
+	if (get_total('user', "WHERE _accesstoken = '$_author_cookie'") >= 1) {
+		$user = GetDataArr('user', "_accesstoken = '$_author_cookie'");
+		$useremail = $user['email'];
+		UpdateLevel($user);
+		resetVipUser($user['vip_date_end'], $user['id'], $user['vip']);
+		$mysql->update("user", "online = 0", "1");
+		$mysql->update("user", "online = 1", "email = '$useremail'");
+		// Check is first login
+		$sqlCheck = "SELECT `id`, `type`, `movie_id`, `ads_type`
 			FROM `table_history_add_coin` 
-			WHERE `user_id` = ".$user['id']." AND `type` = 'first_login' AND `created_at` = '".date('Y-m-d')."'";
-        $resultCheck = $mysql->query($sqlCheck);
-        $dataCheck = $resultCheck->fetch(PDO::FETCH_ASSOC);
+			WHERE `user_id` = " . $user['id'] . " AND `type` = 'first_login' AND `created_at` = '" . date('Y-m-d') . "'";
+		$resultCheck = $mysql->query($sqlCheck);
+		$dataCheck = $resultCheck->fetch(PDO::FETCH_ASSOC);
 
-        if (empty($dataCheck)) {
-            addCoin($user['id'], 'first_login');
-        }
-        $user['khung-vien'] = getIconStoreActive($user['id'], 'khung-vien');
-        $user['background'] = getIconStoreActive($user['id'], 'background');
-        $user['icon-user'] = '';
-        $listUserIconActive = listUserIconActive($user['id'], 'all');
+		if (empty($dataCheck)) {
+			addCoin($user['id'], 'first_login');
+		}
+		$user['khung-vien'] = getIconStoreActive($user['id'], 'khung-vien');
+		$user['background'] = getIconStoreActive($user['id'], 'background');
+		$user['icon-user'] = '';
+		$listUserIconActive = listUserIconActive($user['id'], 'all');
 
-        if (!empty($listUserIconActive)) {
-            $user['icon-user'] .= "<div class='icon-user'>";
+		if (!empty($listUserIconActive)) {
+			$user['icon-user'] .= "<div class='icon-user'>";
 
-            foreach ($listUserIconActive as $v) {
-                $tooltip = '<img src="'.$v['image'].'" /><span class="icon-name">'.$v['name'].'</span>';
-                $user['icon-user'] .= "<span data-tooltip-icon='".$tooltip."'><img src='".$v['image']."' /></span>";
-            }
+			foreach ($listUserIconActive as $v) {
+				$tooltip = '<img src="' . $v['image'] . '" /><span class="icon-name">' . $v['name'] . '</span>';
+				$user['icon-user'] .= "<span data-tooltip-icon='" . $tooltip . "'><img src='" . $v['image'] . "' /></span>";
+			}
 
-            $user['icon-user'] .= "</div>";
-        }
+			$user['icon-user'] .= "</div>";
+		}
 
-        if ($_author_cookie != $user['_accesstoken']) {
-            RemoveCookie();
-        } else if (!$_author_cookie) {
-            RemoveCookie();
-        } else if ($user['id'] < 1) RemoveCookie();
-    } else RemoveCookie();
+		if ($_author_cookie != $user['_accesstoken']) {
+			RemoveCookie();
+		} else if (!$_author_cookie) {
+			RemoveCookie();
+		} else if ($user['id'] < 1) RemoveCookie();
+	} else RemoveCookie();
 }
 RemoveViewUser();
 ClearNotice();
 
 if (isset($_GET['models'])) {
-    $Gmodels    =    $_GET['models'];
-    $value = array();
-    $value    =    explode("/", $Gmodels);
-    $models =   $value[1];
-    $method = "public/$models";
+	$Gmodels    =    $_GET['models'];
+	$value = array();
+	$value    =    explode("/", $Gmodels);
+	$models =   $value[1];
+	$method = "public/$models";
 } else if (isset($_GET['api'])) {
-    $Gmodels    =    $_GET['api'];
-    $value = array();
-    $value    =    explode("/", $Gmodels);
-    $models =   $value[1];
-    $method = "api/$models";
+	$Gmodels    =    $_GET['api'];
+	$value = array();
+	$value    =    explode("/", $Gmodels);
+	$models =   $value[1];
+	$method = "api/$models";
 } else if (isset($_GET['admin'])) {
-    $Gmodels    =    $_GET['admin'];
-    $value = array();
-    $value    =    explode("/", $Gmodels);
-    $models =   $value[1];
-    $method = "admin/$models";
+	$Gmodels    =    $_GET['admin'];
+	$value = array();
+	$value    =    explode("/", $Gmodels);
+	$models =   $value[1];
+	$method = "admin/$models";
 } else if (isset($_GET['author'])) {
-    $Gmodels    =    $_GET['author'];
-    $value = array();
-    $value    =    explode("/", $Gmodels);
-    $models =   $value[1];
-    $folder = "author";
-    $method = "author/$models";
+	$Gmodels    =    $_GET['author'];
+	$value = array();
+	$value    =    explode("/", $Gmodels);
+	$models =   $value[1];
+	$folder = "author";
+	$method = "author/$models";
 } else {
-    $method = "public/home";
+	$method = "public/home";
 }
 $filename = ROOT_DIR . "/$method.php";
 if (file_exists($filename)) {
-    include_once($filename);
+	include_once($filename);
 } else die(header('Location: /404-page'));

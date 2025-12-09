@@ -1,0 +1,28 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /admin_movie/
+Disallow: /api/
+Disallow: /author/
+Disallow: /cacheService/
+Disallow: /helpers/
+Disallow: /includes/
+Disallow: /migrations/
+Disallow: /storage/
+Disallow: /vendor/
+Disallow: /cgi-bin/
+Disallow: /code/
+Disallow: /my_changes/
+Disallow: /SQL/
+Disallow: /ssl/
+Disallow: /assets/upload/
+Disallow: /*.php$
+Allow: /public/*.php
+Allow: /index.php
+
+# Sitemap
+Sitemap: /sitemap.xml
+
+# Crawl-delay (optional, adjust as needed)
+Crawl-delay: 1
+

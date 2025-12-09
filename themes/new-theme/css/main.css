@@ -1,0 +1,52 @@
+body.halimthemes {
+	font-weight: 500;
+	line-height: normal;
+}
+
+#headwrap .nav-items {
+    display: flex !important;
+}
+
+.rank-level {
+	left: 0px;
+}
+
+#login-modal-custom {
+    margin: auto;
+    top: 0;
+	height: 525px;
+    max-width: max-content;
+	padding-right: 0px;
+}
+
+#login-modal-custom .modal-header {
+    color: #000;
+}
+
+#login-modal-custom .modal-dialog {
+    margin: 0;
+    padding: 0;
+}
+
+#login-modal-custom #login-message {
+    display: none;
+	margin-bottom: 8px;
+	font-size: 14px;
+}
+
+#login-modal-custom .google-icon {
+    margin: 0;
+    padding: 3px 5px;
+    border-radius: 3px;
+    background: #fff;
+    margin-right: 10px;
+    line-height: 100%;
+}
+
+#login-modal-custom .alert.alert-info {
+    margin-bottom: 0;
+}
+
+.header-nav-items .dropdown-menu {
+    transform: none;
+}
