@@ -35,7 +35,7 @@
 			</div>
 			<div class="col-xs-12 col-sm-4 col-md-6 text-right pull-right">
 				<p class="blog-info">
-					<a href="<?= URL ?>/sitemap_index.xml" target="_blank" rel="noopener">Sitemap</a>
+					<a href="<?= URL ?>/sitemap.xml" target="_blank" rel="noopener">Sitemap</a>
 				</p>
 			</div>
 		</div>
