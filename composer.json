@@ -1,5 +1,6 @@
 {
     "require": {
-        "phpfastcache/phpfastcache": "^9.1"
+        "phpfastcache/phpfastcache": "^9.1",
+        "google/apiclient": "^2.16"
     }
 }
