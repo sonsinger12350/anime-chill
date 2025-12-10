@@ -1330,7 +1330,7 @@ function loadMovieShowtimes($day)
         FROM " . DATABASE_FX . "movie 
         WHERE public = 'true' 
         AND lich_chieu LIKE '%\"days\":\"$day\"%' 
-        AND (showtimes IS NOT NULL OR showtimes != '') 
+        AND early_screening = 1
         ORDER BY showtimes ASC 
         LIMIT 10
     ");
@@ -1354,42 +1354,42 @@ function loadMovieShowtimes($day)
 	$content = '';
 
 	ob_start();
-?>
-	<?php if (!empty($earlyShowtimesList)): ?>
-		<div class="early-schedule active" id="earlySchedule" style="opacity: 1; transform: translateY(0px); transition: opacity 0.3s, transform 0.3s;">
-			<h2><i class="fas fa-star"></i> Phim Chiếu Sớm</h2>
-			<div class="schedule-items" style="grid-template-columns: 1fr 1fr;">
-				<?php foreach ($earlyShowtimesList as $key => $value): ?>
-					<a href="<?= URL ?>/info/<?= $value['slug'] ?>.html" class="schedule-item">
-						<img src="<?= $value['image'] ?>" alt="<?= $value['name'] ?>" loading="lazy">
-						<div class="schedule-info">
-							<h3 class="schedule-title"><?= $value['name'] ?></h3>
-							<div class="schedule-episode">
-								<i class="fas fa-film"></i>
-								<span>Tập <?= $value['ep_hien_tai'] ?></span>
+	?>
+		<?php if (!empty($earlyShowtimesList)): ?>
+			<div class="early-schedule active" id="earlySchedule" style="opacity: 1; transform: translateY(0px); transition: opacity 0.3s, transform 0.3s;">
+				<h2><i class="fas fa-star"></i> Phim Chiếu Sớm</h2>
+				<div class="schedule-items" style="grid-template-columns: 1fr 1fr;">
+					<?php foreach ($earlyShowtimesList as $key => $value): ?>
+						<a href="<?= URL ?>/info/<?= $value['slug'] ?>.html" class="schedule-item">
+							<img src="<?= $value['image'] ?>" alt="<?= $value['name'] ?>" loading="lazy">
+							<div class="schedule-info">
+								<h3 class="schedule-title"><?= $value['name'] ?></h3>
+								<div class="schedule-episode">
+									<i class="fas fa-film"></i>
+									<span>Tập <?= $value['ep_hien_tai'] ?></span>
+								</div>
 							</div>
-						</div>
-						<div class="early-time-sticker"><?= $value['showtimes'] ?></div>
-					</a>
-				<?php endforeach; ?>
-			</div>
-		</div>
-	<?php endif; ?>
-	<div class="schedule-grid" id="scheduleGrid" style="opacity: 1; transform: translateY(0px); transition: opacity 0.3s, transform 0.3s;">
-		<?php foreach ($listShowtimes as $key => $value): ?>
-			<a href="<?= URL ?>/info/<?= $value['slug'] ?>.html" class="schedule-item">
-				<img src="<?= $value['image'] ?>" alt="<?= $value['name'] ?>" loading="lazy">
-				<div class="schedule-info">
-					<h3 class="schedule-title"><?= $value['name'] ?></h3>
-					<div class="schedule-episode">
-						<i class="fas fa-film"></i>
-						<span><?= $value['ep_hien_tai'] ?>/<?= $value['ep_num'] ?></span>
-					</div>
+							<div class="early-time-sticker"><?= $value['showtimes'] ?></div>
+						</a>
+					<?php endforeach; ?>
 				</div>
-			</a>
-		<?php endforeach; ?>
-	</div>
-<?php
+			</div>
+		<?php endif; ?>
+		<div class="schedule-grid" id="scheduleGrid" style="opacity: 1; transform: translateY(0px); transition: opacity 0.3s, transform 0.3s;">
+			<?php foreach ($listShowtimes as $key => $value): ?>
+				<a href="<?= URL ?>/info/<?= $value['slug'] ?>.html" class="schedule-item">
+					<img src="<?= $value['image'] ?>" alt="<?= $value['name'] ?>" loading="lazy">
+					<div class="schedule-info">
+						<h3 class="schedule-title"><?= $value['name'] ?></h3>
+						<div class="schedule-episode">
+							<i class="fas fa-film"></i>
+							<span><?= $value['ep_hien_tai'] ?>/<?= $value['ep_num'] ?></span>
+						</div>
+					</div>
+				</a>
+			<?php endforeach; ?>
+		</div>
+	<?php
 	$content = ob_get_clean();
 	return $content;
 }

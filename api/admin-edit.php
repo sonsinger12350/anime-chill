@@ -197,6 +197,9 @@ if ($FormEdit == "server") {
                 <label>Giờ chiếu</label>
                 <input type="text" class="form-control" name="data[showtimes]" value="<?= $data['showtimes'] ?>">
             </div>
+            <div class="col-lg-6 col-md-12 mb-3">
+                <label>Phim chiếu sớm <input class="form-check-input" type="checkbox" name="data[early_screening]" value="1" <?= Checked($data['early_screening'], 1) ?>></label>
+            </div>
 <!--
             <div class="col-lg-6 col-md-12 mb-3">
                 <label>Từ Khóa Tìm Kiếm Phim</label>

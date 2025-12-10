@@ -410,8 +410,8 @@
 
 .early-time-sticker {
 	position: absolute;
-	top: -10px;
-	left: -10px;
+	top: -4px;
+	left: -4px;
 	background: #ffb627;
 	color: #000;
 	padding: 6px 12px;

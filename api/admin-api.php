@@ -65,10 +65,7 @@ if ($action == 'loginadmin') {
     $table = sql_escape($_POST['table']);
     $id = sql_escape($_POST['id']);
     $Feils = $_POST['data'];
-
-    if (empty($Feils['public']) && $table == 'news') {
-        $Feils['public'] = "false";
-    }
+    if (empty($Feils['public']) && $table == 'news') $Feils['public'] = "false";
 
     $Check = count($Feils);
     $ArrNum = 0;
@@ -76,25 +73,19 @@ if ($action == 'loginadmin') {
     foreach ($Feils as $key => $value) {
         $ArrNum++;
         $ColumsKey = $key;
-        if ($ColumsKey == 'slug') {
-            $RowValue = chuyenslug($value);
-        } else if ($ColumsKey == 'password') {
-            $RowValue = md5($value);
-        } else if ($ColumsKey == 'cate') {
-            $RowValue = json_encode($Feils['cate'], JSON_UNESCAPED_UNICODE);
-        } else if ($ColumsKey == 'lich_chieu') {
-            $RowValue = json_encode($Feils['lich_chieu'], JSON_UNESCAPED_UNICODE);
-        } else if ($ColumsKey == 'script_footer') {
-            $RowValue = htmlchars($value);
-        } else if ($ColumsKey == 'top_note') {
-            $RowValue = htmlchars($value);
-        } else if ($ColumsKey == 'googletagmanager') {
-            $RowValue = htmlchars($value);
-        } else if ($ColumsKey == 'name') {
-            $RowValue = $value;
-        } else if ($ColumsKey == 'keyword') {
+
+        if ($ColumsKey == 'slug') $RowValue = chuyenslug($value);
+        else if ($ColumsKey == 'password') $RowValue = md5($value);
+        else if ($ColumsKey == 'cate') $RowValue = json_encode($Feils['cate'], JSON_UNESCAPED_UNICODE);
+        else if ($ColumsKey == 'lich_chieu') $RowValue = json_encode($Feils['lich_chieu'], JSON_UNESCAPED_UNICODE);
+        else if ($ColumsKey == 'script_footer') $RowValue = htmlchars($value);
+        else if ($ColumsKey == 'top_note') $RowValue = htmlchars($value);
+        else if ($ColumsKey == 'googletagmanager') $RowValue = htmlchars($value);
+        else if ($ColumsKey == 'name') $RowValue = $value;
+        else if ($ColumsKey == 'keyword') {
             $key_seo = explode("\r", $value);
             $keyword = array();
+
             foreach ($key_seo as $k => $kw) {
                 if ($kw != '') {
                     $Key = sql_escape(explode("|", $kw)[0]);
@@ -105,20 +96,24 @@ if ($action == 'loginadmin') {
                     );
                 }
             }
+
             $RowValue = json_encode($keyword, JSON_UNESCAPED_UNICODE);
-        } else if (in_array($ColumsKey, ['script_foog', 'script_fooh', 'script_fooj', 'tvc_config'])) {
-            $RowValue = json_encode(htmlchars($value));
-        } else $RowValue = $value;
-        if ($ArrNum < $Check) {
-            $SQL .= "$key = '$RowValue',";
-        } else $SQL .= "$key = '$RowValue'";
+        } 
+        else if (in_array($ColumsKey, ['script_foog', 'script_fooh', 'script_fooj', 'tvc_config'])) $RowValue = json_encode(htmlchars($value));
+        else if ($ColumsKey == 'early_screening') $RowValue = !empty($value) ? 1 : 0;
+        else $RowValue = $value;
+
+        if ($ArrNum < $Check) $SQL .= "$key = '$RowValue',";
+        else $SQL .= "$key = '$RowValue'";
     }
 
     try {
         $mysql->update($table, $SQL, "id = '$id'");
-    } catch (\Throwable $th) {
+    }
+    catch (\Throwable $th) {
         die(JsonMessage(400, "Lỗi rồi => [$th]"));
     }
+
     die(JsonMessage(200, "Cập Nhật Thành Công"));
 } else if ($action == 'AddNewDatabase') {
     $table = sql_escape($_POST['table']);
