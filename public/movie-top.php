@@ -65,7 +65,7 @@ if (!in_array($currentTab, array_keys($tabs))) $currentTab = 'all';
 							?>
 								<article class="flex-item thumb grid-item">
 									<div class="halim-item">
-										<a class="halim-thumb" href="<?= URL ?>/thong-tin-phim/<?= $row['slug'] ?>.html" title="<?= $row['name'] ?>">
+										<a class="halim-thumb" href="<?= URL ?>/info/<?= $row['slug'] ?>.html" title="<?= $row['name'] ?>">
 											<figure>
 												<img src="<?= $row['image'] ?>" class="img-responsive wp-post-image" alt="<?= $row['name'] ?>" decoding="async" loading="lazy">
 											</figure>

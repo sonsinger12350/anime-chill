@@ -60,11 +60,11 @@
 				<form id="login-form-custom">
 					<div class="form-group">
 						<label for="login-email">Email</label>
-						<input type="email" class="form-control" id="login-email" name="email" placeholder="Nhập email của bạn" required>
+						<input type="email" class="form-control" id="login-email" name="email" placeholder="Nhập email của bạn" autocomplete="email" required>
 					</div>
 					<div class="form-group">
 						<label for="login-password">Mật khẩu</label>
-						<input type="password" class="form-control" id="login-password" name="password" placeholder="Nhập mật khẩu của bạn" required>
+						<input type="password" class="form-control" id="login-password" name="password" placeholder="Nhập mật khẩu của bạn" autocomplete="current-password" required>
 					</div>
 					<div class="form-group">
 						<button type="submit" class="btn btn-primary btn-block" id="login-submit-btn">

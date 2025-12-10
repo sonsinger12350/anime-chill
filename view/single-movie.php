@@ -3,7 +3,7 @@
 ?>
 <article class="col-md-2 col-sm-4 col-xs-6 thumb grid-item">
 	<div class="halim-item">
-		<a class="halim-thumb" href="<?= URL ?>/thong-tin-phim/<?= $row['slug'] ?>.html" title="<?= $row['name'] ?>">
+		<a class="halim-thumb" href="<?= URL ?>/info/<?= $row['slug'] ?>.html" title="<?= $row['name'] ?>">
 			<figure>
 				<img class="blur-up img-responsive lazyloaded" data-src="<?= $row['image'] ?>" alt="<?= $row['name'] ?>" title="<?= $row['name'] ?>" sizes="300x400" src="<?= $row['image'] ?>" />
 			</figure>

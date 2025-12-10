@@ -120,7 +120,7 @@ if (GetParam("kw")) {
                                                             <div class="btn-group" role="group">
                                                                 <button class="btn btn-primary btn-xs" type="button" onclick="LoadFormEdit('<?= $table ?>',<?= $row['id'] ?>);" style="min-width:35px">Sửa</button>
                                                                 <button class="btn btn-danger btn-xs" type="button" onclick="TableXoa('<?= $table ?>',<?= $row['id'] ?>);">Xóa</button>
-                                                                <a class="btn btn-info btn-xs" href="<?= URL ?>/thong-tin-phim/<?= $row['slug'] ?>.html" target="_blank" style="min-width:66px">Xem Thử</a>
+                                                                <a class="btn btn-info btn-xs" href="<?= URL ?>/info/<?= $row['slug'] ?>.html" target="_blank" style="min-width:66px">Xem Thử</a>
                                                             </div>
                                                         </td>
                                                     </tr>

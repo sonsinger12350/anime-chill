@@ -11,7 +11,7 @@ while ($row = $arr->fetch(PDO::FETCH_ASSOC)) {
     $episode_number = ($row['ep_hien_tai'] ? $row['ep_hien_tai'] : get_total("episode", "WHERE movie_id = '{$row['id']}'"));
     $statut = ($row['loai_phim'] == 'Phim Lẻ' ? "{$row['movie_duration']} Phút" : "$episode_number/{$row['ep_num']}");
     $html .= '<div class="movie-item" id="movie-id-' . $row['id'] . '">
-                <a href="' . URL . '/thong-tin-phim/' . $row['slug'] . '.html" title="' . $row['name'] . '">
+                <a href="' . URL . '/info/' . $row['slug'] . '.html" title="' . $row['name'] . '">
                     <div class="episode-latest" style="background-color: rgba(183,28,28,.9);
                     color: #fff;
                     text-shadow: 0 0 2px rgb(0 0 0 / 30%);

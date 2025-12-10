@@ -15,7 +15,7 @@ $kw = isset($_GET['s']) ? sql_escape($_GET['s']) : '';
 						<form id="search-form-pc" name="halimForm" role="search" action="<?= URL ?>/tim-kiem" method="GET">
 							<div class="form-group">
 								<div class="input-group col-xs-12">
-									<input id="search" type="text" name="s" value="<?= $kw ?>" class="form-control" placeholder="Tìm kiếm phim..." autocomplete="off" required="" />
+									<input type="text" name="s" value="<?= $kw ?>" class="form-control" placeholder="Tìm kiếm phim..." autocomplete="off" required="" />
 									<i class="animate-spin hl-spin4 hidden"></i>
 								</div>
 							</div>
@@ -38,11 +38,11 @@ $kw = isset($_GET['s']) ? sql_escape($_GET['s']) : '';
 						</div>
 					</a>
 					<?php if (!isset($_author_cookie)) { ?>
-						<button id="userInfo" type="button" class="navbar-toggle-pc collapsed pull-right" data-toggle="dropdown" aria-expanded="true" onclick="openLoginModalCustom();">
+						<button id="userInfo" type="button" class="navbar-toggle-pc collapsed pull-right" data-toggle="dropdown" aria-expanded="true" onclick="openLoginModalCustom();" aria-label="Đăng nhập">
 							<i class="fa-solid fa-right-to-bracket"></i>
 						</button>
 					<?php } else { ?>
-						<button id="userInfo" type="button" class="navbar-toggle-pc collapsed pull-right" data-toggle="dropdown" aria-expanded="true">
+						<button id="userInfo" type="button" class="navbar-toggle-pc collapsed pull-right" data-toggle="dropdown" aria-expanded="true" aria-label="Thông tin người dùng">
 							<i class="fa-solid fa-circle-user"></i>
 						</button>
 						<ul class="dropdown-menu" aria-labelledby="userInfo">

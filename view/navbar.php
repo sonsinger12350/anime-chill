@@ -76,10 +76,10 @@ $currentUrl = $currentUrl[0];
 		</nav>
 		<div class="collapse navbar-collapse" id="search-form">
 			<div id="mobile-search-form" class="halim-search-form">
-				<form id="search-form-pc" name="halimForm" role="search" action="<?= URL ?>/tim-kiem" method="GET">
+				<form name="halimForm" role="search" action="<?= URL ?>/tim-kiem" method="GET">
 					<div class="form-group">
 						<div class="input-group col-xs-12">
-							<input id="search" type="text" name="s" value="<?= $kw ?>" class="form-control" placeholder="Tìm kiếm phim..." autocomplete="off" required="" />
+							<input type="text" name="s" value="<?= $kw ?>" class="form-control" placeholder="Tìm kiếm phim..." autocomplete="off" required="" />
 							<i class="animate-spin hl-spin4 hidden"></i>
 						</div>
 					</div>

@@ -21,7 +21,7 @@ if ($cf['slider'] == 'true') {
                 }
             ?>
                 <div>
-                    <a href="<?= URL ?>/thong-tin-phim/<?= $row['slug'] ?>.html">
+                    <a href="<?= URL ?>/info/<?= $row['slug'] ?>.html">
                         <div><img src="<?= $row['image'] ?>" alt="Phim <?= $row['name'] ?>" /></div>
                         <div class="name"><?= $row['name'] ?></div>
                         <div class="episode_latest">

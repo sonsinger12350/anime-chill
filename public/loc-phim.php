@@ -77,7 +77,7 @@ if ($value[2]) {
                             } else $statut = "$NumEpisode/{$row['ep_num']}";
                     ?>
                             <div class="movie-item" id="movie-id-<?= $row['id'] ?>">
-                                <a href="<?= URL ?>/thong-tin-phim/<?= $row['slug'] ?>.html" title="<?= $row['name'] ?>">
+                                <a href="<?= URL ?>/info/<?= $row['slug'] ?>.html" title="<?= $row['name'] ?>">
                                     <div class="episode-latest"> <span><?= $statut ?></span></div>
                                     <div>
                                         <img src="<?= $row['image'] ?>" alt="Phim <?= $row['name'] ?>" />

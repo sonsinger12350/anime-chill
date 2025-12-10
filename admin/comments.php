@@ -93,7 +93,7 @@ if (GetParam("kw")) {
                                                         </td>
                                                         <th scope="row"><?= $stt ?></th>
                                                         <td><a href="<?= URL ?>/admin_movie/author?p=1&kw=<?= $User['email'] ?>"><?= $User['email'] ?></a></td>
-                                                        <td><a href="<?= URL ?>/thong-tin-phim/<?= $Movie['slug'] ?>.html" target="_blank"><?= $Movie['name'] ?></a></td>
+                                                        <td><a href="<?= URL ?>/info/<?= $Movie['slug'] ?>.html" target="_blank"><?= $Movie['name'] ?></a></td>
                                                         <td><?= $row['content'] ?></td>
                                                         <td><?= $row['time'] ?></td>
                                                         <td>

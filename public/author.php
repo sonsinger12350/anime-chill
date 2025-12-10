@@ -124,7 +124,7 @@ $historyMovies = getHistory($user_id);
 									$movieData = GetDataArr('movie', "id = {$movie['movie_id']}");
 								?>
 									<div class="item post-673">
-										<a href="<?= URL ?>/thong-tin-phim/<?= $movieData['slug'] ?>.html" title="<?= $movieData['name'] ?>">
+										<a href="<?= URL ?>/info/<?= $movieData['slug'] ?>.html" title="<?= $movieData['name'] ?>">
 											<div class="item-link">
 												<img src="<?= $movieData['image'] ?>" data-src="<?= $movieData['image'] ?>" class="blur-up post-thumb lazyloaded" alt="<?= $movieData['name'] ?>" title="<?= $movieData['name'] ?>">
 											</div>

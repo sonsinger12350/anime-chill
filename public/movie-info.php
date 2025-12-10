@@ -7,6 +7,13 @@ $MovieSlug = sql_escape($value[2]);
 if (get_total("movie", "WHERE slug = '$MovieSlug'") < 1) die(header('location:' . URL));
 
 $Movie = GetDataArr("movie", "slug = '$MovieSlug'");
+
+// SEO
+$title = "Xem phim {$Movie['name']} - {$cf['title']}";
+$description = strip_tags($Movie['content']);
+$image = $Movie['image'];
+// End SEO
+
 $NumEpisode = ($Movie['ep_hien_tai'] ? $Movie['ep_hien_tai'] : get_total("episode", "WHERE movie_id = '{$Movie['id']}'"));
 $status = ($Movie['loai_phim'] == 'Phim Lẻ' ? "{$Movie['movie_duration']} Phút" : "$NumEpisode/{$Movie['ep_num']}");
 $categoryHtml = [];
@@ -19,8 +26,6 @@ if (!empty($Movie['cate'])) {
 		if (!empty($category)) $categoryHtml[] = '<a href="' . URL . '/the-loai/' . $category['slug'] . '" rel="category tag">' . $category['name'] . '</a>';
 	}
 }
-$title = "Chi tiết phim {$Movie['name']} - {$cf['title']}";
-$description =  "Xem chi tiết phim {$Movie['name']}";
 ob_start();
 ?>
 <style>
@@ -105,7 +110,7 @@ ob_start();
 							</div>
 						</div>
 						<div class="btn ah-frame-bg">
-							<a href="<?= URL ?>/xem-phim/<?= $Movie['slug'] ?>-episode-id-<?= $NumEpisode ?>.html" class="button-default bg-lochinvar watch-btn"><i class="fa-solid fa-circle-play"></i>Xem Phim </a>
+							<a href="<?= URL ?>/watch/<?= $Movie['slug'] ?>-episode-id-<?= $NumEpisode ?>.html" class="button-default bg-lochinvar watch-btn"><i class="fa-solid fa-circle-play"></i>Xem Phim </a>
 							<button id="toggle_follow" value="<?= $Movie['id'] ?>" type="button" class="button-default bg-lochinvar watch-btn"><i class="fa-solid fa-bookmark"></i></button>
 						</div>
 					</div>

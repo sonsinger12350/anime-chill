@@ -190,10 +190,11 @@
 	background-color: #2d2d2d;
 	border: 1px solid rgba(255, 255, 255, 0.1);
 	transition: all 0.3s ease;
-	cursor: pointer;
+	cursor: pointer !important;
 }
 
-.page-numbers li a:hover {
+.page-numbers li a:hover,
+.page-numbers li span.movie-pagination:hover {
 	background-color: #3d3d3d;
 	border-color: rgba(255, 255, 255, 0.2);
 	transform: translateY(-2px);
@@ -226,13 +227,17 @@
 }
 
 .page-numbers li a.prev,
-.page-numbers li a.next {
+.page-numbers li a.next,
+.page-numbers li span.movie-pagination.prev,
+.page-numbers li span.movie-pagination.next {
 	min-width: 32px;
 	padding: 0;
 }
 
 .page-numbers li a.prev i,
-.page-numbers li a.next i {
+.page-numbers li a.next i,
+.page-numbers li span.movie-pagination.prev i,
+.page-numbers li span.movie-pagination.next i {
 	font-size: 14px;
 }
 
@@ -250,7 +255,9 @@
 	}
 
 	.page-numbers li a.prev,
-	.page-numbers li a.next {
+	.page-numbers li a.next,
+	.page-numbers li span.movie-pagination.prev,
+	.page-numbers li span.movie-pagination.next {
 		min-width: 36px;
 	}
 }

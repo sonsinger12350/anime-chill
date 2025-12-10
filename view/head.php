@@ -34,15 +34,15 @@
 	// Xác định og:type
 	$ogType = isset($og_type) ? $og_type : (isset($Movie) ? 'video.movie' : 'website');
 ?>
-<title><?= $currentTitle ?></title>
-<meta name="description" content="<?= $currentDescription ?>" />
+<title><?= htmlspecialchars($currentTitle, ENT_QUOTES, 'UTF-8') ?></title>
+<meta name="description" content="<?= htmlspecialchars($currentDescription, ENT_QUOTES, 'UTF-8') ?>" />
 <link rel="canonical" href="<?= $canonicalUrl ?>" />
 
 <!-- Open Graph -->
 <meta property="og:type" content="<?= $ogType ?>" />
 <meta property="og:locale" content="vi_VN" />
-<meta property="og:title" content="<?= $currentTitle ?>" />
-<meta property="og:description" content="<?= $currentDescription ?>" />
+<meta property="og:title" content="<?= htmlspecialchars($currentTitle, ENT_QUOTES, 'UTF-8') ?>" />
+<meta property="og:description" content="<?= htmlspecialchars($currentDescription, ENT_QUOTES, 'UTF-8') ?>" />
 <meta property="og:url" content="<?= $ogUrl ?>" />
 <meta property="og:site_name" content="<?= $cf['title'] ?>" />
 <?php if ($currentImage): ?>
@@ -59,8 +59,8 @@
 <?php if (isset($cf['twitter_site']) && !empty($cf['twitter_site'])): ?>
 <meta name="twitter:site" content="<?= $cf['twitter_site'] ?>" />
 <?php endif; ?>
-<meta name="twitter:title" content="<?= $currentTitle ?>" />
-<meta name="twitter:description" content="<?= $currentDescription ?>" />
+<meta name="twitter:title" content="<?= htmlspecialchars($currentTitle, ENT_QUOTES, 'UTF-8') ?>" />
+<meta name="twitter:description" content="<?= htmlspecialchars($currentDescription, ENT_QUOTES, 'UTF-8') ?>" />
 <?php if ($currentImage): ?>
 <meta name="twitter:image" content="<?= $currentImage ?>" />
 <meta name="twitter:image:alt" content="<?= htmlspecialchars($currentTitle, ENT_QUOTES, 'UTF-8') ?>" />

@@ -79,7 +79,7 @@ while ($movie = $movies->fetch(PDO::FETCH_ASSOC)) {
 	if (!empty($movie['slug'])) {
 		$movieLastMod = !empty($movie['timestap']) ? date('Y-m-d', $movie['timestap']) : $lastMod;
 		echo "\t<url>\n";
-		echo "\t\t<loc>" . htmlspecialchars(URL . '/thong-tin-phim/' . $movie['slug'] . '.html') . "</loc>\n";
+		echo "\t\t<loc>" . htmlspecialchars(URL . '/info/' . $movie['slug'] . '.html') . "</loc>\n";
 		echo "\t\t<lastmod>" . $movieLastMod . "</lastmod>\n";
 		echo "\t\t<changefreq>weekly</changefreq>\n";
 		echo "\t\t<priority>0.9</priority>\n";

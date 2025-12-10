@@ -5,11 +5,17 @@ $MovieSlug = sql_escape($value[2]);
 $EpisodeID = sql_escape($value[3]);
 FireWall();
 if (get_total("movie", "WHERE slug = '$MovieSlug'") < 1) die(header('location:' . URL));
-if (get_total("episode", "WHERE id = '$EpisodeID'") < 1) die(header('location:' . URL . "/thong-tin-phim/$MovieSlug.html"));
+if (get_total("episode", "WHERE id = '$EpisodeID'") < 1) die(header('location:' . URL . "/info/$MovieSlug.html"));
 $Movie = GetDataArr("movie", "slug = '$MovieSlug'");
 $Ep = GetDataArr("episode", " id = '$EpisodeID'");
 $mysql->update("movie", "view = view + 1, view_day = view_day + 1, view_week = view_week + 1, view_month = view_month + 1, view_year = view_year + 1", "id = '{$Movie['id']}'");
 $statut = ($Movie['loai_phim'] == 'Phim Lẻ' ? "{$Movie['movie_duration']} Phút" : "$NumEpisode/{$Movie['ep_num']}");
+
+// SEO
+$title = "Xem phim {$Movie['name']} - Tập {$Ep['ep_name']} - {$cf['title']}";
+$description = strip_tags($Movie['content']);
+$image = $Movie['image'];
+// End SEO
 
 // ===== NEW LOGIC: GET ALL EPISODES AND SERVERS =====
 // Get all episodes of the movie
@@ -45,7 +51,7 @@ $ep_num_plus = ($Ep['ep_num'] + 1);
 $ep_num = ($Ep['ep_num'] - 1);
 if (get_total('episode', "WHERE movie_id = '{$Movie['id']}' AND ep_num = '$ep_num_plus'") >= 1) {
     $EpNext = GetDataArr('episode', "movie_id = '{$Movie['id']}' AND ep_num = '$ep_num_plus'");
-    $JsNextEpisode = 'window.location.href = "' . URL . '/xem-phim/' . $Movie['slug'] . '-episode-id-' . $EpNext['id'] . '.html";';
+    $JsNextEpisode = 'window.location.href = "' . URL . '/watch/' . $Movie['slug'] . '-episode-id-' . $EpNext['id'] . '.html";';
 } else $JsNextEpisode = 'Toast({
     message: "Không có tập tiếp theo",
     type: "error"
@@ -54,7 +60,7 @@ final_ep = true;';
 
 if (get_total('episode', "WHERE movie_id = '{$Movie['id']}' AND ep_num = '$ep_num'") >= 1) {
     $EpNext = GetDataArr('episode', "movie_id = '{$Movie['id']}' AND ep_num = '$ep_num'");
-    $JsOldEpisode = 'window.location.href = "' . URL . '/xem-phim/' . $Movie['slug'] . '-episode-id-' . $EpNext['id'] . '.html";';
+    $JsOldEpisode = 'window.location.href = "' . URL . '/watch/' . $Movie['slug'] . '-episode-id-' . $EpNext['id'] . '.html";';
 } else $JsOldEpisode = 'Toast({
     message: "Không có tập trước",
     type: "error"
@@ -66,7 +72,7 @@ while ($row = $arr->fetch(PDO::FETCH_ASSOC)) {
     $Active = ($row['id'] == $EpisodeID ? 'active' : '');
     // List Episode
     $ListEpisode .= '
-        <a href="' . URL . '/xem-phim/' . $Movie['slug'] . '-episode-id-' . $row['id'] . '.html" title="' . $row['ep_name'] . '" class="' . $Active . '">
+        <a href="' . URL . '/watch/' . $Movie['slug'] . '-episode-id-' . $row['id'] . '.html" title="' . $row['ep_name'] . '" class="' . $Active . '">
             <span>' . $row['ep_name'] . '</span>'. ($row['vip'] == 1 ? '<span class="vip">VIP</span>' : '') .'
         </a>
     ';
@@ -303,7 +309,6 @@ ob_start();
 						// Global variable to save server and episode information
 						var serverEpisodes = <?= json_encode($serverEpisodes) ?>;
 						var currentServer = "<?= $currentServer ?>";
-						console.log(currentServer);
 
 						if (currentServer)  $(`#sv_${currentServer}`).addClass("bg-green");
 						else $('#list_sv a').first().addClass("bg-green");
@@ -576,7 +581,7 @@ ob_start();
 				<div class="title-block watch-page">
 					<div class="title-wrapper full">
 						<button id="toggle_follow" value="<?= $Movie['id'] ?>" type="button" class="button-default bg-lochinvar watch-btn"><i class="fa-solid fa-bookmark"></i></button>
-						<h1 class="entry-title"><a href="<?= URL ?>/thong-tin-phim/<?= $Movie['slug'] ?>.html" title="<?= $Movie['name'] ?> <?= $Ep['ep_name'] ?> HD" class="tl"><?= $Movie['name'] ?> - Tập <?= $Ep['ep_name'] ?> HD</a></h1>
+						<h1 class="entry-title"><a href="<?= URL ?>/info/<?= $Movie['slug'] ?>.html" title="<?= $Movie['name'] ?> <?= $Ep['ep_name'] ?> HD" class="tl"><?= $Movie['name'] ?> - Tập <?= $Ep['ep_name'] ?> HD</a></h1>
 					</div>
 					<div class="ratings_wrapper single-info">
 						<div class="halim-rating-container">
@@ -801,7 +806,7 @@ ob_start();
 							$('#toggle_follow').css("background-color", "rgb(125, 72, 72)");
 						}
 					} catch (error) {
-						console.log(error);
+						console.error(error);
 					}
 				}
 			</script>

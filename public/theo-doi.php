@@ -66,9 +66,11 @@ FireWall();
                         let response = await loadFollowmovie(page);
                         let data = response.data;
                         movie_follow.innerHTML = data;
-                    } catch (e) {
-                        console.log(e)
                     }
+                    catch (e) {
+                        console.error(e)
+                    }
+
                     $user.id && asyncFollow();
                 }
                 asyncFollow = async () => {

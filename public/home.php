@@ -48,7 +48,7 @@ $weekdays = [
 							<div class="owl-item">
 								<article class="thumb grid-item post-189">
 									<div class="halim-item">
-										<a class="halim-thumb" href="<?= URL ?>/thong-tin-phim/<?= $row['slug'] ?>.html" title="<?= $row['name'] ?>">
+										<a class="halim-thumb" href="<?= URL ?>/info/<?= $row['slug'] ?>.html" title="<?= $row['name'] ?>">
 											<figure class="clip-path-even">
 												<div class="halim-trending-poster-mask halim-trending-clip-path-even">
 												</div>

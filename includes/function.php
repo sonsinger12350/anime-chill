@@ -1360,7 +1360,7 @@ function loadMovieShowtimes($day)
 			<h2><i class="fas fa-star"></i> Phim Chiếu Sớm</h2>
 			<div class="schedule-items" style="grid-template-columns: 1fr 1fr;">
 				<?php foreach ($earlyShowtimesList as $key => $value): ?>
-					<a href="<?= URL ?>/thong-tin-phim/<?= $value['slug'] ?>.html" class="schedule-item">
+					<a href="<?= URL ?>/info/<?= $value['slug'] ?>.html" class="schedule-item">
 						<img src="<?= $value['image'] ?>" alt="<?= $value['name'] ?>" loading="lazy">
 						<div class="schedule-info">
 							<h3 class="schedule-title"><?= $value['name'] ?></h3>
@@ -1377,7 +1377,7 @@ function loadMovieShowtimes($day)
 	<?php endif; ?>
 	<div class="schedule-grid" id="scheduleGrid" style="opacity: 1; transform: translateY(0px); transition: opacity 0.3s, transform 0.3s;">
 		<?php foreach ($listShowtimes as $key => $value): ?>
-			<a href="<?= URL ?>/thong-tin-phim/<?= $value['slug'] ?>.html" class="schedule-item">
+			<a href="<?= URL ?>/info/<?= $value['slug'] ?>.html" class="schedule-item">
 				<img src="<?= $value['image'] ?>" alt="<?= $value['name'] ?>" loading="lazy">
 				<div class="schedule-info">
 					<h3 class="schedule-title"><?= $value['name'] ?></h3>

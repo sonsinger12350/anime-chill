@@ -32,7 +32,7 @@
 		// Nút Previous
 		if ($currentPage > 1) {
 			$prevPage = $currentPage - 1;
-			echo '<li><a class="page-numbers movie-pagination prev" href="javascript:void(0)" data-page="' . $prevPage . '"><i class="fa-solid fa-angle-left"></i></a></li>';
+			echo '<li><span class="page-numbers movie-pagination prev" data-page="' . $prevPage . '"><i class="fa-solid fa-angle-left"></i></span></li>';
 		}
 		
 		$prevPage = null;
@@ -46,7 +46,7 @@
 				echo '<li><span aria-current="page" class="page-numbers current">' . $pageNum . '</span></li>';
 			}
 			else {
-				echo '<li><a class="page-numbers movie-pagination" href="javascript:void(0)" data-page="' . $pageNum . '">' . $pageNum . '</a></li>';
+				echo '<li><span class="page-numbers movie-pagination" data-page="' . $pageNum . '">' . $pageNum . '</span></li>';
 			}
 			
 			$prevPage = $pageNum;
@@ -55,7 +55,7 @@
 		// Nút Next
 		if ($currentPage < $total) {
 			$nextPage = $currentPage + 1;
-			echo '<li><a class="page-numbers movie-pagination next" href="javascript:void(0)" data-page="' . $nextPage . '"><i class="fa-solid fa-angle-right"></i></a></li>';
+			echo '<li><span class="page-numbers movie-pagination next" data-page="' . $nextPage . '"><i class="fa-solid fa-angle-right"></i></span></li>';
 		}
 		?>
 	</ul>

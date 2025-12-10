@@ -23,8 +23,8 @@ if ($Json['action'] == 'live_search') {
 		} else {
 			$statut = "$NumEpisode/{$row['ep_num']}";
 		}
-		$data['data'] = '<a href="' . URL . '/thong-tin-phim/' . $row['slug'] . '.html"><div class="row_one"><img src="' . $row['image'] . '"></div><div class="row_two"><span class="fw-500">' . $row['name'] . '</span> <span class="fs-12 margin-t-5">' . $statut . '</span></div></a>';
-		$data['result'] = '<a href="' . URL . '/thong-tin-phim/' . $row['slug'] . '.html"><div class="row_one"><img src="' . $row['image'] . '"></div><div class="row_two"><span class="fw-500">' . $row['name'] . '</span> <span class="fs-12 margin-t-5">' . $statut . '</span></div></a>';
+		$data['data'] = '<a href="' . URL . '/info/' . $row['slug'] . '.html"><div class="row_one"><img src="' . $row['image'] . '"></div><div class="row_two"><span class="fw-500">' . $row['name'] . '</span> <span class="fs-12 margin-t-5">' . $statut . '</span></div></a>';
+		$data['result'] = '<a href="' . URL . '/info/' . $row['slug'] . '.html"><div class="row_one"><img src="' . $row['image'] . '"></div><div class="row_two"><span class="fw-500">' . $row['name'] . '</span> <span class="fs-12 margin-t-5">' . $statut . '</span></div></a>';
 	}
 	$data['status'] = 'success';
 	$InstanceCache->set($cache_key, json_encode($data), $cf['time_cache'] * 3600);
@@ -83,7 +83,7 @@ if ($Json['action'] == 'live_search') {
 
 				$HTML_DATA .= '<div class="movie-item" movie-id="' . $MovieID . '">
                                     <a class="delete" href="#" onclick="delFollowmovie(event,' . $MovieID . ')">X</a>
-                                    <a href="' . URL . '/thong-tin-phim/' . $Movie['slug'] . '.html" title="' . $Movie['name'] . '">
+                                    <a href="' . URL . '/info/' . $Movie['slug'] . '.html" title="' . $Movie['name'] . '"></a>
                                         <div class="episode-latest">
                                             <span>' . $statut . '</span>
                                         </div>
@@ -124,7 +124,7 @@ if ($Json['action'] == 'live_search') {
 			} else $statut = "$NumEpisode/{$Movie['ep_num']}";
 			$HTML_DATA .= '<div class="movie-item" movie-id="' . $id . '">
                 <a class="delete" href="#" onclick="delFollowmovie(event,' . $id . ')">X</a>
-                <a href="' . URL . '/thong-tin-phim/' . $Movie['slug'] . '.html" title="' . $Movie['name'] . '">
+                <a href="' . URL . '/info/' . $Movie['slug'] . '.html" title="' . $Movie['name'] . '">
                     <div class="episode-latest">
                         <span>' . $statut . '</span>
                     </div>
@@ -794,7 +794,7 @@ if ($Json['action'] == 'live_search') {
                         <div class="content">' . $result['content'] . '</div>
                         <div class="flex fs-12 toolbarr">
                             <label>
-                                <a href="' . URL . '/thong-tin-phim/' . $result['movie_slug'] . '.html"><i class="fa fa-film"></i> ' . $result['movie_name'] . '</a>
+                                <a href="' . URL . '/info/' . $result['movie_slug'] . '.html"><i class="fa fa-film"></i> ' . $result['movie_name'] . '</a>
                             </label>
                             <span class="cmt-time color-gray">' . RemainTime($result['timestap']) . '</span><br>
                         </div>
@@ -1224,7 +1224,7 @@ if ($Json['action'] == 'live_search') {
 				$History .= '
                     <article class="col-md-2 col-sm-4 col-xs-6 thumb grid-item">
                         <div class="halim-item">
-                            <a class="halim-thumb" href="' . URL . '/thong-tin-phim/' . $Movie['slug'] . '.html" title="' . $Movie['name'] . '">
+                            <a class="halim-thumb" href="' . URL . '/info/' . $Movie['slug'] . '.html" title="' . $Movie['name'] . '">
                                 <figure>
                                     <img class="blur-up img-responsive lazyloaded" data-src="' . $Movie['image'] . '" alt="' . $Movie['name'] . '" title="' . $Movie['name'] . '" sizes="300x400" src="' . $Movie['image'] . '" />
                                 </figure>
