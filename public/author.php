@@ -226,7 +226,7 @@ $historyMovies = getHistory($user_id);
 				success: function(response) {
 					if (response.status === 'success') {
 						Toast({
-							message: response.message || 'Đổi mật khẩu thành công',
+							message: response.result || 'Đổi mật khẩu thành công',
 							type: 'success'
 						});
 						// Reset form
@@ -234,7 +234,7 @@ $historyMovies = getHistory($user_id);
 					}
 					else {
 						Toast({
-							message: response.message || 'Đổi mật khẩu thất bại',
+							message: response.result || 'Đổi mật khẩu thất bại',
 							type: 'error'
 						});
 					}

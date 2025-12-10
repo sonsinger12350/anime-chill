@@ -5,8 +5,8 @@ if (!ini_get('register_globals')) {
 	extract($_GET);
 	extract($_POST);
 }
-include('dbconnect.php');
-include('CurlClass/vendor/autoload.php');
+include(__DIR__ . '/dbconnect.php');
+include(__DIR__ . '/CurlClass/vendor/autoload.php');
 $ConnectSQL = new ConectSQL;
 $mysqldb = $ConnectSQL->connect($config['db_host'], $config['db_user'], $config['db_pass'], $config['db_name']);
 $mysql = new mysql;
