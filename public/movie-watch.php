@@ -183,6 +183,7 @@ ob_start();
 		justify-content: start;
 		gap: 8px;
 		flex-wrap: wrap;
+		overflow-x: hidden;
 	}
 
 	.info-movie .list_episode .list-item-episode a,
