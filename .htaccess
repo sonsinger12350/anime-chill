@@ -70,7 +70,7 @@ RewriteRule ^dang-xuat$ ./?author=/dang-xuat/ [L]
 #RewriteRule ^tin-nhan/view/(.*)$ ./?author=/tin-nhan/$1 [L]
 #RewriteRule ^thong-bao$ ./?author=/thong-bao/ [L]   
 #RewriteRule ^buy-vip-user/(.*).html$ ./?author=/buy-vip-user/&vip_package=$1 [L]
-#RewriteRule ^trang-ca-nhan/(.*)$ ./?author=/trang-ca-nhan/$1 [L]
+RewriteRule ^trang-ca-nhan/(.*)$ ./?author=/trang-ca-nhan/$1 [L]
 
 #Api Http Request
 RewriteRule ^server/api$ ./?api=/api/ [L]
