@@ -1590,7 +1590,6 @@ function renderBookmarkedMovies($params = [])
 	// Kiểm tra user_id
 	if (!$user_id || $user_id < 1) {
 		ob_start();
-		echo '<h3 class="section-title"><span>Phim đã theo dõi</span></h3>';
 		echo '<div class="list-movie">';
 		echo '<div class="noti-error">Vui lòng đăng nhập để xem phim đã theo dõi</div>';
 		echo '</div>';
