@@ -1233,7 +1233,7 @@ function loadMovieList($params = [])
 		$filters[] = "lich_chieu LIKE '%\"days\":\"$filterDay\"%'";
 	}
 
-	if (!empty($filter['keyword'])) $filters[] = "name LIKE '%{$filter['keyword']}%' AND other_name LIKE '%{$filter['keyword']}%'";
+	if (!empty($filter['keyword'])) $filters[] = "`name` LIKE '%{$filter['keyword']}%' OR `other_name` LIKE '%{$filter['keyword']}%'";
 
 	if ($view === 'movie-complete') $filters[] = "trang_thai = 'Hoàn Thành'";
 	if (!empty($filter['category_id'])) $filters[] = "cate LIKE '%\"cate_id\":\"{$filter['category_id']}\"%'";
