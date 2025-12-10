@@ -15,7 +15,7 @@ $image = $Movie['image'];
 // End SEO
 
 $NumEpisode = ($Movie['ep_hien_tai'] ? $Movie['ep_hien_tai'] : get_total("episode", "WHERE movie_id = '{$Movie['id']}'"));
-$episodeId = GetDataArr("episode", "WHERE movie_id = '{$Movie['id']}' AND ep_num = '{$NumEpisode}'");
+$episodeId = GetDataArr("episode", "movie_id = '{$Movie['id']}' AND ep_num = '{$NumEpisode}'");
 $episodeId = $episodeId['id'];
 $status = ($Movie['loai_phim'] == 'Phim Lẻ' ? "{$Movie['movie_duration']} Phút" : "$NumEpisode/{$Movie['ep_num']}");
 $categoryHtml = [];
