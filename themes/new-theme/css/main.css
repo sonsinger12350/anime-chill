@@ -56,15 +56,3 @@ body.halimthemes {
 	flex-wrap: wrap;
 	gap: 6px;
 }
-
-#comments .item-store,
-#comments .icon-user,
-#comments .nickname [data-tooltip-icon],
-#comments .vip-icon,
-#comments .avatar-frame {
-	display: none !important;
-}
-
-#comments .bg-comment {
-	background: #171717 !important;
-}
