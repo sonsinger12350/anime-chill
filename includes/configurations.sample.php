@@ -25,7 +25,7 @@ if (isset($_SERVER['HTTP_CF_CONNECTING_IP'])) {
 define('IP', $_SERVER['REMOTE_ADDR']);
 define('USER_AGENT', $_SERVER['HTTP_USER_AGENT']);
 define('URL_LOAD', $_SERVER["REQUEST_URI"]);
-define('GOOGLE_CLIENT_ID', '683221640163-u696gmgu75sp15afmbse3t3mdjo1q3jp.apps.googleusercontent.com');
-define('GOOGLE_CLIENT_SECRET', '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');
-define('GOOGLE_REDIRECT_URI', 'https://shumafood.com/login-google-callback');
+define('GOOGLE_CLIENT_ID', '');
+define('GOOGLE_CLIENT_SECRET', '');
+define('GOOGLE_REDIRECT_URI', 'http://localhost/login-google-callback');
 include('init.php');
