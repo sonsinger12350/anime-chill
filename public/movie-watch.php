@@ -578,6 +578,12 @@ ob_start();
 							</a>
 						</div>
 					</div>
+					<form action="<?= URL ?>/watch/<?= $Movie['slug'] ?>-episode-id-<?= $EpisodeID ?>.html" method="POST" name="episode_error" id="episode_error">
+						<input type="text" style="width: 200px;border-radius: 8px;" name="note" placeholder="Điền Lý Do Lỗi Bạn Gặp Phải">
+						<input type="text" style="display: none;" name="movie_id" value="<?= $Movie['id'] ?>">
+						<input type="text" style="display: none;" name="Episode_id" value="<?= $EpisodeID ?>">
+						<input type="submit" style="border-radius: 8px;" name="send_error" value="Gửi">
+					</form>
 				<?php endif; ?>
 				<div class="title-block watch-page">
 					<div class="title-wrapper full">

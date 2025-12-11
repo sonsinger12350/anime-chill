@@ -100,11 +100,14 @@ if ($action == 'loginadmin') {
             $RowValue = json_encode($keyword, JSON_UNESCAPED_UNICODE);
         } 
         else if (in_array($ColumsKey, ['script_foog', 'script_fooh', 'script_fooj', 'tvc_config'])) $RowValue = json_encode(htmlchars($value));
-        else if ($ColumsKey == 'early_screening') $RowValue = !empty($value) ? 1 : 0;
         else $RowValue = $value;
 
         if ($ArrNum < $Check) $SQL .= "$key = '$RowValue',";
         else $SQL .= "$key = '$RowValue'";
+    }
+
+    if ($table == 'movie') {
+        $SQL .= ",early_screening = '" . (!empty($Feils['early_screening']) ? 1 : 0) . "'";
     }
 
     try {
