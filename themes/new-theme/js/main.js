@@ -375,3 +375,31 @@ function isValidEmail(email) {
 	var re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 	return re.test(email);
 }
+
+// Function to handle dropdown toggle for comments
+function clickEventDropDown(this_dropdown, icon_default = "Null", NameLabel = "") {
+    var _name = this_dropdown.getAttribute("bind");
+    var _dropdown_menu = document.getElementById(_name);
+    if (!_dropdown_menu) return false;
+    
+    if (!_dropdown_menu.style.display || _dropdown_menu.style.display === "none") {
+        this_dropdown.innerHTML = `<span class="material-icons-round material-icons-menu">highlight_off</span>`;
+        if (icon_default !== "expand_more") {
+            this_dropdown.style.backgroundColor = "#ab3e3e";
+        }
+        _dropdown_menu.style.display = "flex";
+        setTimeout(function() {
+            _dropdown_menu.style.transform = "scale(1)";
+        }, 50)
+    } else {
+        _dropdown_menu.style = null;
+        this_dropdown.style = null;
+        setTimeout(function() {
+            if (typeof $ !== 'undefined') {
+                $(`#${_name}`).removeClass("display-block");
+                $(this_dropdown).removeClass("active");
+            }
+        }, 50);
+        this_dropdown.innerHTML = `<span class="material-icons-round material-icons-menu">${icon_default}</span><div class="item-label">${NameLabel}</div>`;
+    }
+}
