@@ -83,9 +83,11 @@ $historyMovies = getHistory($user_id);
 						<li class="active">
 							<a href="#tab-movie" data-toggle="tab"><i class="fa-solid fa-user"></i> Overview</a>
 						</li>
-						<li>
-							<a href="#tab-change-password" data-toggle="tab"><i class="fa-solid fa-key"></i> Đổi mật khẩu</a>
-						</li>
+						<?php if ($user_id == $user['id']) { ?>
+							<li>
+								<a href="#tab-change-password" data-toggle="tab"><i class="fa-solid fa-key"></i> Đổi mật khẩu</a>
+							</li>
+						<?php } ?>
 					</ul>
 				</div>
 			</div>

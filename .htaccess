@@ -1,26 +1,17 @@
  RewriteEngine On
 Options +FollowSymlinks
 RewriteCond %{HTTP_HOST} ^localhost
-#RewriteCond %{HTTPS} !on 
-#RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^the-loai/(.*).html$ ./?models=/the-loai/$1 [L]
-#RewriteRule ^the-loai-de-cu/(.*).html$ ./?models=/the-loai-de-cu/$1 [L]
-#RewriteRule ^theo-doi$ ./?models=/theo-doi/ [L]
-#RewriteRule ^loc-phim/(.*)$ ./?models=/loc-phim/$1 [L]
 RewriteRule ^tim-kiem/(.*).html$ ./?models=/tim-kiem/$1 [L]
 RewriteRule ^info/(.*).html$ ./?models=/movie-info/$1 [L]
 RewriteRule ^watch/(.*)-episode-id-(.*).html$ ./?models=/movie-watch/$1/$2 [L]
 RewriteRule ^404-page$ ./?models=/404-page/ [L]
-#RewriteRule ^contact$ ./?models=/contact/ [L]
 RewriteRule ^terms$ ./?models=/terms/ [L]
 RewriteRule ^player-ads.xml$ ./?models=/player-ads/ [L]
 RewriteRule ^tvc$ ./?models=/tvc/ [L]
 RewriteRule ^confirm-robot$ ./?models=/firewall/ [L]
 RewriteRule ^website/bao-tri$ ./?models=/bao-tri/ [L]
-#RewriteRule ^news/(.*).html$ /./?models=/news/$1 [L]
-#RewriteRule ^news$ /./?models=/news/ [L]
 RewriteRule ^sitemap\.xml$ /./?models=/sitemap/ [L]
 RewriteRule ^moi-cap-nhat$ /./?models=/movie-lastest/ [L]
 RewriteRule ^phim-hoan-thanh$ /./?models=/movie-complete/ [L]
@@ -60,16 +51,8 @@ RewriteRule ^admin_movie/movie-lien-ket$ ./?admin=/movie-lien-ket/ [L]
 RewriteRule ^admin_movie/file-manager$ ./?admin=/file-manager/ [L]
 RewriteRule ^admin_movie/news$ ./?admin=/news/ [L]
 #Author
-#RewriteRule ^login$ ./?author=/login/ [L]
 RewriteRule ^login-google-callback$ ./?author=/login-google-callback [L,QSA]
 RewriteRule ^dang-xuat$ ./?author=/dang-xuat/ [L]
-#RewriteRule ^dang-ky$ ./?author=/dang-ky/ [L]
-#RewriteRule ^thay-doi-mat-khau$ ./?author=/change-password/ [L]
-#RewriteRule ^tai-khoan/ho-so$ ./?author=/ho-so/ [L]
-#RewriteRule ^tai-khoan/nap-xu$ ./?author=/nap-xu/ [L]
-#RewriteRule ^tin-nhan/view/(.*)$ ./?author=/tin-nhan/$1 [L]
-#RewriteRule ^thong-bao$ ./?author=/thong-bao/ [L]   
-#RewriteRule ^buy-vip-user/(.*).html$ ./?author=/buy-vip-user/&vip_package=$1 [L]
 RewriteRule ^trang-ca-nhan/(.*)$ ./?author=/trang-ca-nhan/$1 [L]
 
 #Api Http Request
