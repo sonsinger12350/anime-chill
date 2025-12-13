@@ -5,7 +5,7 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^tim-kiem/(.*).html$ ./?models=/tim-kiem/$1 [L]
 RewriteRule ^info/(.*).html$ ./?models=/movie-info/$1 [L]
-RewriteRule ^watch/(.*)-episode-id-(.*).html$ ./?models=/movie-watch/$1/$2 [L]
+RewriteRule ^watch/(.*)-episode-tap-(.*).html$ ./?models=/movie-watch/$1/$2 [L]
 RewriteRule ^404-page$ ./?models=/404-page/ [L]
 RewriteRule ^terms$ ./?models=/terms/ [L]
 RewriteRule ^player-ads.xml$ ./?models=/player-ads/ [L]

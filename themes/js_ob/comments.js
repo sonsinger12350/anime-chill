@@ -448,8 +448,12 @@ async function optionComment(_0x482009 = {}) {
                             _0x3ba8bd = document[_0x1d3ae8(0x10a) + _0x1d3ae8(0x1a1)](_0x3ba8bd);
                             if (_0x3e27ff[_0x1d3ae8(0x179)](_0x5f5a06, _0x3e27ff[_0x1d3ae8(0xe7)])) {
                                 var _0x3538e6 = document[_0x1d3ae8(0x10a) + _0x1d3ae8(0x1a1)](_0x1d3ae8(0x17a) + _0x27327a);
-                                _0x3ba8bd[_0x1d3ae8(0x16f)](),
-                                    _0x3538e6 && _0x3538e6[_0x1d3ae8(0x16f)]();
+                                if (_0x3ba8bd) {
+                                    _0x3ba8bd[_0x1d3ae8(0x16f)]();
+                                }
+                                if (_0x3538e6) {
+                                    _0x3538e6[_0x1d3ae8(0x16f)]();
+                                }
                             } else
                                 _0x3ba8bd[_0x1d3ae8(0xa2) + _0x1d3ae8(0x11b)](_0x3e27ff[_0x1d3ae8(0x82)])[_0x1d3ae8(0xb0) + 't'] = _0x482009[_0x1d3ae8(0xc8)];
                             _0x3e27ff[_0x1d3ae8(0x16d)](Toast, {

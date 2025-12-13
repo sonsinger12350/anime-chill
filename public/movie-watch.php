@@ -2,12 +2,12 @@
 if (!defined('MovieAnime')) die("You are illegally infiltrating our website");
 if (!$value[2]) die(header('location:' . URL));
 $MovieSlug = sql_escape($value[2]);
-$EpisodeID = sql_escape($value[3]);
+$EpisodeNum = sql_escape($value[3]);
 FireWall();
 if (get_total("movie", "WHERE slug = '$MovieSlug'") < 1) die(header('location:' . URL));
-if (get_total("episode", "WHERE id = '$EpisodeID'") < 1) die(header('location:' . URL . "/info/$MovieSlug.html"));
 $Movie = GetDataArr("movie", "slug = '$MovieSlug'");
-$Ep = GetDataArr("episode", " id = '$EpisodeID'");
+if (get_total("episode", "WHERE movie_id = '{$Movie['id']}' AND ep_num = '$EpisodeNum'") < 1) die(header('location:' . URL . "/info/$MovieSlug.html"));
+$Ep = GetDataArr("episode", "movie_id = '{$Movie['id']}' AND ep_num = '$EpisodeNum'");
 $mysql->update("movie", "view = view + 1, view_day = view_day + 1, view_week = view_week + 1, view_month = view_month + 1, view_year = view_year + 1", "id = '{$Movie['id']}'");
 $statut = ($Movie['loai_phim'] == 'Phim Lẻ' ? "{$Movie['movie_duration']} Phút" : "$NumEpisode/{$Movie['ep_num']}");
 
@@ -51,7 +51,7 @@ $ep_num_plus = ($Ep['ep_num'] + 1);
 $ep_num = ($Ep['ep_num'] - 1);
 if (get_total('episode', "WHERE movie_id = '{$Movie['id']}' AND ep_num = '$ep_num_plus'") >= 1) {
     $EpNext = GetDataArr('episode', "movie_id = '{$Movie['id']}' AND ep_num = '$ep_num_plus'");
-    $JsNextEpisode = 'window.location.href = "' . URL . '/watch/' . $Movie['slug'] . '-episode-id-' . $EpNext['id'] . '.html";';
+    $JsNextEpisode = 'window.location.href = "' . URL . '/watch/' . $Movie['slug'] . '-episode-tap-' . $EpNext['ep_num'] . '.html";';
 } else $JsNextEpisode = 'Toast({
     message: "Không có tập tiếp theo",
     type: "error"
@@ -60,7 +60,7 @@ final_ep = true;';
 
 if (get_total('episode', "WHERE movie_id = '{$Movie['id']}' AND ep_num = '$ep_num'") >= 1) {
     $EpNext = GetDataArr('episode', "movie_id = '{$Movie['id']}' AND ep_num = '$ep_num'");
-    $JsOldEpisode = 'window.location.href = "' . URL . '/watch/' . $Movie['slug'] . '-episode-id-' . $EpNext['id'] . '.html";';
+    $JsOldEpisode = 'window.location.href = "' . URL . '/watch/' . $Movie['slug'] . '-episode-tap-' . $EpNext['ep_num'] . '.html";';
 } else $JsOldEpisode = 'Toast({
     message: "Không có tập trước",
     type: "error"
@@ -69,10 +69,10 @@ final_ep = true;';
 
 $arr = $mysql->query("SELECT * FROM " . DATABASE_FX . "episode WHERE movie_id = '{$Movie['id']}' ORDER BY id DESC");
 while ($row = $arr->fetch(PDO::FETCH_ASSOC)) {
-    $Active = ($row['id'] == $EpisodeID ? 'active' : '');
+    $Active = ($row['ep_num'] == $EpisodeNum ? 'active' : '');
     // List Episode
     $ListEpisode .= '
-        <a href="' . URL . '/watch/' . $Movie['slug'] . '-episode-id-' . $row['id'] . '.html" title="' . $row['ep_name'] . '" class="' . $Active . '">
+        <a href="' . URL . '/watch/' . $Movie['slug'] . '-episode-tap-' . $row['ep_num'] . '.html" title="' . $row['ep_name'] . '" class="' . $Active . '">
             <span>' . $row['ep_name'] . '</span>'. ($row['vip'] == 1 ? '<span class="vip">VIP</span>' : '') .'
         </a>
     ';
@@ -90,9 +90,9 @@ while ($row = $arr->fetch(PDO::FETCH_ASSOC)) {
 
 if (isset($_POST['send_error'])) {
     $note = sql_escape($_POST['note']);
-    if ($note && $EpisodeID && $Movie['id']) {
-        if (get_total("report", "WHERE movie_id = '{$Movie['id']}' AND episode_id = '$EpisodeID'") < 1) {
-            $mysql->insert("report", "movie_id,episode_id,content", "'{$Movie['id']}','$EpisodeID','$note'");
+    if ($note && $Ep['id'] && $Movie['id']) {
+        if (get_total("report", "WHERE movie_id = '{$Movie['id']}' AND episode_id = '{$Ep['id']}'") < 1) {
+            $mysql->insert("report", "movie_id,episode_id,content", "'{$Movie['id']}','{$Ep['id']}','$note'");
         }
     }
 }
@@ -578,10 +578,10 @@ ob_start();
 							</a>
 						</div>
 					</div>
-					<form action="<?= URL ?>/watch/<?= $Movie['slug'] ?>-episode-id-<?= $EpisodeID ?>.html" method="POST" name="episode_error" id="episode_error">
+					<form action="<?= URL ?>/watch/<?= $Movie['slug'] ?>-episode-tap-<?= $EpisodeNum ?>.html" method="POST" name="episode_error" id="episode_error">
 						<input type="text" style="width: 200px;border-radius: 8px;" name="note" placeholder="Điền Lý Do Lỗi Bạn Gặp Phải">
 						<input type="text" style="display: none;" name="movie_id" value="<?= $Movie['id'] ?>">
-						<input type="text" style="display: none;" name="Episode_id" value="<?= $EpisodeID ?>">
+						<input type="text" style="display: none;" name="Episode_id" value="<?= $Ep['id'] ?>">
 						<input type="submit" style="border-radius: 8px;" name="send_error" value="Gửi">
 					</form>
 				<?php endif; ?>

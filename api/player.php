@@ -11,8 +11,8 @@ if (get_total("movie", "WHERE id = '$MovieID'") < 1) die(JsonMessage(401, "Phim 
 if (get_total("episode", "WHERE id = '$EpisodeID'") < 1) die(JsonMessage(401, "Tập này Không Tồn Tại Trên Hệ Thông"));
 $Ep = GetDataArr("episode", " id = '$EpisodeID'");
 $Movie = GetDataArr("movie", " id = '$MovieID'");
-if (URL . "/watch/{$Movie['slug']}-episode-id-$EpisodeID.html" != $referer)  die(JsonMessage(401, "Bạn Đang Truy Cập Trái Phép Website Của Chúng Tôi"));
-$cache_key = $Movie['slug'] . "_$EpisodeID";
+if (URL . "/watch/{$Movie['slug']}-episode-tap-{$Ep['ep_num']}.html" != $referer)  die(JsonMessage(401, "Bạn Đang Truy Cập Trái Phép Website Của Chúng Tôi"));
+$cache_key = $Movie['slug'] . "_" . $Ep['ep_num'];
 if ($InstanceCache->has($cache_key)) die($InstanceCache->get($cache_key));
 $PlayerData = array();
 $PlayerData['code'] = 200;

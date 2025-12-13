@@ -14,8 +14,8 @@ $description = strip_tags($Movie['content']);
 $image = $Movie['image'];
 // End SEO
 
-$episodeId = GetDataArr("episode", "movie_id = '{$Movie['id']}' ORDER BY ep_num DESC LIMIT 1");
-$episodeId = $episodeId['id'];
+$episodeData = GetDataArr("episode", "movie_id = '{$Movie['id']}' ORDER BY ep_num DESC LIMIT 1");
+$episodeNum = $episodeData['ep_num'];
 $status = ($Movie['loai_phim'] == 'Phim Lẻ' ? "{$Movie['movie_duration']} Phút" : "$NumEpisode/{$Movie['ep_num']}");
 $categoryHtml = [];
 
@@ -111,7 +111,7 @@ ob_start();
 							</div>
 						</div>
 						<div class="btn ah-frame-bg">
-							<a href="<?= URL ?>/watch/<?= $Movie['slug'] ?>-episode-id-<?= $episodeId ?>.html" class="button-default bg-lochinvar watch-btn"><i class="fa-solid fa-circle-play"></i>Xem Phim </a>
+							<a href="<?= URL ?>/watch/<?= $Movie['slug'] ?>-episode-tap-<?= $episodeNum ?>.html" class="button-default bg-lochinvar watch-btn"><i class="fa-solid fa-circle-play"></i>Xem Phim </a>
 							<button id="toggle_follow" value="<?= $Movie['id'] ?>" type="button" class="button-default bg-lochinvar watch-btn"><i class="fa-solid fa-bookmark"></i></button>
 						</div>
 					</div>
